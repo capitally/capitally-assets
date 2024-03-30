@@ -1,0 +1,116 @@
+{
+  "version": 3,
+  "type": "Capitally Data Export",
+  "exportedAt": "2024-03-30T15:12:33.150Z",
+  "data": {
+    "importTemplates": {
+      "u-app-myfund": {
+        "id": "u-app-myfund",
+        "name": "MyFund",
+        "author": "Capitally",
+        "info": "To import your transactions from MyFund:\n\n1. Go to **Portfel** → **Historia operacji**\n1. Click **Eksport do xls** or **Eksport do csv**\n1. Open or drop that file here",
+        "logoUrl": "/static/brokers/myfund.png",
+        "group": "Apps",
+        "updatedAt": "2023-04-29",
+        "parser": {
+          "id": "csv",
+          "allowPaste": false,
+          "csv": {
+            "codepage": "windows-1250"
+          }
+        },
+        "resolver": {
+          "id": "transaction",
+          "columns": {
+            "Konto inwestycyjne": {
+              "prop": "account",
+              "replace": [
+                [
+                  "&oacute;",
+                  "ó"
+                ],
+                [
+                  "&nbsp;",
+                  ""
+                ]
+              ],
+              "mapping": {
+                "type": "formula",
+                "value": "=value ? {$template: value, name: value} : null"
+              }
+            },
+            "Walor": {
+              "prop": "asset",
+              "replace": [
+                [
+                  "&oacute;",
+                  "ó"
+                ],
+                [
+                  "&nbsp;",
+                  ""
+                ]
+              ],
+              "mapping": {
+                "type": "formula",
+                "value": "=regexMatch(col(\"Operacja\"), \"Kupno|Sprzedaż|Dywidenda|Odsetki od obligacji|Założenie lokaty\") ? regexReplace(value, \"Automatyczny import;\", \"\") : null"
+              },
+              "valueMap": {}
+            },
+            "Data": {
+              "prop": "date"
+            },
+            "Operacja": {
+              "prop": "type",
+              "valueMap": {
+                "Dodanie zobowiązania": null,
+                "Dywidenda": "DIVIDEND",
+                "Kupno": "OPEN",
+                "Odsetki": null,
+                "Odsetki od obligacji": "INTEREST",
+                "Przelew przychodzący": null,
+                "Przelew wychodzący": null,
+                "Sprzedaż": "CLOSE",
+                "Wpłata": null,
+                "Wypłata": null,
+                "Założenie lokaty": "OPEN"
+              }
+            },
+            "Liczba jednostek": {
+              "prop": "qty",
+              "mapping": {
+                "type": "formula",
+                "value": "=col(\"Operacja\") == \"Założenie lokaty\" ? -N(col(\"Wartość\")) : value"
+              }
+            },
+            "Cena": {
+              "prop": "price"
+            },
+            "Prowizja": {
+              "prop": "fee"
+            },
+            "Waluta": {
+              "prop": "currency"
+            },
+            "Komentarz": {
+              "prop": "notes",
+              "replace": [
+                [
+                  "&oacute;",
+                  "ó"
+                ],
+                [
+                  "&nbsp;",
+                  ""
+                ]
+              ]
+            }
+          }
+        },
+        "generator": {
+          "id": "transaction"
+        }
+      }
+    }
+  }
+}

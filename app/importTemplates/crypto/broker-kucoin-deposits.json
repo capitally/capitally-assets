@@ -1,0 +1,69 @@
+{
+  "version": 3,
+  "type": "Capitally Data Export",
+  "exportedAt": "2024-03-30T15:12:33.153Z",
+  "data": {
+    "importTemplates": {
+      "u-broker-kucoin-deposits": {
+        "name": "KuCoin - deposits & withdrawals",
+        "id": "u-broker-kucoin-deposits",
+        "author": "Capitally",
+        "info": "To import your deposits&withdrawals from KuCoin:\n\n1. Go to [**KuCoin** → **Assets** → **Main Account**](https://www.kucoin.com/assets/main-account)\n1. Open **History (Deposit & Withdrawal)** tab\n1. Click **Export to CSV**\n1. Choose timeframe. You can only export up to 100 days each time, so you may need to export multiple files. For transaction conducted before 2019 you'll need to contact KuCoin's support\n1. Click **Confirm** and wait for the files to generate\n1. Open or drop that file here",
+        "logoUrl": "/static/brokers/kucoin.png",
+        "group": "Crypto",
+        "updatedAt": "2023-05-04",
+        "parser": {
+          "id": "csv",
+          "csv": {}
+        },
+        "resolver": {
+          "id": "transaction",
+          "columns": {
+            "$account": {
+              "prop": "account",
+              "mapping": {
+                "type": "value",
+                "value": {
+                  "$template": "KuCoin",
+                  "name": "KuCoin"
+                }
+              }
+            },
+            "Coin": {
+              "prop": "asset",
+              "mapping": {
+                "type": "formula",
+                "value": "=value + '.CRYPTO'"
+              }
+            },
+            "Time(UTC+02:00)": {
+              "prop": "date"
+            },
+            "Status": {
+              "prop": "type",
+              "valueMap": {
+                "SUCCESS": "TRANSFER"
+              }
+            },
+            "Amount": {
+              "prop": "qty",
+              "mapping": {
+                "type": "formula",
+                "value": "=col('Remarks') == 'Deposit' ? value : -value"
+              }
+            },
+            "Fee": {
+              "prop": "fee"
+            },
+            "Transfer Network": {
+              "prop": "feeCurrency"
+            }
+          }
+        },
+        "generator": {
+          "id": "transaction"
+        }
+      }
+    }
+  }
+}

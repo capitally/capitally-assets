@@ -1,0 +1,79 @@
+{
+  "version": 3,
+  "type": "Capitally Data Export",
+  "exportedAt": "2024-03-30T15:12:33.155Z",
+  "data": {
+    "importTemplates": {
+      "u-broker-kucoin": {
+        "name": "KuCoin - trades",
+        "id": "u-broker-kucoin",
+        "author": "Capitally",
+        "info": "To import your trades from KuCoin:\n\n1. Go to [**KuCoin** → **Orders** → **Spot Trade History**](https://www.kucoin.com/order/trade/history)\n1. Open **Trade History** tab\n1. Click **Export to CSV**\n1. Choose timeframe. You can only export up to 100 days each time, so you may need to export multiple files. For transaction conducted before 2019 you'll need to contact KuCoin's support\n1. Click **Confirm** and wait for the files to generate\n1. Open or drop that file here\n\n Please note that KuCoin does not provide the FIAT trades, you will need to enter these manually.",
+        "logoUrl": "/static/brokers/kucoin.png",
+        "group": "Crypto",
+        "updatedAt": "2023-05-04",
+        "parser": {
+          "id": "csv",
+          "csv": {}
+        },
+        "resolver": {
+          "id": "transaction",
+          "columns": {
+            "$account": {
+              "prop": "account",
+              "mapping": {
+                "type": "value",
+                "value": {
+                  "$template": "KuCoin",
+                  "name": "KuCoin"
+                }
+              }
+            },
+            "Symbol": {
+              "prop": null
+            },
+            "$asset": {
+              "prop": "asset",
+              "mapping": {
+                "type": "formula",
+                "value": "=regexMatch(col('Symbol'), '^(.+?)-', 1) + '.CRYPTO'"
+              }
+            },
+            "Filled Time(UTC+02:00)": {
+              "prop": "date"
+            },
+            "Side": {
+              "prop": "type"
+            },
+            "Filled Amount": {
+              "prop": "qty"
+            },
+            "Avg  Filled Price": {
+              "prop": "price"
+            },
+            "Fee": {
+              "prop": "fee"
+            },
+            "Fee Currency": {
+              "prop": "feeCurrency"
+            },
+            "Order ID": {
+              "prop": "reference"
+            },
+            "Status": null,
+            "$valueCurrency": {
+              "prop": "valueCurrency",
+              "mapping": {
+                "type": "formula",
+                "value": "=regexMatch(col('Symbol'), '-(.+?)$', 1)"
+              }
+            }
+          }
+        },
+        "generator": {
+          "id": "transaction"
+        }
+      }
+    }
+  }
+}

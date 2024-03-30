@@ -1,0 +1,83 @@
+{
+  "version": 3,
+  "type": "Capitally Data Export",
+  "exportedAt": "2024-03-30T15:12:33.156Z",
+  "data": {
+    "importTemplates": {
+      "u-broker-kraken": {
+        "id": "u-broker-kraken",
+        "name": "Kraken",
+        "author": "Capitally",
+        "info": "To import your transactions from Kraken:\n\n1. Go to [**Kraken** → **History** → **Export**](https://www.kraken.com/u/history/export)\n1. Select **Trades** from first dropdown \n1. Choose timeframe\n1. Click **Submit**, wait for the export to process and download it\n1. Open or drop that file here",
+        "logoUrl": "/static/brokers/kraken.png",
+        "group": "Crypto",
+        "updatedAt": "2023-05-04",
+        "parser": {
+          "id": "csv",
+          "csv": {}
+        },
+        "resolver": {
+          "id": "transaction",
+          "columns": {
+            "$account": {
+              "prop": "account",
+              "mapping": {
+                "type": "value",
+                "value": {
+                  "$template": "Kraken",
+                  "name": "Kraken"
+                }
+              }
+            },
+            "pair": null,
+            "$asset": {
+              "prop": "asset",
+              "mapping": {
+                "type": "formula",
+                "value": "=pair = col('pair'); sym = S.slice(pair, 0, pair['length'] / 2); regexReplace(sym, '^X', '') + '.CRYPTO'"
+              },
+              "valueMap": {
+                "XBT.CRYPTO": {
+                  "id": "ms-CRYPTO-BTC"
+                }
+              }
+            },
+            "time": {
+              "prop": "date"
+            },
+            "type": {
+              "prop": "type"
+            },
+            "vol": {
+              "prop": "qty"
+            },
+            "price": {
+              "prop": "price"
+            },
+            "fee": {
+              "prop": "fee"
+            },
+            "$currency": {
+              "prop": "currency",
+              "mapping": {
+                "type": "formula",
+                "value": "=pair = col('pair'); sym = S.slice(pair, pair['length'] / 2); regexMatch(sym, '^X...$') ? S.slice(sym, 1) : regexMatch(sym, '^Z...$') ? S.slice(sym, 1) : sym "
+              },
+              "valueMap": {
+                "XBT": {
+                  "id": "ms-CRYPTO-BTC"
+                }
+              }
+            },
+            "txid": {
+              "prop": "reference"
+            }
+          }
+        },
+        "generator": {
+          "id": "transaction"
+        }
+      }
+    }
+  }
+}

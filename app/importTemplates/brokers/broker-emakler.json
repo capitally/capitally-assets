@@ -1,0 +1,78 @@
+{
+  "version": 3,
+  "type": "Capitally Data Export",
+  "exportedAt": "2024-03-30T15:12:33.145Z",
+  "data": {
+    "importTemplates": {
+      "u-broker-emakler": {
+        "id": "u-broker-emakler",
+        "name": "mBank eMakler",
+        "author": "Capitally",
+        "info": "To import your transactions from eMakler:\n\n1. Go to [mBank](https://online.mbank.pl/)\n1. Open **Produkty** → **Inwestycje** → **Wszystkie** → **eMakler** \n1. Open **Operacje** \n1. Choose option **Typ** → **Transakcje**\n1. Choose time frame\n1. Click **Pobierz listę** → **CSV**\n1. Open or drop that file here",
+        "logoUrl": "/static/brokers/mbank.png",
+        "group": "Brokers",
+        "updatedAt": "2023-05-02",
+        "parser": {
+          "id": "csv",
+          "csv": {
+            "skipUntil": "Czas transakcji\\tWalor",
+            "codepage": "windows-1250"
+          }
+        },
+        "resolver": {
+          "id": "transaction",
+          "info": "☝️ mBank does not provide official market symbols. Make sure to verify your assets, or manually search for the [right symbol](https://www.mycapitally.com/help/choosing-the-right-asset-symbol).",
+          "columns": {
+            "$account": {
+              "prop": "account",
+              "mapping": {
+                "type": "value",
+                "value": {
+                  "$template": "mBank eMakler",
+                  "name": "mBank eMakler"
+                }
+              }
+            },
+            "Czas transakcji": {
+              "prop": "date"
+            },
+            "Walor": {
+              "prop": "asset",
+              "mapping": {
+                "type": "formula",
+                "value": "=regexReplace(lowerCase(value), ' (gr|ln) etf', ' etf') + ' \"' + regexReplace(col('Giełda'), '^.+-', '') +  '\"'"
+              },
+              "valueMapInfo": "Verify if the assets are correct. If not, choose the right symbol from the list or search by typing in the field the ISIN (`PLOPTTC00011`), symbol (`CDR.GPW`) or name"
+            },
+            "Giełda": {},
+            "K/S": {
+              "prop": "type",
+              "valueMap": {
+                "K": "OPEN",
+                "S": "CLOSE"
+              }
+            },
+            "Liczba": {
+              "prop": "qty"
+            },
+            "Kurs": {
+              "prop": "price"
+            },
+            "Waluta": {
+              "prop": "valueCurrency"
+            },
+            "Prowizja": {
+              "prop": "fee"
+            },
+            "Waluta (1)": {
+              "prop": "feeCurrency"
+            }
+          }
+        },
+        "generator": {
+          "id": "transaction"
+        }
+      }
+    }
+  }
+}

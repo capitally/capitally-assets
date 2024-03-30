@@ -1,0 +1,14 @@
+{
+  "name": "@capitally/assets",
+  "version": "1.0.0",
+  "type": "module",
+  "author": "Capitally <hello@mycapitally.com>",
+  "homepage": "https://github.com/capitally/capitally-assets",
+  "license": "Proprietary",
+  "private": true,
+  "exports": {
+    "./app/*.json": "./app/*.json"
+  },
+  "sideEffects": false,
+  "packageManager": "yarn@4.1.1"
+}

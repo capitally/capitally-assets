@@ -1,0 +1,72 @@
+{
+  "version": 3,
+  "type": "Capitally Data Export",
+  "exportedAt": "2024-03-30T15:12:33.151Z",
+  "data": {
+    "importTemplates": {
+      "u-app-portfolioperformance": {
+        "id": "u-app-portfolioperformance",
+        "name": "Portfolio Performance",
+        "author": "Capitally",
+        "info": "To import your transactions from Portfolio Performance:\n\n1. Select **File** → **Export** → **CSV Files** from the menu\n1. Select one account under **Securities Account Transactions** \n1. Click **Finish**\n1. Open or drop that file here",
+        "logoUrl": "/static/brokers/portfolioperformance.png",
+        "group": "Apps",
+        "updatedAt": "2023-04-28",
+        "parser": {
+          "id": "csv",
+          "allowPaste": false,
+          "csv": {}
+        },
+        "resolver": {
+          "id": "transaction",
+          "columns": {
+            "$account": {
+              "prop": "account",
+              "mapping": {
+                "type": "value"
+              }
+            },
+            "Date": {
+              "prop": "date"
+            },
+            "Type": {
+              "prop": "type"
+            },
+            "$asset": {
+              "prop": "asset",
+              "mapping": {
+                "type": "formula",
+                "value": "=col(\"ISIN\") || col(\"Ticker Symbol\") || col(\"Security Name\")"
+              }
+            },
+            "ISIN": {
+              "prop": null
+            },
+            "Ticker Symbol": {
+              "prop": null
+            },
+            "Security Name": {},
+            "Shares": {
+              "prop": "qty"
+            },
+            "Value": {
+              "prop": "value"
+            },
+            "Fees": {
+              "prop": "fee"
+            },
+            "Transaction Currency": {
+              "prop": "currency"
+            },
+            "Note": {
+              "prop": "notes"
+            }
+          }
+        },
+        "generator": {
+          "id": "transaction"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,96 @@
+{
+  "version": 3,
+  "type": "Capitally Data Export",
+  "exportedAt": "2024-03-30T15:12:33.144Z",
+  "data": {
+    "importTemplates": {
+      "u-broker-ibkr": {
+        "id": "u-broker-ibkr",
+        "name": "Interactive Brokers",
+        "author": "Capitally",
+        "info": "To import your transactions from Interactive Brokers:\n\n1. Go to [IBKR](https://www.interactivebrokers.co.uk/)\n1. Open **Performance & Reports** → **Flex Queries** → **Trade Confirmation Flex Query** \n1. Create new Flex Query with a **+** sign\n    1. From **Sections** choose only the **Trade Confirmation**\n        1. Ensure only **Execution** is selected in Options\n        1. Select all fields\n        1. Click Save\n    1. Set Format to **CSV**\n    1. Set Date Format to **yyyy-MM-dd**\n    1. Set Time Format to **HH:mm:ss**\n    1. Save the query\n1. Run created query with the arrow sign (**→**)\n1. Choose date period (maximum is one year, you will need an export per each year), ensure Format is **CSV** format and save the file somewhere\n1. Open or drop that file here",
+        "logoUrl": "/static/brokers/ibkr.png",
+        "group": "Brokers",
+        "updatedAt": "2023-05-04",
+        "parser": {
+          "id": "csv",
+          "csv": {
+            "header": true,
+            "replace": [
+              [
+                "/^.+\\n.+\"(BUY|SELL) \\(Ca\\.\\)\".*$/gm",
+                ""
+              ]
+            ]
+          }
+        },
+        "resolver": {
+          "id": "transaction",
+          "columns": {
+            "$account": {
+              "prop": "account",
+              "mapping": {
+                "type": "value",
+                "value": {
+                  "$template": "IBKR",
+                  "name": "Interactive Brokers"
+                }
+              }
+            },
+            "ISIN": {
+              "prop": "asset"
+            },
+            "Description": {},
+            "$date": {
+              "prop": "date",
+              "mapping": {
+                "type": "formula",
+                "value": "=col('Date/Time') || col('DateTime')"
+              }
+            },
+            "Buy/Sell": {
+              "prop": "type",
+              "valueMap": {
+                "SELL": "CLOSE",
+                "BUY": "OPEN"
+              }
+            },
+            "Quantity": {
+              "prop": "qty"
+            },
+            "$price": {
+              "prop": "price",
+              "mapping": {
+                "type": "formula",
+                "value": "=col('Price') || col('TradePrice')"
+              }
+            },
+            "CurrencyPrimary": {
+              "prop": "valueCurrency"
+            },
+            "$fee": {
+              "prop": "fee",
+              "mapping": {
+                "type": "formula",
+                "value": "=col('Commission') || col('IBCommission')"
+              }
+            },
+            "$feeCurrency": {
+              "prop": "feeCurrency",
+              "mapping": {
+                "type": "formula",
+                "value": "=col('CommissionCurrency') || col('IBCommissionCurrency')"
+              }
+            },
+            "TradeID": {
+              "prop": "reference"
+            }
+          }
+        },
+        "generator": {
+          "id": "transaction"
+        }
+      }
+    }
+  }
+}

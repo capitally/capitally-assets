@@ -1,0 +1,84 @@
+{
+  "version": 3,
+  "type": "Capitally Data Export",
+  "exportedAt": "2024-03-30T15:12:33.147Z",
+  "data": {
+    "importTemplates": {
+      "u-broker-bossa": {
+        "id": "u-broker-bossa",
+        "name": "Bossa",
+        "author": "Capitally",
+        "info": "To import your transactions from Bossa:\n\n1. Go to [Bossa](https://online.bossa.pl/bossaapp/login)\n1. Open **Portfel** → **Historia Papierów** \n1. Choose **Wszystkie transakcje** \n1. Choose time frame\n1. Select **Eksportuj do CSV**\n1. Open or drop that file here",
+        "logoUrl": "/static/brokers/bossa.png",
+        "group": "Brokers",
+        "parser": {
+          "id": "csv",
+          "csv": {
+            "codepage": "windows-1250"
+          }
+        },
+        "resolver": {
+          "id": "transaction",
+          "info": "☝️ Bossa does not provide official market symbols nor transaction currencies. Make sure to verify your assets, or manually search for the [right symbol](https://www.mycapitally.com/help/choosing-the-right-asset-symbol).",
+          "columns": {
+            "$account": {
+              "prop": "account",
+              "mapping": {
+                "type": "value",
+                "value": {
+                  "$template": "Bossa",
+                  "name": "Bossa"
+                }
+              }
+            },
+            "data": {
+              "prop": "date"
+            },
+            "papier": {
+              "prop": "asset",
+              "mapping": {
+                "type": "formula",
+                "value": "=lowerCase(value)"
+              },
+              "valueMapInfo": "Verify if the assets are correct. If not, choose the right symbol from the list or search by typing in the field the ISIN (`PLOPTTC00011`), symbol (`CDR.GPW`) or name"
+            },
+            "-": {
+              "prop": "type",
+              "valueMap": {
+                "K": "OPEN",
+                "S": "CLOSE"
+              }
+            },
+            "ilość": {
+              "prop": "qty"
+            },
+            "cena": {
+              "prop": "price"
+            },
+            "$valueCurrency": {
+              "prop": "valueCurrency",
+              "mapping": {
+                "type": "value"
+              }
+            },
+            "prowizja": {
+              "prop": "fee"
+            },
+            "$feeCurrency": {
+              "prop": "feeCurrency",
+              "mapping": {
+                "type": "value",
+                "value": {
+                  "id": "c-PLN"
+                }
+              }
+            }
+          }
+        },
+        "generator": {
+          "id": "transaction"
+        }
+      }
+    }
+  }
+}

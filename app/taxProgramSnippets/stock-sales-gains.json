@@ -1,0 +1,69 @@
+{
+  "id": "tax-stock-sales-gains",
+  "name": "Stock sales income",
+  "stmts": [
+    {
+      "type": "if",
+      "ifs": [
+        {
+          "stmts": [
+            {
+              "type": "comment",
+              "md": "This rule will be applied whenever a Stock, ETF or Crypto asset is sold.\nThe sum of taxable income will be visible under the `Sales Tax` group in Taxes Report."
+            },
+            {
+              "type": "selectGroup",
+              "group": {
+                "type": "value",
+                "value": "Sales Tax"
+              }
+            },
+            {
+              "type": "if",
+              "ifs": [
+                {
+                  "stmts": [
+                    {
+                      "type": "applyTax",
+                      "tax": {
+                        "type": "value"
+                      }
+                    }
+                  ],
+                  "xpr": {
+                    "type": "in",
+                    "xpr": {
+                      "type": "prop",
+                      "prop": "asset.type"
+                    },
+                    "v": {
+                      "type": "value",
+                      "value": [
+                        "STOCK",
+                        "ETF",
+                        "CRYPTO"
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          ],
+          "xpr": {
+            "type": "in",
+            "xpr": {
+              "type": "prop",
+              "prop": "type"
+            },
+            "v": {
+              "type": "value",
+              "value": [
+                "SELL"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

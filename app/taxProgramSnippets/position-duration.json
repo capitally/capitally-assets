@@ -1,0 +1,60 @@
+{
+  "id": "tax-position-duration",
+  "name": "Position duration",
+  "stmts": [
+    {
+      "type": "if",
+      "ifs": [
+        {
+          "xpr": {
+            "type": "<",
+            "xpr": {
+              "type": "prop",
+              "prop": "days"
+            },
+            "v": {
+              "type": "value",
+              "value": 60
+            }
+          },
+          "stmts": [
+            {
+              "type": "comment",
+              "md": "This applies different tax rates based on the duration for which the position was held.\nThe Taxes Report will display the `Short/Long stay` notes for verification.\n\n☝️ Remember to first check for Sales Tax and Asset type."
+            },
+            {
+              "type": "addNote",
+              "note": {
+                "type": "value",
+                "value": "Short stay"
+              }
+            },
+            {
+              "type": "applyTax",
+              "tax": {
+                "type": "value"
+              }
+            }
+          ]
+        },
+        {
+          "stmts": [
+            {
+              "type": "addNote",
+              "note": {
+                "type": "value",
+                "value": "Long stay"
+              }
+            },
+            {
+              "type": "applyTax",
+              "tax": {
+                "type": "value"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

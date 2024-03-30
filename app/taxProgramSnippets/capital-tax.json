@@ -1,0 +1,77 @@
+{
+  "id": "tax-capital-tax",
+  "name": "Capital tax on value",
+  "stmts": [
+    {
+      "type": "capitalTax",
+      "day": 31,
+      "month": 12,
+      "interval": "1y",
+      "stmts": [
+        {
+          "type": "comment",
+          "md": "This rule will calculate Capital/Wealth tax once a year and place it under `Wealth Tax`.\nAs wealth tax is usually calculated for the overall value of held assets, their value is used to calculate the revenue and expenses are set to zero."
+        },
+        {
+          "type": "if",
+          "ifs": [
+            {
+              "xpr": {
+                "type": "in",
+                "xpr": {
+                  "type": "prop",
+                  "prop": "asset.type"
+                },
+                "v": {
+                  "type": "value",
+                  "value": [
+                    "ESTATE",
+                    "DEPOSIT",
+                    "FUND",
+                    "ETF",
+                    "CASH",
+                    "BOND"
+                  ]
+                }
+              },
+              "stmts": [
+                {
+                  "type": "selectGroup",
+                  "group": {
+                    "type": "value",
+                    "value": "Wealth Tax"
+                  }
+                },
+                {
+                  "type": "set",
+                  "prop": "revenue",
+                  "xpr": {
+                    "type": "prop",
+                    "prop": "value"
+                  }
+                },
+                {
+                  "type": "set",
+                  "prop": "expense",
+                  "xpr": {
+                    "type": "value",
+                    "value": 0
+                  }
+                },
+                {
+                  "type": "applyProgressiveTax",
+                  "brackets": [
+                    {
+                      "limit": 1000000,
+                      "tax": 0
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

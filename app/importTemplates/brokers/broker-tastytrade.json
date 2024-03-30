@@ -1,0 +1,89 @@
+{
+  "version": 3,
+  "type": "Capitally Data Export",
+  "exportedAt": "2024-03-30T15:12:33.140Z",
+  "data": {
+    "importTemplates": {
+      "u-broker-tastytrade": {
+        "id": "u-broker-tastytrade",
+        "name": "TastyTrade",
+        "author": "Capitally",
+        "info": "To import your transactions from TastyTrade:\n\n1. Go to [TastyTrade Trading](https://trade.tastytrade.com/)\n1. Open **Activity** → **History** \n1. Click the filter icon to select time period\n1. Click the **CSV** icon to download the trades files\n1. Open or drop that file here",
+        "logoUrl": "/static/brokers/tastyworks.png",
+        "group": "Brokers",
+        "updatedAt": "2023-01-14",
+        "parser": {
+          "id": "csv",
+          "csv": {
+            "header": true
+          }
+        },
+        "resolver": {
+          "id": "transaction",
+          "assetTypeIn": [
+            "STOCK",
+            "ETF"
+          ],
+          "columns": {
+            "$account": {
+              "prop": "account",
+              "mapping": {
+                "type": "value",
+                "value": {
+                  "$template": "TastyTrade",
+                  "name": "TastyTrade"
+                }
+              }
+            },
+            "Symbol": {
+              "prop": "asset",
+              "replace": [
+                [
+                  ".+",
+                  "$&.US"
+                ]
+              ]
+            },
+            "Description": {},
+            "Date/Time": {
+              "prop": "date"
+            },
+            "Buy/Sell": {
+              "prop": "type"
+            },
+            "Quantity": {
+              "prop": "qty"
+            },
+            "Price": {
+              "prop": "price"
+            },
+            "Fees": {
+              "prop": "fee"
+            },
+            "$feeCurrency": {
+              "prop": "feeCurrency",
+              "mapping": {
+                "type": "value",
+                "value": {
+                  "id": "c-USD"
+                }
+              }
+            },
+            "$valueCurrency": {
+              "prop": "valueCurrency",
+              "mapping": {
+                "type": "value",
+                "value": {
+                  "id": "c-USD"
+                }
+              }
+            }
+          }
+        },
+        "generator": {
+          "id": "transaction"
+        }
+      }
+    }
+  }
+}

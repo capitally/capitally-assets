@@ -1,0 +1,74 @@
+{
+  "version": 3,
+  "type": "Capitally Data Export",
+  "exportedAt": "2024-03-30T15:12:33.152Z",
+  "data": {
+    "importTemplates": {
+      "u-app-sharesight": {
+        "name": "ShareSight",
+        "id": "u-app-sharesight",
+        "author": "Capitally",
+        "info": "To import your transactions from ShareSight:\n\n1. Go to [ShareSight Portfolio](https://portfolio.sharesight.com/)\n1. Open **Reports** → **All Trades**\n1. Select timeframe\n1. Click **Download as XLSX** (green spreadsheet icon in top-right corner)\n1. Open or drop that file here",
+        "logoUrl": "/static/brokers/sharesight.png",
+        "group": "Apps",
+        "updatedAt": "2023-05-04",
+        "parser": {
+          "id": "csv",
+          "csv": {
+            "header": true,
+            "skipUntil": "Code\\t"
+          }
+        },
+        "resolver": {
+          "id": "transaction",
+          "columns": {
+            "$account": {
+              "prop": "account",
+              "mapping": {
+                "type": "value"
+              }
+            },
+            "Code": {
+              "prop": "asset",
+              "mapping": {
+                "type": "formula",
+                "value": "=value + ' (' + col('Market Code') + ')'"
+              },
+              "valueMap": {
+                "Total ()": null
+              }
+            },
+            "Name": {},
+            "Date": {
+              "prop": "date"
+            },
+            "Type": {
+              "prop": "type",
+              "valueMap": {
+                "Split": null
+              }
+            },
+            "Qty": {
+              "prop": "qty"
+            },
+            "Price": {
+              "prop": "price"
+            },
+            "Instrument Currency": {
+              "prop": "valueCurrency"
+            },
+            "Brokerage": {
+              "prop": "fee"
+            },
+            "Brokerage Currency": {
+              "prop": "feeCurrency"
+            }
+          }
+        },
+        "generator": {
+          "id": "transaction"
+        }
+      }
+    }
+  }
+}

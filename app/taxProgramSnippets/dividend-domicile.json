@@ -1,0 +1,114 @@
+{
+  "id": "tax-dividend-domicile",
+  "name": "Dividends by domicile",
+  "stmts": [
+    {
+      "type": "if",
+      "ifs": [
+        {
+          "xpr": {
+            "type": "in",
+            "xpr": {
+              "type": "prop",
+              "prop": "type"
+            },
+            "v": {
+              "type": "value",
+              "value": [
+                "DIVIDEND"
+              ]
+            }
+          },
+          "stmts": [
+            {
+              "type": "comment",
+              "md": "This rule will be applied for each dividend paid.\nIt specifies different tax rates depending on the Asset's domicile.\nYou can change the `Asset Country` to `Market Country` if the tax is based on that.\n\nThe taxes will be grouped under `Dividends` → `Country` in the Taxes Report"
+            },
+            {
+              "type": "if",
+              "ifs": [
+                {
+                  "xpr": {
+                    "type": "in",
+                    "xpr": {
+                      "type": "prop",
+                      "prop": "asset.countryISO"
+                    },
+                    "v": {
+                      "type": "value",
+                      "value": [
+                        "US"
+                      ]
+                    }
+                  },
+                  "stmts": [
+                    {
+                      "type": "selectGroup",
+                      "group": {
+                        "type": "value",
+                        "value": "Dividends/US"
+                      }
+                    },
+                    {
+                      "type": "applyTax",
+                      "tax": {
+                        "type": "value"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "xpr": {
+                    "type": "in",
+                    "xpr": {
+                      "type": "prop",
+                      "prop": "asset.countryISO"
+                    },
+                    "v": {
+                      "type": "value",
+                      "value": [
+                        "DE"
+                      ]
+                    }
+                  },
+                  "stmts": [
+                    {
+                      "type": "selectGroup",
+                      "group": {
+                        "type": "value",
+                        "value": "Dividends/DE"
+                      }
+                    },
+                    {
+                      "type": "applyTax",
+                      "tax": {
+                        "type": "value"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "stmts": [
+                    {
+                      "type": "selectGroup",
+                      "group": {
+                        "type": "value",
+                        "value": "Dividends/Others"
+                      }
+                    },
+                    {
+                      "type": "applyTax",
+                      "tax": {
+                        "type": "value"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

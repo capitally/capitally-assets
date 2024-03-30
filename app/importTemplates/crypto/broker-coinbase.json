@@ -1,0 +1,79 @@
+{
+  "version": 3,
+  "type": "Capitally Data Export",
+  "exportedAt": "2024-03-30T15:12:33.155Z",
+  "data": {
+    "importTemplates": {
+      "u-broker-coinbase": {
+        "id": "u-broker-coinbase",
+        "name": "Coinbase",
+        "author": "Capitally",
+        "info": "To import your transactions from Coinbase:\n\n1. Go to [Coinbase Reports](https://www.coinbase.com/reports) (by clicking you avatar in top-right corner)\n1. Open **Transaction history** → **Generate report** \n1. Choose timeframe\n1. Click **CSV Report** → **Generate Report** and download it\n1. Open or drop that file here",
+        "logoUrl": "/static/brokers/coinbase.png",
+        "group": "Crypto",
+        "updatedAt": "2023-04-05",
+        "parser": {
+          "id": "csv",
+          "csv": {
+            "header": true,
+            "skipUntil": "^Timestamp"
+          }
+        },
+        "resolver": {
+          "id": "transaction",
+          "columns": {
+            "$account": {
+              "prop": "account",
+              "mapping": {
+                "type": "value",
+                "value": {
+                  "$template": "Coinbase",
+                  "name": "Coinbase"
+                }
+              }
+            },
+            "Asset": {
+              "prop": "asset",
+              "replace": [
+                [
+                  ".+",
+                  "$&.CRYPTO"
+                ]
+              ]
+            },
+            "Timestamp": {
+              "prop": "date"
+            },
+            "Transaction Type": {
+              "prop": "type",
+              "valueMap": {
+                "Advanced Trade Buy": "OPEN",
+                "Rewards Income": "TRANSFER"
+              }
+            },
+            "Quantity Transacted": {
+              "prop": "qty"
+            },
+            "Spot Price Currency": {
+              "prop": "currency"
+            },
+            "Spot Price at Transaction": {
+              "prop": "price"
+            },
+            "Subtotal": {},
+            "Total (inclusive of fees and/or spread)": {},
+            "Fees and/or Spread": {
+              "prop": "fee"
+            },
+            "Notes": {
+              "prop": "notes"
+            }
+          }
+        },
+        "generator": {
+          "id": "transaction"
+        }
+      }
+    }
+  }
+}

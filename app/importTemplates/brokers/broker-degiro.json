@@ -1,0 +1,75 @@
+{
+  "version": 3,
+  "type": "Capitally Data Export",
+  "exportedAt": "2024-03-30T15:12:33.142Z",
+  "data": {
+    "importTemplates": {
+      "u-broker-degiro": {
+        "id": "u-broker-degiro",
+        "name": "Degiro",
+        "author": "Capitally",
+        "info": "To import your transactions from Degiro:\n\n1. Go to [Degiro](https://degiro.com/)\n1. Open **Inbox** → **Transactions** \n1. Pick a date range\n1. Click the **↓ Export** button, choose **CSV** format and save the file somewhere\n1. Open or drop that file here",
+        "logoUrl": "/static/brokers/degiro.png",
+        "group": "Brokers",
+        "updatedAt": "2023-01-14",
+        "parser": {
+          "id": "csv",
+          "csv": {
+            "header": false,
+            "skipUntil": "1"
+          }
+        },
+        "resolver": {
+          "id": "transaction",
+          "assetTypeIn": [
+            "STOCK",
+            "ETF"
+          ],
+          "columns": {
+            "$account": {
+              "prop": "account",
+              "mapping": {
+                "type": "value",
+                "value": {
+                  "$template": "Degiro",
+                  "name": "Degiro"
+                }
+              }
+            },
+            "Column 4": {
+              "prop": "asset"
+            },
+            "Column 3": {},
+            "Column 1": {
+              "prop": "date"
+            },
+            "Column 2": {
+              "prop": "time"
+            },
+            "Column 7": {
+              "prop": "qtyBuySell"
+            },
+            "Column 8": {
+              "prop": "price"
+            },
+            "Column 9": {
+              "prop": "valueCurrency"
+            },
+            "Column 15": {
+              "prop": "fee"
+            },
+            "Column 16": {
+              "prop": "feeCurrency"
+            },
+            "Column 19": {
+              "prop": "reference"
+            }
+          }
+        },
+        "generator": {
+          "id": "transaction"
+        }
+      }
+    }
+  }
+}

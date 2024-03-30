@@ -1,0 +1,77 @@
+{
+  "version": 3,
+  "type": "Capitally Data Export",
+  "exportedAt": "2024-03-30T15:12:33.155Z",
+  "data": {
+    "importTemplates": {
+      "u-broker-bittrex": {
+        "id": "u-broker-bittrex",
+        "name": "Bittrex",
+        "author": "Capitally",
+        "info": "To import your transactions from Bittrex:\n\n1. Go to [Bittrex](https://bittrex.com/)\n1. Open **Orders** \n1. Click **Download History**\n1. Download history for each year you traded\n1. Open or drop those files here",
+        "logoUrl": "/static/brokers/bittrex.png",
+        "group": "Crypto",
+        "updatedAt": "2023-05-04",
+        "parser": {
+          "id": "csv",
+          "csv": {}
+        },
+        "resolver": {
+          "id": "transaction",
+          "columns": {
+            "$account": {
+              "prop": "account",
+              "mapping": {
+                "type": "value",
+                "value": {
+                  "$template": "Bittrex",
+                  "name": "Bittrex"
+                }
+              }
+            },
+            "$asset": {
+              "prop": "asset",
+              "mapping": {
+                "type": "formula",
+                "value": "=regexMatch(col('Exchange'), '-(.+?)$', 1) + '.CRYPTO'"
+              }
+            },
+            "Exchange": {},
+            "OrderType": {
+              "prop": "type",
+              "mapping": {
+                "type": "formula",
+                "value": "=regexMatch(value, 'BUY') ? 'Buy' : regexMatch(value, 'SELL') ? 'Sell' : null"
+              }
+            },
+            "Closed": {
+              "prop": "date"
+            },
+            "Quantity": {
+              "prop": "qty"
+            },
+            "PricePerUnit": {
+              "prop": "price"
+            },
+            "Commission": {
+              "prop": "fee"
+            },
+            "Uuid": {
+              "prop": "reference"
+            },
+            "$currency": {
+              "prop": "currency",
+              "mapping": {
+                "type": "formula",
+                "value": "=regexMatch(col('Exchange'), '^(.+?)-', 1)"
+              }
+            }
+          }
+        },
+        "generator": {
+          "id": "transaction"
+        }
+      }
+    }
+  }
+}

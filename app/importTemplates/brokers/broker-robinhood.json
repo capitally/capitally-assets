@@ -1,0 +1,93 @@
+{
+  "version": 3,
+  "type": "Capitally Data Export",
+  "exportedAt": "2024-03-30T15:12:33.148Z",
+  "data": {
+    "importTemplates": {
+      "u-broker-robinhood": {
+        "id": "u-broker-robinhood",
+        "name": "Robinhood",
+        "author": "Capitally",
+        "info": "To import your transactions from Robinhood:\n\n1. Open the Robinhood app\n1. Click on the Account icon in the lower right corner\n1. Open the navigation menu in the upper right and choose **Reports and statements**\n1. Click on **Reports**\n1. Click on **Generate new report** button\n1. Choose the account you need, and specify a date range, then click **Done**\n1. Robinhood will notify you when your CSV report is ready\n1. Download the file and open or drop that file here\n\n> ☝️ If you have multiple accounts, choose/create the right account in Capitally. It's best to save the template for each account separately.\n",
+        "logoUrl": "/static/brokers/robinhood.png",
+        "group": "Brokers",
+        "updatedAt": "2024-01-31",
+        "parser": {
+          "id": "csv",
+          "allowPaste": false,
+          "csv": {}
+        },
+        "resolver": {
+          "id": "transaction",
+          "columns": {
+            "$account": {
+              "prop": "account",
+              "mapping": {
+                "type": "value",
+                "value": {
+                  "$template": "Robinhood",
+                  "name": "Robinhood"
+                }
+              }
+            },
+            "Instrument": {
+              "prop": "asset",
+              "mapping": {
+                "type": "formula",
+                "value": "=value ? value + \".US\" : \"\""
+              }
+            },
+            "Activity Date": {
+              "prop": "date"
+            },
+            "Trans Code": {
+              "prop": "type",
+              "valueMap": {
+                "Buy": "OPEN",
+                "Sell": "CLOSE",
+                "ITRF": null,
+                "CDIV": null,
+                "SLIP": "OTHER",
+                "SPL": null,
+                "ACH": null,
+                "BCXL": "OPEN",
+                "LCAP": null,
+                "SCAP": null,
+                "REC": "OPEN",
+                "T/A": null
+              }
+            },
+            "Quantity": {
+              "prop": "qty"
+            },
+            "Price": {
+              "prop": "price",
+              "mapping": {
+                "type": "formula",
+                "value": "=col(\"Trans Code\") == \"REC\" ? 0 : value"
+              }
+            },
+            "Amount": {
+              "prop": "value"
+            },
+            "$currency": {
+              "prop": "currency",
+              "mapping": {
+                "type": "value",
+                "value": {
+                  "id": "c-USD"
+                }
+              }
+            },
+            "Description": {
+              "prop": "notes"
+            }
+          }
+        },
+        "generator": {
+          "id": "transaction"
+        }
+      }
+    }
+  }
+}

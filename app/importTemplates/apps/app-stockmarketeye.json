@@ -1,0 +1,110 @@
+{
+  "version": 3,
+  "type": "Capitally Data Export",
+  "exportedAt": "2024-03-30T15:12:33.152Z",
+  "data": {
+    "importTemplates": {
+      "u-app-stockmarketeye": {
+        "name": "StockMarketEye",
+        "id": "u-app-stockmarketeye",
+        "author": "Capitally",
+        "info": "To import your transactions from StockMarketEye:\n\n1. Go to your portfolio\n1. Choose **Reports** → **Transactions**\n1. Select timeframe\n1. Click **More** -> **Export to CSV**\n1. Make sure that **Export columns necessary for re-import into StockMarketEye** is checked\n1. Click **Export** and save the file\n1. Open or drop that file here",
+        "logoUrl": "/static/brokers/stockmarketeye.png",
+        "group": "Apps",
+        "updatedAt": "2023-09-06",
+        "parser": {
+          "id": "csv",
+          "allowPaste": false,
+          "csv": {}
+        },
+        "resolver": {
+          "id": "transaction",
+          "columns": {
+            "$account": {
+              "prop": "account",
+              "mapping": {
+                "type": "value"
+              }
+            },
+            "$asset": {
+              "prop": "asset",
+              "mapping": {
+                "type": "formula",
+                "value": "=col(\"symbol\") || col(\"currency\")"
+              }
+            },
+            "date": {
+              "prop": "date"
+            },
+            "type": {
+              "prop": "type",
+              "valueMap": {
+                "CORP_ACTION": null,
+                "FEES": "OTHER",
+                "DIVIDEND": "DIVIDEND",
+                "SELL_LOT": "CLOSE",
+                "FEES_ADJ": "OTHER",
+                "INTEREST_IN": "OTHER",
+                "CAPGAIN": "OTHER",
+                "CASH_OUT": "TRANSFER",
+                "CASH_IN": "TRANSFER"
+              }
+            },
+            "$price": null,
+            "shares": {
+              "prop": "qty",
+              "mapping": {
+                "type": "formula",
+                "value": "=regexMatch(col(\"type\"), \"CASH_\") ? col(\"total amount\") : value"
+              }
+            },
+            "total amount": {
+              "prop": "value",
+              "mapping": {
+                "type": "formula",
+                "value": "=(value - col(\"fees\") - col(\"costs\")) * (col(\"type\") == \"CASH_OUT\" ? -1 : 1)"
+              }
+            },
+            "shares affected": null,
+            "currency": {
+              "prop": "feeCurrency"
+            },
+            "rate": null,
+            "cash affected": null,
+            "name": {},
+            "comment": null,
+            "brokerage id": null,
+            "rate currency": {
+              "prop": "valueCurrency"
+            },
+            "$notes": {
+              "prop": "notes",
+              "mapping": {
+                "type": "formula",
+                "value": "=regexReplace(col(\"comment\"), \"</?p>\", \"\") + \"\\n\" + \"Fees: \" + N(col(\"fees\")) + \"\\nCosts: \" + N(col(\"costs\")) + \"\\nTaxes: \" + N(col(\"taxes\"))"
+              }
+            },
+            "$fee": {
+              "prop": "fee",
+              "mapping": {
+                "type": "formula",
+                "value": "=N(col(\"fees\")) + N(col(\"costs\")) + N(col(\"taxes\"))"
+              }
+            },
+            "share price": {
+              "prop": "price",
+              "mapping": {
+                "type": "formula",
+                "value": "=N(value) || N(col(\"div amount\"))"
+              }
+            },
+            "div amount": {}
+          }
+        },
+        "generator": {
+          "id": "transaction"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,83 @@
+{
+  "version": 3,
+  "type": "Capitally Data Export",
+  "exportedAt": "2024-03-30T15:12:33.143Z",
+  "data": {
+    "importTemplates": {
+      "u-broker-trading212": {
+        "id": "u-broker-trading212",
+        "name": "Trading 212",
+        "author": "Capitally",
+        "info": "To import your transactions from Trading 212:\n\n1. Open the Trading 212 app\n1. Open the main menu and navigate to **History**\n1. Click the download icon in the top-right\n1. Select the date range and click **Export CSV**\n1. Download the file and open or drop that file here\n",
+        "logoUrl": "/static/brokers/trading212.png",
+        "group": "Brokers",
+        "updatedAt": "2024-03-28",
+        "parser": {
+          "id": "csv",
+          "allowPaste": false,
+          "csv": {}
+        },
+        "resolver": {
+          "id": "transaction",
+          "columns": {
+            "$account": {
+              "prop": "account",
+              "mapping": {
+                "type": "value",
+                "value": {
+                  "$template": "Trading 212",
+                  "name": "Trading 212"
+                }
+              }
+            },
+            "ISIN": {
+              "prop": "asset"
+            },
+            "Time": {
+              "prop": "date"
+            },
+            "Action": {
+              "prop": "type",
+              "valueMap": {
+                "Market buy": "OPEN",
+                "Dividend (Ordinary)": null,
+                "Dividend (Bonus)": null,
+                "Dividend (Ordinary manufactured payment)": null,
+                "Market sell": "CLOSE",
+                "Deposit": null,
+                "Dividend (Return of capital non us)": null
+              }
+            },
+            "No  of shares": {
+              "prop": "qty"
+            },
+            "Price / share": {
+              "prop": "price"
+            },
+            "Currency (Price / share)": {
+              "prop": "valueCurrency"
+            },
+            "Withholding tax": {
+              "prop": "taxPaid"
+            },
+            "Charge amount": {
+              "prop": "fee"
+            },
+            "Currency (Charge amount)": {
+              "prop": "feeCurrency"
+            },
+            "Notes": {
+              "prop": "notes"
+            },
+            "ID": {
+              "prop": "reference"
+            }
+          }
+        },
+        "generator": {
+          "id": "transaction"
+        }
+      }
+    }
+  }
+}

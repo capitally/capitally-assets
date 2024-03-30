@@ -1,0 +1,120 @@
+{
+  "version": 3,
+  "type": "Capitally Data Export",
+  "exportedAt": "2024-03-30T15:12:33.146Z",
+  "data": {
+    "importTemplates": {
+      "u-broker-schwab": {
+        "id": "u-broker-schwab",
+        "name": "Charles Schwab",
+        "author": "Capitally",
+        "info": "To import your transactions from Schwab:\n\n1. Go to [Schwab Client Portal](https://client.schwab.com/)\n1. Open **Accounts** → **History** \n1. Click the **↓ Export** to download the trades files\n1. Open or drop that file here",
+        "logoUrl": "/static/brokers/schwab.png",
+        "group": "Brokers",
+        "updatedAt": "2023-01-14",
+        "parser": {
+          "id": "csv",
+          "csv": {
+            "header": true,
+            "skipUntil": "Date",
+            "replace": [
+              [
+                "/^Transactions Total.+$/m",
+                ""
+              ]
+            ]
+          }
+        },
+        "resolver": {
+          "id": "transaction",
+          "assetTypeIn": [
+            "STOCK",
+            "ETF"
+          ],
+          "columns": {
+            "$account": {
+              "prop": "account",
+              "mapping": {
+                "type": "value",
+                "value": {
+                  "$template": "Schwab",
+                  "name": "Schwab"
+                }
+              }
+            },
+            "Symbol": {
+              "prop": "asset",
+              "replace": [
+                [
+                  ".+",
+                  "$&.US"
+                ]
+              ]
+            },
+            "Description": {},
+            "Date": {
+              "prop": "date"
+            },
+            "Action": {
+              "prop": "type",
+              "valueMap": {
+                "": null,
+                "Buy": "OPEN",
+                "Sell": "CLOSE",
+                "Credit Interest": null,
+                "Service Fee": null,
+                "Misc Cash Entry": null,
+                "Journal": null,
+                "NRA Tax Adj": null,
+                "Wire Funds Adj": null,
+                "Wire Sent": null
+              }
+            },
+            "Quantity": {
+              "prop": "qty",
+              "replace": [
+                [
+                  ",",
+                  ""
+                ]
+              ]
+            },
+            "Price": {
+              "prop": "price",
+              "replace": [
+                [
+                  ",",
+                  ""
+                ]
+              ]
+            },
+            "Fees & Comm": {
+              "prop": "fee"
+            },
+            "$valueCurrency": {
+              "prop": "valueCurrency",
+              "mapping": {
+                "type": "value",
+                "value": {
+                  "id": "c-USD"
+                }
+              }
+            },
+            "$feeCurrency": {
+              "prop": "feeCurrency",
+              "mapping": {
+                "type": "value",
+                "value": {
+                  "id": "c-USD"
+                }
+              }
+            }
+          }
+        },
+        "generator": {
+          "id": "transaction"
+        }
+      }
+    }
+  }
+}

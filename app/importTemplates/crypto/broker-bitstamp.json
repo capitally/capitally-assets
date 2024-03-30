@@ -1,0 +1,76 @@
+{
+  "version": 3,
+  "type": "Capitally Data Export",
+  "exportedAt": "2024-03-30T15:12:33.154Z",
+  "data": {
+    "importTemplates": {
+      "u-broker-bitstamp": {
+        "id": "u-broker-bitstamp",
+        "name": "Bitstamp",
+        "author": "Capitally",
+        "info": "To import your transactions from Bitstamp:\n\n1. Go to **[BitStamp](https://www.bitstamp.net/account/transactions/)** → **Dashboard** → **Transaction History**\n1. Click **Open export options**\n1. Choose timeframe\n1. Click **Export selection** (or **Export all**) and download the file\n1. Open or drop that file here",
+        "logoUrl": "/static/brokers/bitstamp.png",
+        "group": "Crypto",
+        "updatedAt": "2023-05-04",
+        "parser": {
+          "id": "csv",
+          "csv": {}
+        },
+        "resolver": {
+          "id": "transaction",
+          "columns": {
+            "$account": {
+              "prop": "account",
+              "mapping": {
+                "type": "value",
+                "value": {
+                  "$template": "Bitstamp",
+                  "name": "Bitstamp"
+                }
+              }
+            },
+            "$asset": {
+              "prop": "asset",
+              "mapping": {
+                "type": "formula",
+                "value": "=col('Type') == 'Market' ? regexMatch(col('Amount'), '[A-Z0-9]{3}$') + '.CRYPTO' : null"
+              }
+            },
+            "Datetime": {
+              "prop": "date"
+            },
+            "Sub Type": {
+              "prop": "type"
+            },
+            "Amount": {
+              "prop": "qty"
+            },
+            "Rate": {
+              "prop": "price"
+            },
+            "$valueCurrency": {
+              "prop": "valueCurrency",
+              "mapping": {
+                "type": "formula",
+                "value": "=col('Type') == 'Market' ? regexMatch(col('Rate'), '[A-Z0-9]{3}$') : null"
+              }
+            },
+            "Fee": {
+              "prop": "fee"
+            },
+            "$feeCurrency": {
+              "prop": "feeCurrency",
+              "mapping": {
+                "type": "formula",
+                "value": "=col('Type') == 'Market' ? regexMatch(col('Fee'), '[A-Z0-9]{3}$') : null"
+              }
+            }
+          }
+        },
+        "generator": {
+          "id": "transaction"
+        }
+      }
+    }
+  }
+}

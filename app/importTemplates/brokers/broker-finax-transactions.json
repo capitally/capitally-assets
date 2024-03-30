@@ -1,0 +1,77 @@
+{
+  "version": 3,
+  "type": "Capitally Data Export",
+  "exportedAt": "2024-03-30T15:12:33.143Z",
+  "data": {
+    "importTemplates": {
+      "u-broker-finax-transactions": {
+        "id": "u-broker-finax-transactions",
+        "name": "Finax - Transactions",
+        "author": "Capitally",
+        "info": "To import your transactions from Finax:\n\n1. Login to [Finax](https://finax.eu/en/login)\n1. Choose **Transactions** from the top menu\n1. Choose a time period\n1. Select the whole table and **copy** it (`Ctrl+C` / `Cmd+C`)\n1. Click **paste** below\n\nℹ️ Please note that you need to use the `Finax - Operations` template to import fees.\n",
+        "logoUrl": "/static/brokers/finax.png",
+        "group": "Brokers",
+        "updatedAt": "2024-01-05",
+        "parser": {
+          "id": "csv",
+          "allowPaste": true,
+          "csv": {
+            "skipUntil": "\\d+",
+            "header": false
+          }
+        },
+        "resolver": {
+          "id": "transaction",
+          "columns": {
+            "$account": {
+              "prop": "account",
+              "mapping": {
+                "type": "value",
+                "value": {
+                  "$template": "Finax",
+                  "name": "Finax"
+                }
+              }
+            },
+            "Column 6": {
+              "prop": "asset",
+              "mapping": {
+                "type": "formula",
+                "value": "=regexReplace(value, \"\\\\.GR\", \".EU\")"
+              }
+            },
+            "Column 1": {
+              "prop": "date"
+            },
+            "Column 2": {
+              "prop": "type",
+              "valueMap": {
+                "Zakup": "OPEN",
+                "Sprzedaż": "CLOSE"
+              }
+            },
+            "Column 3": {
+              "prop": "qty"
+            },
+            "Column 4": {
+              "prop": "price"
+            },
+            "$currency": {
+              "prop": "currency",
+              "mapping": {
+                "type": "value",
+                "value": {
+                  "id": "c-EUR"
+                }
+              }
+            },
+            "Column 5": null
+          }
+        },
+        "generator": {
+          "id": "transaction"
+        }
+      }
+    }
+  }
+}

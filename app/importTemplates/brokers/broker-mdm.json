@@ -1,0 +1,80 @@
+{
+  "version": 3,
+  "type": "Capitally Data Export",
+  "exportedAt": "2024-03-30T15:12:33.148Z",
+  "data": {
+    "importTemplates": {
+      "u-broker-mdm": {
+        "id": "u-broker-mdm",
+        "name": "mBank Dom Maklerski",
+        "author": "Capitally",
+        "info": "To import your transactions from MDM:\n\n1. Go to [mInwestor](https://minwestor.mbank.pl/mdm/)\n1. Open **Historia** → **Transakcje** \n1. Select time period in filters\n1. Click the arrow (**↓**) icon to download the trades files\n1. Open or drop that file here",
+        "logoUrl": "/static/brokers/mbank.png",
+        "group": "Brokers",
+        "updatedAt": "2023-01-14",
+        "parser": {
+          "id": "csv",
+          "csv": {
+            "header": true
+          }
+        },
+        "resolver": {
+          "id": "transaction",
+          "assetTypeIn": [
+            "STOCK",
+            "ETF"
+          ],
+          "columns": {
+            "$account": {
+              "prop": "account",
+              "mapping": {
+                "type": "value",
+                "value": {
+                  "$template": "mBank Dom Maklerski",
+                  "name": "mBank Dom Maklerski"
+                }
+              }
+            },
+            "Walor": {
+              "prop": "asset",
+              "replace": [
+                [
+                  " GR ETF$",
+                  ".EU"
+                ]
+              ]
+            },
+            "Czas transakcji": {
+              "prop": "date"
+            },
+            "K/S": {
+              "prop": "type",
+              "valueMap": {
+                "S": "CLOSE",
+                "K": "OPEN"
+              }
+            },
+            "Liczba": {
+              "prop": "qty"
+            },
+            "Kurs": {
+              "prop": "price"
+            },
+            "Waluta": {
+              "prop": "valueCurrency"
+            },
+            "Prowizja": {
+              "prop": "fee"
+            },
+            "Waluta rozliczenia": {
+              "prop": "feeCurrency"
+            }
+          }
+        },
+        "generator": {
+          "id": "transaction"
+        }
+      }
+    }
+  }
+}
