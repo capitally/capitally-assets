@@ -1,0 +1,201 @@
+{
+  "version": 3,
+  "type": "Capitally Data Export",
+  "exportedAt": "2024-04-01T18:48:46.982Z",
+  "data": {
+    "taxPresets": {
+      "u-yHJ01CtSssniNiF": {
+        "id": "u-yHJ01CtSssniNiF",
+        "name": "Investment Account",
+        "countryISO": "GB",
+        "note": "🚧 Please note that this Tax Preset is in its early stages and may contain inaccuracies. If you encounter any errors, we would appreciate your feedback.\n\nThis preset covers sales from all investment types, including Real Estate. Interest or Rental is not covered.\n\n⚠️ Your actual tax will vary based on additional sources of income, allowances and deductions. You may adjust the progressive tax rates to better fit your personal situation for a more accurate estimate.",
+        "currencyId": "c-GBP",
+        "taxProgram": {
+          "stmts": [
+            {
+              "type": "if",
+              "ifs": [
+                {
+                  "xpr": {
+                    "type": ">=",
+                    "xpr": {
+                      "type": "prop",
+                      "prop": "date"
+                    },
+                    "v": {
+                      "type": "value",
+                      "value": "2020-01-01T00:00"
+                    }
+                  },
+                  "stmts": [
+                    {
+                      "type": "comment",
+                      "md": "You can duplicate this If-block to alter tax rates for a particular year. Remember to place older years first!"
+                    },
+                    {
+                      "type": "if",
+                      "ifs": [
+                        {
+                          "xpr": {
+                            "type": "and",
+                            "xprs": [
+                              {
+                                "type": "in",
+                                "xpr": {
+                                  "type": "prop",
+                                  "prop": "asset.type"
+                                },
+                                "v": {
+                                  "type": "value",
+                                  "value": [
+                                    "ESTATE"
+                                  ]
+                                }
+                              },
+                              {
+                                "type": "in",
+                                "xpr": {
+                                  "type": "prop",
+                                  "prop": "type"
+                                },
+                                "v": {
+                                  "type": "value",
+                                  "value": [
+                                    "SELL"
+                                  ]
+                                }
+                              }
+                            ]
+                          },
+                          "stmts": [
+                            {
+                              "type": "selectGroup",
+                              "group": {
+                                "type": "value",
+                                "value": "Capital Gains Tax/Real Estate Sales"
+                              }
+                            },
+                            {
+                              "type": "applyProgressiveTax",
+                              "brackets": [
+                                {
+                                  "limit": 12571,
+                                  "tax": 0.18
+                                },
+                                {
+                                  "limit": 50271,
+                                  "tax": 0.28
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "xpr": {
+                            "type": "and",
+                            "xprs": [
+                              {
+                                "type": "in",
+                                "xpr": {
+                                  "type": "prop",
+                                  "prop": "asset.type"
+                                },
+                                "v": {
+                                  "type": "value",
+                                  "value": [
+                                    "STOCK",
+                                    "ETF"
+                                  ]
+                                }
+                              },
+                              {
+                                "type": "in",
+                                "xpr": {
+                                  "type": "prop",
+                                  "prop": "type"
+                                },
+                                "v": {
+                                  "type": "value",
+                                  "value": [
+                                    "DIVIDEND"
+                                  ]
+                                }
+                              }
+                            ]
+                          },
+                          "stmts": [
+                            {
+                              "type": "selectGroup",
+                              "group": {
+                                "type": "formula",
+                                "formula": "=\"Capital Gains Tax/Dividends/\" + asset.countryISO"
+                              }
+                            },
+                            {
+                              "type": "applyProgressiveTax",
+                              "brackets": [
+                                {
+                                  "limit": 12571,
+                                  "tax": 0.0875
+                                },
+                                {
+                                  "limit": 50271,
+                                  "tax": 0.3375
+                                },
+                                {
+                                  "limit": 125140,
+                                  "tax": 0.3935
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "xpr": {
+                            "type": "in",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "type"
+                            },
+                            "v": {
+                              "type": "value",
+                              "value": [
+                                "SELL"
+                              ]
+                            }
+                          },
+                          "stmts": [
+                            {
+                              "type": "selectGroup",
+                              "group": {
+                                "type": "value",
+                                "value": "Capital Gains Tax/Capital Assets Sales"
+                              }
+                            },
+                            {
+                              "type": "applyProgressiveTax",
+                              "brackets": [
+                                {
+                                  "limit": 12571,
+                                  "tax": 0.1
+                                },
+                                {
+                                  "limit": 50271,
+                                  "tax": 0.2
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  }
+}

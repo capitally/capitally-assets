@@ -1,0 +1,82 @@
+{
+  "version": 3,
+  "type": "Capitally Data Export",
+  "exportedAt": "2024-04-01T18:49:18.486Z",
+  "data": {
+    "taxPresets": {
+      "u-UZZvhGY9ue1cTIO": {
+        "id": "u-UZZvhGY9ue1cTIO",
+        "name": "Declaration/Foreign Investment Account",
+        "countryISO": "IT",
+        "note": "🚧 Please note that this Tax Preset is in its early stages and may contain inaccuracies. If you encounter any errors, we would appreciate your feedback.\n\nThis preset is meant for accounts where you are responsible for taxes.",
+        "currencyId": "c-EUR_CB",
+        "taxProgram": {
+          "stmts": [
+            {
+              "type": "if",
+              "ifs": [
+                {
+                  "xpr": {
+                    "type": ">=",
+                    "xpr": {
+                      "type": "prop",
+                      "prop": "date"
+                    },
+                    "v": {
+                      "type": "value",
+                      "value": "2020-01-01T00:00"
+                    }
+                  },
+                  "stmts": [
+                    {
+                      "type": "comment",
+                      "md": "You can duplicate this If-block to alter tax rates for a particular year. Remember to place older years first!"
+                    },
+                    {
+                      "type": "if",
+                      "ifs": [
+                        {
+                          "xpr": {
+                            "type": "in",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "type"
+                            },
+                            "v": {
+                              "type": "value",
+                              "value": [
+                                "SELL",
+                                "DIVIDEND",
+                                "INTEREST"
+                              ]
+                            }
+                          },
+                          "stmts": [
+                            {
+                              "type": "selectGroup",
+                              "group": {
+                                "type": "formula",
+                                "formula": "=\"Capital Gains Tax/\" + asset.countryISO"
+                              }
+                            },
+                            {
+                              "type": "applyTax",
+                              "tax": {
+                                "type": "value",
+                                "value": 0.26
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  }
+}

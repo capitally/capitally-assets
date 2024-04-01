@@ -1,0 +1,75 @@
+{
+  "version": 3,
+  "type": "Capitally Data Export",
+  "exportedAt": "2024-04-01T18:49:02.236Z",
+  "data": {
+    "taxPresets": {
+      "u-DbGKsXFxe6xIBAr": {
+        "id": "u-DbGKsXFxe6xIBAr",
+        "name": "Administered Investment Account",
+        "countryISO": "IT",
+        "note": "🚧 Please note that this Tax Preset is in its early stages and may contain inaccuracies. If you encounter any errors, we would appreciate your feedback.\n\nThis preset is meant for administered accounts which will calculate and withhold the tax for you.",
+        "currencyId": "c-EUR_CB",
+        "taxProgram": {
+          "stmts": [
+            {
+              "type": "if",
+              "ifs": [
+                {
+                  "xpr": {
+                    "type": ">=",
+                    "xpr": {
+                      "type": "prop",
+                      "prop": "date"
+                    },
+                    "v": {
+                      "type": "value",
+                      "value": "2020-01-01T00:00"
+                    }
+                  },
+                  "stmts": [
+                    {
+                      "type": "comment",
+                      "md": "You can duplicate this If-block to alter tax rates for a particular year. Remember to place older years first!"
+                    },
+                    {
+                      "type": "if",
+                      "ifs": [
+                        {
+                          "xpr": {
+                            "type": "in",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "type"
+                            },
+                            "v": {
+                              "type": "value",
+                              "value": [
+                                "SELL",
+                                "DIVIDEND",
+                                "INTEREST"
+                              ]
+                            }
+                          },
+                          "stmts": [
+                            {
+                              "type": "applyTax",
+                              "tax": {
+                                "type": "value",
+                                "value": 0.26
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  }
+}

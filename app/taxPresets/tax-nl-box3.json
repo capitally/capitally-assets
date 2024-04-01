@@ -1,0 +1,108 @@
+{
+  "version": 3,
+  "type": "Capitally Data Export",
+  "exportedAt": "2024-04-01T19:33:17.387Z",
+  "data": {
+    "taxPresets": {
+      "u-3M3c8CNqkhi4XVh": {
+        "id": "u-3M3c8CNqkhi4XVh",
+        "name": "Investments and other assets (box 3 income)",
+        "countryISO": "NL",
+        "note": "🚧 Please note that this Tax Preset is in its early stages and may contain inaccuracies. If you encounter any errors, we would appreciate your feedback.\n\nThis preset assumes rate of return for investments at 6.04%.\n\nIt assumes tax-free allowance of €57000 (multiplied by the above rate)\n\n⚠️ Your actual tax will depend on amount of your savings among other factors.",
+        "sourceId": "tax-nl-box3",
+        "currencyId": "c-EUR_CB",
+        "taxProgram": {
+          "stmts": [
+            {
+              "type": "if",
+              "ifs": [
+                {
+                  "xpr": {
+                    "type": ">=",
+                    "xpr": {
+                      "type": "prop",
+                      "prop": "date"
+                    },
+                    "v": {
+                      "type": "value",
+                      "value": "2020-01-01T00:00"
+                    }
+                  },
+                  "stmts": [
+                    {
+                      "type": "comment",
+                      "md": "You can duplicate this If-block to alter tax rates for a particular year. Remember to place older years first!"
+                    },
+                    {
+                      "type": "capitalTax",
+                      "day": 1,
+                      "month": 1,
+                      "interval": "1y",
+                      "stmts": [
+                        {
+                          "type": "if",
+                          "ifs": [
+                            {
+                              "xpr": {
+                                "type": "<=",
+                                "xpr": {
+                                  "type": "prop",
+                                  "prop": "value"
+                                },
+                                "v": {
+                                  "type": "value",
+                                  "value": 0
+                                }
+                              },
+                              "stmts": [
+                                {
+                                  "type": "return"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "addNote",
+                          "note": {
+                            "type": "formula",
+                            "formula": "=\"Value: \" + round(value * 10) / 10"
+                          }
+                        },
+                        {
+                          "type": "set",
+                          "prop": "expense",
+                          "xpr": {
+                            "type": "value",
+                            "value": 0
+                          }
+                        },
+                        {
+                          "type": "set",
+                          "prop": "revenue",
+                          "xpr": {
+                            "type": "formula",
+                            "formula": "=value * 0.0604"
+                          }
+                        },
+                        {
+                          "type": "applyProgressiveTax",
+                          "brackets": [
+                            {
+                              "limit": 3442.8,
+                              "tax": 0.36
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  }
+}
