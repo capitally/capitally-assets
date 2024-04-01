@@ -1,0 +1,231 @@
+{
+  "version": 3,
+  "type": "Capitally Data Export",
+  "exportedAt": "2024-03-31T20:43:30.493Z",
+  "data": {
+    "taxPresets": {
+      "u-Enl6oUGL0lztbAr": {
+        "id": "u-Enl6oUGL0lztbAr",
+        "name": "Investment Account",
+        "countryISO": "US",
+        "note": "🚧 Please note that this Tax Preset is in its early stages and may contain inaccuracies. If you encounter any errors, we would appreciate your feedback.\n\n⚠️ The tax estimate provided will vary based on additional sources of income. The progressive tax rates mentioned are for a single filer in 2023. You may need to adjust these rates to better fit your personal situation for a more accurate calculation.",
+        "currencyId": "c-USD",
+        "taxProgram": {
+          "stmts": [
+            {
+              "type": "if",
+              "ifs": [
+                {
+                  "xpr": {
+                    "type": ">=",
+                    "xpr": {
+                      "type": "prop",
+                      "prop": "date"
+                    },
+                    "v": {
+                      "type": "value",
+                      "value": "2020-01-01T00:00"
+                    }
+                  },
+                  "stmts": [
+                    {
+                      "type": "comment",
+                      "md": "You can duplicate this If-block to alter tax rates for a particular year. Remember to place older years first!"
+                    },
+                    {
+                      "type": "if",
+                      "ifs": [
+                        {
+                          "xpr": {
+                            "type": "and",
+                            "xprs": [
+                              {
+                                "type": "in",
+                                "xpr": {
+                                  "type": "prop",
+                                  "prop": "asset.type"
+                                },
+                                "v": {
+                                  "type": "value",
+                                  "value": [
+                                    "ETF",
+                                    "FUND",
+                                    "STOCK"
+                                  ]
+                                }
+                              },
+                              {
+                                "type": "in",
+                                "xpr": {
+                                  "type": "prop",
+                                  "prop": "type"
+                                },
+                                "v": {
+                                  "type": "value",
+                                  "value": [
+                                    "SELL"
+                                  ]
+                                }
+                              },
+                              {
+                                "type": ">=",
+                                "xpr": {
+                                  "type": "prop",
+                                  "prop": "days"
+                                },
+                                "v": {
+                                  "type": "value",
+                                  "value": 365
+                                }
+                              }
+                            ]
+                          },
+                          "stmts": [
+                            {
+                              "type": "addNote",
+                              "note": {
+                                "type": "value",
+                                "value": "Long-term investment"
+                              }
+                            },
+                            {
+                              "type": "selectGroup",
+                              "group": {
+                                "type": "value",
+                                "value": "Long-term Capital Income Tax Rates"
+                              }
+                            },
+                            {
+                              "type": "applyProgressiveTax",
+                              "brackets": [
+                                {
+                                  "limit": 44626,
+                                  "tax": 0.15
+                                },
+                                {
+                                  "limit": 492301,
+                                  "tax": 0.2
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "xpr": {
+                            "type": "and",
+                            "xprs": [
+                              {
+                                "type": "in",
+                                "xpr": {
+                                  "type": "prop",
+                                  "prop": "asset.type"
+                                },
+                                "v": {
+                                  "type": "value",
+                                  "value": [
+                                    "ETF",
+                                    "STOCK",
+                                    "FUND"
+                                  ]
+                                }
+                              },
+                              {
+                                "type": "in",
+                                "xpr": {
+                                  "type": "prop",
+                                  "prop": "type"
+                                },
+                                "v": {
+                                  "type": "value",
+                                  "value": [
+                                    "SELL",
+                                    "DIVIDEND"
+                                  ]
+                                }
+                              }
+                            ]
+                          },
+                          "stmts": [
+                            {
+                              "type": "if",
+                              "ifs": [
+                                {
+                                  "xpr": {
+                                    "type": "in",
+                                    "xpr": {
+                                      "type": "prop",
+                                      "prop": "type"
+                                    },
+                                    "v": {
+                                      "type": "value",
+                                      "value": [
+                                        "SELL"
+                                      ]
+                                    }
+                                  },
+                                  "stmts": [
+                                    {
+                                      "type": "addNote",
+                                      "note": {
+                                        "type": "value",
+                                        "value": "Short-term investment"
+                                      }
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "selectGroup",
+                              "group": {
+                                "type": "value",
+                                "value": "Ordinary Income Tax Rates"
+                              }
+                            },
+                            {
+                              "type": "applyProgressiveTax",
+                              "brackets": [
+                                {
+                                  "limit": 0,
+                                  "tax": 0.1
+                                },
+                                {
+                                  "limit": 11001,
+                                  "tax": 0.12
+                                },
+                                {
+                                  "limit": 44726,
+                                  "tax": 0.22
+                                },
+                                {
+                                  "limit": 95376,
+                                  "tax": 0.24
+                                },
+                                {
+                                  "limit": 182101,
+                                  "tax": 0.32
+                                },
+                                {
+                                  "limit": 231251,
+                                  "tax": 0.35
+                                },
+                                {
+                                  "limit": 578126,
+                                  "tax": 0.37
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  }
+}

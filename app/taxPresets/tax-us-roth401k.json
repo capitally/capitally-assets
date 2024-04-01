@@ -1,0 +1,93 @@
+{
+  "version": 3,
+  "type": "Capitally Data Export",
+  "exportedAt": "2024-03-31T20:44:20.524Z",
+  "data": {
+    "taxPresets": {
+      "u-Ltiu0hJ73Y1McsV": {
+        "id": "u-Ltiu0hJ73Y1McsV",
+        "name": "Roth 401(k) or Roth IRA (after tax)",
+        "countryISO": "US",
+        "note": "🚧 Please note that this Tax Preset is in its early stages and may contain inaccuracies. If you encounter any errors, we would appreciate your feedback.\n\nNo tax is applied. Revenue and expenses are recognized at the time of sale.",
+        "currencyId": "c-USD",
+        "taxProgram": {
+          "stmts": [
+            {
+              "type": "if",
+              "ifs": [
+                {
+                  "xpr": {
+                    "type": ">=",
+                    "xpr": {
+                      "type": "prop",
+                      "prop": "date"
+                    },
+                    "v": {
+                      "type": "value",
+                      "value": "2020-01-01T00:00"
+                    }
+                  },
+                  "stmts": [
+                    {
+                      "type": "comment",
+                      "md": "You can duplicate this If-block to alter tax rates for a particular year. Remember to place older years first!"
+                    },
+                    {
+                      "type": "if",
+                      "ifs": [
+                        {
+                          "xpr": {
+                            "type": "and",
+                            "xprs": [
+                              {
+                                "type": "in",
+                                "xpr": {
+                                  "type": "prop",
+                                  "prop": "asset.type"
+                                },
+                                "v": {
+                                  "type": "value",
+                                  "value": [
+                                    "ETF",
+                                    "FUND",
+                                    "STOCK"
+                                  ]
+                                }
+                              },
+                              {
+                                "type": "in",
+                                "xpr": {
+                                  "type": "prop",
+                                  "prop": "type"
+                                },
+                                "v": {
+                                  "type": "value",
+                                  "value": [
+                                    "SELL"
+                                  ]
+                                }
+                              }
+                            ]
+                          },
+                          "stmts": [
+                            {
+                              "type": "applyTax",
+                              "tax": {
+                                "type": "value",
+                                "value": 0
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  }
+}

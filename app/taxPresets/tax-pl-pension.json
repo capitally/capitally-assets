@@ -1,0 +1,94 @@
+{
+  "version": 3,
+  "type": "Capitally Data Export",
+  "exportedAt": "2024-03-30T21:28:12.479Z",
+  "data": {
+    "taxPresets": {
+      "u-1ih9Q0av7SzTEic": {
+        "id": "u-1ih9Q0av7SzTEic",
+        "name": "Konto Emerytalne (IKE, IKZE, PPK, OIPE)",
+        "countryISO": "PL",
+        "note": "Konta emerytalne zakładają brak podatku w całym okresie inwestycji",
+        "currencyId": "c-PLN_CB",
+        "currencyDateOffset": -1,
+        "taxProgram": {
+          "stmts": [
+            {
+              "type": "if",
+              "ifs": [
+                {
+                  "xpr": {
+                    "type": "period",
+                    "xpr": {
+                      "type": "prop",
+                      "prop": "date"
+                    },
+                    "period": "2020 : ytd"
+                  },
+                  "stmts": [
+                    {
+                      "type": "if",
+                      "ifs": [
+                        {
+                          "xpr": {
+                            "type": "and",
+                            "xprs": [
+                              {
+                                "type": "in",
+                                "xpr": {
+                                  "type": "prop",
+                                  "prop": "type"
+                                },
+                                "v": {
+                                  "type": "value",
+                                  "value": [
+                                    "SELL",
+                                    "DIVIDEND"
+                                  ]
+                                }
+                              },
+                              {
+                                "type": "in",
+                                "xpr": {
+                                  "type": "prop",
+                                  "prop": "asset.type"
+                                },
+                                "v": {
+                                  "type": "value",
+                                  "value": [
+                                    "COMMODITY",
+                                    "CRYPTO",
+                                    "ETF",
+                                    "FUND",
+                                    "STOCK"
+                                  ]
+                                }
+                              }
+                            ]
+                          },
+                          "stmts": [
+                            {
+                              "type": "comment",
+                              "md": "This is a tax sheltered account, so 0% is applied, but we want to collect all expense & revenue"
+                            },
+                            {
+                              "type": "applyTax",
+                              "tax": {
+                                "type": "value",
+                                "value": 0
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  }
+}

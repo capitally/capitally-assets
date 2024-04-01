@@ -1,0 +1,153 @@
+{
+  "version": 3,
+  "type": "Capitally Data Export",
+  "exportedAt": "2024-03-31T20:43:54.457Z",
+  "data": {
+    "taxPresets": {
+      "u-ByGvvWvIRCBJMMj": {
+        "id": "u-ByGvvWvIRCBJMMj",
+        "name": "401k or IRA (before tax)",
+        "countryISO": "US",
+        "note": "🚧 Please note that this Tax Preset is in its early stages and may contain inaccuracies. If you encounter any errors, we would appreciate your feedback.\n\nNo tax is applied. Expenses are accumulated for tax deductions at the time of purchase, and revenue is recognized at the time of sale.",
+        "currencyId": "c-USD",
+        "taxProgram": {
+          "stmts": [
+            {
+              "type": "if",
+              "ifs": [
+                {
+                  "xpr": {
+                    "type": ">=",
+                    "xpr": {
+                      "type": "prop",
+                      "prop": "date"
+                    },
+                    "v": {
+                      "type": "value",
+                      "value": "2020-01-01T00:00"
+                    }
+                  },
+                  "stmts": [
+                    {
+                      "type": "comment",
+                      "md": "You can duplicate this If-block to alter tax rates for a particular year. Remember to place older years first!"
+                    },
+                    {
+                      "type": "if",
+                      "ifs": [
+                        {
+                          "xpr": {
+                            "type": "and",
+                            "xprs": [
+                              {
+                                "type": "in",
+                                "xpr": {
+                                  "type": "prop",
+                                  "prop": "asset.type"
+                                },
+                                "v": {
+                                  "type": "value",
+                                  "value": [
+                                    "ETF",
+                                    "FUND",
+                                    "STOCK"
+                                  ]
+                                }
+                              },
+                              {
+                                "type": "in",
+                                "xpr": {
+                                  "type": "prop",
+                                  "prop": "type"
+                                },
+                                "v": {
+                                  "type": "value",
+                                  "value": [
+                                    "BUY"
+                                  ]
+                                }
+                              }
+                            ]
+                          },
+                          "stmts": [
+                            {
+                              "type": "set",
+                              "prop": "revenue",
+                              "xpr": {
+                                "type": "value",
+                                "value": 0
+                              }
+                            },
+                            {
+                              "type": "applyTax",
+                              "tax": {
+                                "type": "value",
+                                "value": 0
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "xpr": {
+                            "type": "and",
+                            "xprs": [
+                              {
+                                "type": "in",
+                                "xpr": {
+                                  "type": "prop",
+                                  "prop": "asset.type"
+                                },
+                                "v": {
+                                  "type": "value",
+                                  "value": [
+                                    "ETF",
+                                    "FUND",
+                                    "STOCK"
+                                  ]
+                                }
+                              },
+                              {
+                                "type": "in",
+                                "xpr": {
+                                  "type": "prop",
+                                  "prop": "type"
+                                },
+                                "v": {
+                                  "type": "value",
+                                  "value": [
+                                    "SELL"
+                                  ]
+                                }
+                              }
+                            ]
+                          },
+                          "stmts": [
+                            {
+                              "type": "set",
+                              "prop": "expense",
+                              "xpr": {
+                                "type": "value",
+                                "value": 0
+                              }
+                            },
+                            {
+                              "type": "applyTax",
+                              "tax": {
+                                "type": "value",
+                                "value": 0
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  }
+}

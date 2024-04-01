@@ -1,0 +1,93 @@
+{
+  "version": 3,
+  "type": "Capitally Data Export",
+  "exportedAt": "2024-03-30T21:28:54.798Z",
+  "data": {
+    "taxPresets": {
+      "u-iqrFv8gbJ5JLI6I": {
+        "id": "u-iqrFv8gbJ5JLI6I",
+        "name": "Wynajem (ryczałt PIT-28)",
+        "countryISO": "PL",
+        "note": "Wynajem uwzględnia obecnie 8.5% podatku z tytuły najmu nieruchomości na transakcjach typu \"Rental\". Wszelkie koszty są ignorowane.",
+        "currencyId": "c-PLN_CB",
+        "currencyDateOffset": -1,
+        "taxProgram": {
+          "stmts": [
+            {
+              "type": "if",
+              "ifs": [
+                {
+                  "xpr": {
+                    "type": "period",
+                    "xpr": {
+                      "type": "prop",
+                      "prop": "date"
+                    },
+                    "period": "2020 : ytd"
+                  },
+                  "stmts": [
+                    {
+                      "type": "if",
+                      "ifs": [
+                        {
+                          "xpr": {
+                            "type": "and",
+                            "xprs": [
+                              {
+                                "type": "in",
+                                "xpr": {
+                                  "type": "prop",
+                                  "prop": "type"
+                                },
+                                "v": {
+                                  "type": "value",
+                                  "value": [
+                                    "RENT"
+                                  ]
+                                }
+                              },
+                              {
+                                "type": "in",
+                                "xpr": {
+                                  "type": "prop",
+                                  "prop": "asset.type"
+                                },
+                                "v": {
+                                  "type": "value",
+                                  "value": [
+                                    "ESTATE"
+                                  ]
+                                }
+                              }
+                            ]
+                          },
+                          "stmts": [
+                            {
+                              "type": "set",
+                              "prop": "expense",
+                              "xpr": {
+                                "type": "value",
+                                "value": 0
+                              }
+                            },
+                            {
+                              "type": "applyTax",
+                              "tax": {
+                                "type": "value",
+                                "value": 0.085
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  }
+}

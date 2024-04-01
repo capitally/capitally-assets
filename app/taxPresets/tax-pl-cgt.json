@@ -1,0 +1,233 @@
+{
+  "version": 3,
+  "type": "Capitally Data Export",
+  "exportedAt": "2024-03-30T21:53:51.241Z",
+  "data": {
+    "taxPresets": {
+      "u-sFQXSAC0CT0QFNh": {
+        "id": "u-sFQXSAC0CT0QFNh",
+        "name": "Konto Inwestycyjne (PIT-38)",
+        "countryISO": "PL",
+        "note": "☝️ Upewnij się, że wszystkie transakcje mają wypełniony `Tax Paid` jeżeli był pobrany podatek, a dywidendy mają ustawioną datę wpłynięcia na konto u brokera (Dywidendy automatyczne można edytować!)\n\n#### Sprzedaż akcji\n\nWszystkie dochody które otrzymujesz w PIT-8C będą zgrupowane w `Dochody kapitałowe (PIT-38)/Dochody z giełdy w Polsce (PIT-8C)`.\n\nOperacje u zagranicznych brokerów rozbite są na kraj **konta**, ale można je też zmienić na `Market Country`. Sumy można wykorzystać w PIT-Z/G\n\n#### Dywidendy\n\nDochody od dywidend rozdzielone są na: \n\n- te które otrzymaliśmy od Polskiej spółki na Polskim koncie (tylko w tym przypadku będą one uwzględnione na PIT-8C.\n-  zagraniczne dywidendy (nawet dla Polskich spółek jeśli były kupione u zagranicznego brokera).\n\nWyliczony podatek od dywidend zagranicznych jest tylko orientacyjny, gdyż zależy od umów o podwójnym opodatkowaniu.\n\nJeżeli u źródła został pobrany podatek niższy niż 19% (czyli mamy np. zgłoszony W8-BEN), wtedy w Polsce pozostaje do opłacenia tylko różnica do 19%. Jeżeli zatem pole `Tax Paid` zostało wypełnione zgodnie z prawdą, to `Tax to Pay` powinien pokrywać się z rzeczywistością.",
+        "currencyId": "c-PLN_CB",
+        "currencyDateOffset": -1,
+        "taxProgram": {
+          "stmts": [
+            {
+              "type": "if",
+              "ifs": [
+                {
+                  "xpr": {
+                    "type": "period",
+                    "xpr": {
+                      "type": "prop",
+                      "prop": "date"
+                    },
+                    "period": "2020 : ytd"
+                  },
+                  "stmts": [
+                    {
+                      "type": "if",
+                      "ifs": [
+                        {
+                          "xpr": {
+                            "type": "in",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "type"
+                            },
+                            "v": {
+                              "type": "value",
+                              "value": [
+                                "SELL"
+                              ]
+                            }
+                          },
+                          "stmts": [
+                            {
+                              "type": "comment",
+                              "md": "Dochody od sprzedaży akcji rozdzielone są na te dokonane na Polskim koncie (które powinny przesłać nam PIT-8C i odprowadzić podatek za nas), oraz operacje za granicą."
+                            },
+                            {
+                              "type": "if",
+                              "ifs": [
+                                {
+                                  "xpr": {
+                                    "type": "in",
+                                    "xpr": {
+                                      "type": "prop",
+                                      "prop": "account.countryISO"
+                                    },
+                                    "v": {
+                                      "type": "value",
+                                      "value": [
+                                        "PL"
+                                      ]
+                                    }
+                                  },
+                                  "stmts": [
+                                    {
+                                      "type": "selectGroup",
+                                      "group": {
+                                        "type": "value",
+                                        "value": "Dochody kapitałowe (PIT-38)/Dochody z giełdy w Polsce (PIT-8C)/Sprzedaż akcji"
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "stmts": [
+                                    {
+                                      "type": "selectGroup",
+                                      "group": {
+                                        "type": "formula",
+                                        "formula": "=\"Dochody kapitałowe (PIT-38)/Zagraniczna sprzedaż akcji/\" + account.countryISO"
+                                      }
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "if",
+                              "ifs": [
+                                {
+                                  "xpr": {
+                                    "type": "in",
+                                    "xpr": {
+                                      "type": "prop",
+                                      "prop": "asset.type"
+                                    },
+                                    "v": {
+                                      "type": "value",
+                                      "value": [
+                                        "STOCK",
+                                        "ETF",
+                                        "CRYPTO"
+                                      ]
+                                    }
+                                  },
+                                  "stmts": [
+                                    {
+                                      "type": "applyTax",
+                                      "tax": {
+                                        "type": "value",
+                                        "value": 0.19
+                                      }
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "if",
+                      "ifs": [
+                        {
+                          "xpr": {
+                            "type": "in",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "type"
+                            },
+                            "v": {
+                              "type": "value",
+                              "value": [
+                                "DIVIDEND"
+                              ]
+                            }
+                          },
+                          "stmts": [
+                            {
+                              "type": "comment",
+                              "md": "Dochody od dywidend rozdzielone są na te które otrzymaliśmy od Polskiej spółki na Polskim koncie - tylko w tym przypadku będą one uwzględnione na PIT-8C.\n\nW przeciwnym razie liczone są jako zagraniczne dywidendy (nawet dla Polskich spółek jeśli były kupione u zagranicznego brokera)."
+                            },
+                            {
+                              "type": "if",
+                              "ifs": [
+                                {
+                                  "xpr": {
+                                    "type": "and",
+                                    "xprs": [
+                                      {
+                                        "type": "in",
+                                        "xpr": {
+                                          "type": "prop",
+                                          "prop": "asset.countryISO"
+                                        },
+                                        "v": {
+                                          "type": "value",
+                                          "value": [
+                                            "PL"
+                                          ]
+                                        }
+                                      },
+                                      {
+                                        "type": "in",
+                                        "xpr": {
+                                          "type": "prop",
+                                          "prop": "account.countryISO"
+                                        },
+                                        "v": {
+                                          "type": "value",
+                                          "value": [
+                                            "PL"
+                                          ]
+                                        }
+                                      }
+                                    ]
+                                  },
+                                  "stmts": [
+                                    {
+                                      "type": "selectGroup",
+                                      "group": {
+                                        "type": "value",
+                                        "value": "Dochody kapitałowe (PIT-38)/Dochody z giełdy w Polsce (PIT-8C)/Dywidendy"
+                                      }
+                                    },
+                                    {
+                                      "type": "applyTax",
+                                      "tax": {
+                                        "type": "value",
+                                        "value": 0.19
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "stmts": [
+                                    {
+                                      "type": "selectGroup",
+                                      "group": {
+                                        "type": "formula",
+                                        "formula": "=\"Dochody kapitałowe (PIT-38)/Zagraniczne dywidendy/\" + asset.countryISO"
+                                      }
+                                    },
+                                    {
+                                      "type": "applyTax",
+                                      "tax": {
+                                        "type": "value",
+                                        "value": 0.19
+                                      }
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  }
+}
