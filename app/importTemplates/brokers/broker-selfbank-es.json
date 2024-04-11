@@ -1,0 +1,96 @@
+{
+  "version": 3,
+  "type": "Capitally Data Export",
+  "exportedAt": "2024-03-30T15:12:33.144Z",
+  "data": {
+    "importTemplates": {
+      "u-broker-selfbank-es": {
+        "id": "u-broker-selfbank-es",
+        "name": "Self Bank",
+        "author": "Capitally",
+        "info": "To import your transactions from Self Bank:\n\n1. Go to Self Bank\n1. Open **Bolsa** → **Movimientos** \n1. Choose date period\n1. Click **xls: exportar movimientos a excel** \n1. Open or drop that file here",
+        "logoUrl": "/static/brokers/selfbank.png",
+        "group": "Brokers",
+        "updatedAt": "2024-04-11",
+        "parser": {
+          "id": "csv",
+          "csv": {
+            "header": true,
+            "replace": [
+              [
+                "/^.+\\n.+\"(BUY|SELL) \\(Ca\\.\\)\".*$/gm",
+                ""
+              ]
+            ]
+          }
+        },
+        "resolver": {
+          "id": "transaction",
+          "columns": {
+            "$account": {
+              "prop": "account",
+              "mapping": {
+                "type": "value",
+                "value": {
+                  "$template": "Self Bank",
+                  "name": "Self Bank"
+                }
+              }
+            },
+            "ISIN": {
+              "prop": "asset"
+            },
+            "Description": {},
+            "$date": {
+              "prop": "date",
+              "mapping": {
+                "type": "formula",
+                "value": "=col('Date/Time') || col('DateTime')"
+              }
+            },
+            "Buy/Sell": {
+              "prop": "type",
+              "valueMap": {
+                "SELL": "CLOSE",
+                "BUY": "OPEN"
+              }
+            },
+            "Quantity": {
+              "prop": "qty"
+            },
+            "$price": {
+              "prop": "price",
+              "mapping": {
+                "type": "formula",
+                "value": "=col('Price') || col('TradePrice')"
+              }
+            },
+            "CurrencyPrimary": {
+              "prop": "valueCurrency"
+            },
+            "$fee": {
+              "prop": "fee",
+              "mapping": {
+                "type": "formula",
+                "value": "=col('Commission') || col('IBCommission')"
+              }
+            },
+            "$feeCurrency": {
+              "prop": "feeCurrency",
+              "mapping": {
+                "type": "formula",
+                "value": "=col('CommissionCurrency') || col('IBCommissionCurrency')"
+              }
+            },
+            "TradeID": {
+              "prop": "reference"
+            }
+          }
+        },
+        "generator": {
+          "id": "transaction"
+        }
+      }
+    }
+  }
+}

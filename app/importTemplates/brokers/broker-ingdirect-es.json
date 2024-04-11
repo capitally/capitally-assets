@@ -1,0 +1,78 @@
+{
+  "version": 3,
+  "type": "Capitally Data Export",
+  "exportedAt": "2024-04-11T09:47:03.432Z",
+  "data": {
+    "importTemplates": {
+      "u-85qt7am8FXsr8tS": {
+        "name": "ING Direct España",
+        "id": "u-85qt7am8FXsr8tS",
+        "author": "Capitally",
+        "info": "To import your transactions from ING Direct:\n\n1. Go to ING Direct\n1. Open **Broker** → **Consultar** → **Últimos movimientos**\n 1. Select **ejecutadas** to export transactions \n1. Choose date period\n1. Download the file and open or drop it here",
+        "logoUrl": "/static/brokers/ing.png",
+        "group": "Brokers",
+        "updatedAt": "2024-04-11T11:46",
+        "parser": {
+          "id": "csv",
+          "allowPaste": false,
+          "csv": {}
+        },
+        "resolver": {
+          "id": "transaction",
+          "columns": {
+            "$account": {
+              "prop": "account",
+              "mapping": {
+                "type": "value",
+                "value": {
+                  "$template": "ING Direct España",
+                  "name": "ING Direct España"
+                }
+              }
+            },
+            "VALOR": {
+              "prop": "asset",
+              "mapping": {
+                "type": "formula",
+                "value": "=regexMatch(value, \"\\\\.D[- .]\") ? null : value"
+              }
+            },
+            "FECHA": {
+              "prop": "date",
+              "mapping": {
+                "type": "formula",
+                "value": "=regexReplace(value, \"/\", \"-\")"
+              }
+            },
+            "OPERACIÓN": {
+              "prop": "type",
+              "valueMap": {
+                "VENTA": "CLOSE",
+                "COMPRA": "OPEN",
+                "O.P.A. VENTA": "CLOSE"
+              }
+            },
+            "TÍTULOS": {
+              "prop": "qty"
+            },
+            "PRECIO EN DIVISA ORIGEN": {
+              "prop": "price"
+            },
+            "$currency": {
+              "prop": "currency",
+              "mapping": {
+                "type": "value",
+                "value": {
+                  "id": "c-EUR"
+                }
+              }
+            }
+          }
+        },
+        "generator": {
+          "id": "transaction"
+        }
+      }
+    }
+  }
+}
