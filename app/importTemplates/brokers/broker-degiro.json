@@ -1,7 +1,7 @@
 {
   "version": 3,
   "type": "Capitally Data Export",
-  "exportedAt": "2024-03-30T15:12:33.142Z",
+  "exportedAt": "2024-04-23T09:12:14.239Z",
   "data": {
     "importTemplates": {
       "u-broker-degiro": {
@@ -11,7 +11,7 @@
         "info": "To import your transactions from Degiro:\n\n1. Go to [Degiro](https://degiro.com/)\n1. Open **Inbox** → **Transactions** \n1. Pick a date range\n1. Click the **↓ Export** button, choose **CSV** format and save the file somewhere\n1. Open or drop that file here",
         "logoUrl": "/static/brokers/degiro.png",
         "group": "Brokers",
-        "updatedAt": "2023-01-14",
+        "updatedAt": "2024-04-23",
         "parser": {
           "id": "csv",
           "csv": {
@@ -21,10 +21,6 @@
         },
         "resolver": {
           "id": "transaction",
-          "assetTypeIn": [
-            "STOCK",
-            "ETF"
-          ],
           "columns": {
             "$account": {
               "prop": "account",
@@ -56,7 +52,11 @@
               "prop": "valueCurrency"
             },
             "Column 15": {
-              "prop": "fee"
+              "prop": "fee",
+              "mapping": {
+                "type": "formula",
+                "value": "=abs(value)"
+              }
             },
             "Column 16": {
               "prop": "feeCurrency"
@@ -64,7 +64,8 @@
             "Column 19": {
               "prop": "reference"
             }
-          }
+          },
+          "assetTypeIn": ["STOCK", "ETF"]
         },
         "generator": {
           "id": "transaction"
