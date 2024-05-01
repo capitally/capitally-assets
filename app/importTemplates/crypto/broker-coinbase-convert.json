@@ -5,10 +5,10 @@
   "data": {
     "importTemplates": {
       "u-broker-coinbase": {
-        "id": "u-broker-coinbase",
-        "name": "Coinbase",
+        "id": "u-broker-coinbase-convert",
+        "name": "Coinbase (conversions)",
         "author": "Capitally",
-        "info": "To import your transactions from Coinbase:\n\n1. Go to [Coinbase Statements](https://accounts.coinbase.com/statements) (by clicking your avatar in top-right corner)\n1. Choose All assets and a timeframe **Transactions** → **Generate custom statement** box \n1. Choose **CSV** format\n1. Click **Download**\n1. Open or drop that file here\n\n> If you did any token conversions, import the same file with `Coinbase (conversions)`",
+        "info": "> ☝️ This template is used only to import token conversions. If you had any, import the same file with the regular `Coinbase` template.\n\nTo import your conversions from Coinbase:\n\n1. Go to [Coinbase Statements](https://accounts.coinbase.com/statements) (by clicking your avatar in top-right corner)\n1. Choose All assets and a timeframe **Transactions** → **Generate custom statement** box \n1. Choose **CSV** format\n1. Click **Download**\n1. Open or drop that file here\n1. Import the same file with `Coinbase` template",
         "logoUrl": "/static/brokers/coinbase.png",
         "group": "Crypto",
         "updatedAt": "2024-05-01",
@@ -36,7 +36,7 @@
               "prop": "asset",
               "mapping": {
                 "type": "formula",
-                "value": "=regexMatch(col(\"Transaction Type\"), \"Deposit|Withdraw\") ? value : value + \".CRYPTO\""
+                "value": "=asset = regexMatch(col(\"Notes\"), \"Converted .+ to [\\\\d.]+ ([A-Z]+)\", 1); asset ? asset + \".CRYPTO\" : null"
               }
             },
             "Timestamp": {
@@ -46,17 +46,20 @@
               "prop": "type",
               "valueMap": {
                 "Withdrawal": null,
-                "Receive": "TRANSFER",
-                "Send": "TRANSFER",
+                "Receive": null,
+                "Send": null,
                 "Deposit": null,
-                "Convert": "TRANSFER"
+                "Convert": "TRANSFER",
+                "Buy": null,
+                "Sell": null
               }
             },
+
             "Quantity Transacted": {
               "prop": "qty",
               "mapping": {
                 "type": "formula",
-                "value": "=regexMatch(col(\"Transaction Type\"), \"^(Send|Convert)$\") ? -value : value"
+                "value": "=regexMatch(col(\"Notes\"), \"Converted .+ to ([\\\\d.]+)\", 1)"
               }
             },
             "Price Currency": {
