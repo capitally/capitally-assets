@@ -1,0 +1,111 @@
+{
+  "version": 2,
+  "type": "Capitally Data Export",
+  "exportedAt": "2023-03-02T15:21:41.857Z",
+  "data": {
+    "importTemplates": {
+      "u-broker-obligacjeskarbowe-transactions": {
+        "name": "Obligacje Skarbowe - 1: Transactions",
+        "id": "u-broker-obligacjeskarbowe-transactions",
+        "author": "Capitally",
+        "info": "To import your transactions from Obligacje Skarbowe (Polish National Bonds):\n\n1. Go to [Serwis Obligacji Skarbowych](https://www.zakup.obligacjeskarbowe.pl/login.html)\n1. Open **Historia dyspozycji na rachunku rejestrowym**\n1. Choose dates and click **Dalej**\n1. Click the green **X** to download the XLS file\n1. Open or drop that file here\n\n> ☝️ Use the separate import **Obligacje Skarbowe - Prices** to regularly update the current value of your bonds.",
+        "logoUrl": "/static/brokers/ministerstwo-finansow.png",
+        "group": "Brokers",
+        "updatedAt": "2023-02-25T17:25",
+        "sourceId": "transaction-csv",
+        "parser": {
+          "id": "csv",
+          "csv": {
+            "header": true
+          }
+        },
+        "resolver": {
+          "id": "transaction",
+          "columns": {
+            "DATA DYSPOZYCJI": {
+              "prop": "date",
+              "mapping": {
+                "type": "formula",
+                "value": "=value || col(\"DATA DYSPOZYCJI\", index - 1)"
+              }
+            },
+            "RODZAJ DYSPOZYCJI": {
+              "prop": "type",
+              "mapping": {
+                "type": "formula",
+                "value": "=regexReplace(value, ' na [\\\\d-]+', '')"
+              },
+              "valueMap": {
+                "zakup papierów": "OPEN",
+                "dyspozycja zakupu": null,
+                "wypłata przelewem": null,
+                "podatek": "OTHER",
+                "naliczenie odsetek": "OTHER",
+                "opłata za przedterminowy wykup": "OTHER",
+                "przedterminowy wykup": "CLOSE",
+                "odsetki": "OTHER",
+                "dyspozycja przedterminowego wykupu": null
+              }
+            },
+            "KOD OBLIGACJI": {
+              "prop": "asset",
+              "mapping": {
+                "type": "formula",
+                "value": "={$template: 'Obligacja ' + value, name: 'Obligacja ' + value, type: 'BOND', symbol: value, currency: 'PLN'}"
+              }
+            },
+            "LICZBA OBLIGACJI": {
+              "prop": "qty",
+              "mapping": {
+                "type": "formula",
+                "value": "=col('RODZAJ DYSPOZYCJI') == 'zakup papierów' ? value : col('RODZAJ DYSPOZYCJI') == 'przedterminowy wykup' ? N(col('KWOTA OPERACJI')) / 100 : null"
+              }
+            },
+            "KWOTA OPERACJI": {
+              "prop": "value"
+            },
+            "$account": {
+              "prop": "account",
+              "mapping": {
+                "type": "value",
+                "value": {
+                  "$template": "Obligacje Skarbowe",
+                  "name": "Obligacje Skarbowe"
+                }
+              }
+            },
+            "$currency": {
+              "prop": "currency",
+              "mapping": {
+                "type": "value",
+                "value": {
+                  "id": "c-PLN"
+                }
+              }
+            },
+            "$marketPrice": {
+              "prop": "marketPrice",
+              "mapping": {
+                "type": "formula",
+                "value": "=col(\"RODZAJ DYSPOZYCJI\") == 'zakup papierów' ? 100 : null"
+              }
+            },
+            "NR ZAPISU": {
+              "prop": "reference"
+            },
+            "$notes": {
+              "prop": "notes",
+              "mapping": {
+                "type": "formula",
+                "value": "=col('RODZAJ DYSPOZYCJI')"
+              }
+            }
+          }
+        },
+        "generator": {
+          "id": "transaction"
+        }
+      }
+    }
+  }
+}

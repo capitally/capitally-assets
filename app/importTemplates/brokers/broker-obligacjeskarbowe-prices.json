@@ -1,0 +1,75 @@
+{
+  "version": 2,
+  "type": "Capitally Data Export",
+  "exportedAt": "2023-03-02T15:21:41.857Z",
+  "data": {
+    "importTemplates": {
+      "u-broker-obligacjeskarbowe-prices": {
+        "name": "Obligacje Skarbowe - 2: Prices",
+        "id": "u-broker-obligacjeskarbowe-prices",
+        "author": "Capitally",
+        "info": "> ☝️ This will update prices and value of bonds you've previously imported using **Obligacje Skarbowe - Transactions**. You'll need to run it regularly, as Capitally does not automatically update value of bonds.\n\nTo update the bond prices:\n\n1. Go to [Serwis Obligacji Skarbowych](https://www.zakup.obligacjeskarbowe.pl/login.html)\n1. Open **Stan Rachunku Rejestrowego**\n1. Click the green **X** to download the XLS file\n1. Open or drop that file here",
+        "logoUrl": "/static/brokers/ministerstwo-finansow.png",
+        "group": "Brokers",
+        "updatedAt": "2023-02-25T17:27",
+        "sourceId": "transaction-csv",
+        "parser": {
+          "id": "csv",
+          "csv": {
+            "header": true
+          }
+        },
+        "resolver": {
+          "id": "transaction",
+          "columns": {
+            "EMISJA": {
+              "prop": "asset",
+              "mapping": {
+                "type": "formula",
+                "value": "={$template: 'Obligacja ' + value, name: 'Obligacja ' + value, type: 'BOND', symbol: value, currency: 'PLN'}"
+              }
+            },
+            "DOSTĘPNA LICZBA OBLIGACJI": {},
+            "ZABLOKOWANA LICZBA OBLIGACJI": {},
+            "WARTOŚĆ NOMINALNA": {},
+            "WARTOŚĆ AKTUALNA": {
+              "prop": "marketPrice",
+              "mapping": {
+                "type": "formula",
+                "value": "=N(value) / N(col('WARTOŚĆ NOMINALNA')) * 100"
+              }
+            },
+            "DATA WYKUPU": {},
+            "$account": {
+              "prop": "account",
+              "mapping": {
+                "type": "value",
+                "value": {
+                  "$template": "Obligacje Skarbowe",
+                  "name": "Obligacje Skarbowe"
+                }
+              }
+            },
+            "$date": {
+              "prop": "date",
+              "mapping": {
+                "type": "formula",
+                "value": "=Date.today()"
+              }
+            },
+            "$type": {
+              "prop": "type",
+              "mapping": {
+                "type": "value",
+                "value": "PRICE"
+              }
+            }
+          }
+        },
+        "generator": {
+          "id": "transaction"
+        }
+      }
+    }
+  }
+}
