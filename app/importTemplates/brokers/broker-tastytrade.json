@@ -1,17 +1,17 @@
 {
   "version": 3,
   "type": "Capitally Data Export",
-  "exportedAt": "2024-03-30T15:12:33.140Z",
+  "exportedAt": "2024-06-13T10:34:11.715Z",
   "data": {
     "importTemplates": {
       "u-broker-tastytrade": {
         "id": "u-broker-tastytrade",
         "name": "TastyTrade",
         "author": "Capitally",
-        "info": "To import your transactions from TastyTrade:\n\n1. Go to [TastyTrade Trading](https://trade.tastytrade.com/)\n1. Open **Activity** → **History** \n1. Click the filter icon to select time period\n1. Click the **CSV** icon to download the trades files\n1. Open or drop that file here",
+        "info": "To import your transactions from TastyTrade:\n\n1. Go to [TastyTrade Trading](https://trade.tastytrade.com/)\n1. Open **History** from the left menu\n1. Make sure **Transactions** tab is opened\n1. Set desired time period with the **Date Filter**\n1. Click the **↑** icon above the Date Filter to download the trades file\n1. Open or drop that file here",
         "logoUrl": "/static/brokers/tastyworks.png",
         "group": "Brokers",
-        "updatedAt": "2023-01-14",
+        "updatedAt": "2024-06-13",
         "parser": {
           "id": "csv",
           "csv": {
@@ -20,10 +20,7 @@
         },
         "resolver": {
           "id": "transaction",
-          "assetTypeIn": [
-            "STOCK",
-            "ETF"
-          ],
+          "assetTypeIn": ["STOCK", "ETF"],
           "columns": {
             "$account": {
               "prop": "account",
@@ -37,46 +34,35 @@
             },
             "Symbol": {
               "prop": "asset",
-              "replace": [
-                [
-                  ".+",
-                  "$&.US"
-                ]
-              ]
+              "replace": [[".+", "$&.US"]]
             },
             "Description": {},
-            "Date/Time": {
+            "Date": {
               "prop": "date"
             },
-            "Buy/Sell": {
-              "prop": "type"
+            "Sub Type": {
+              "prop": "type",
+              "valueMap": {
+                "Buy to Open": "OPEN",
+                "Dividend": null,
+                "Sell to Close": "CLOSE",
+                "Balance Adjustment": null,
+                "Credit Interest": null,
+                "Deposit": null,
+                "Withdrawal": null
+              }
             },
             "Quantity": {
               "prop": "qty"
             },
-            "Price": {
-              "prop": "price"
+            "Value": {
+              "prop": "value"
             },
             "Fees": {
               "prop": "fee"
             },
-            "$feeCurrency": {
-              "prop": "feeCurrency",
-              "mapping": {
-                "type": "value",
-                "value": {
-                  "id": "c-USD"
-                }
-              }
-            },
-            "$valueCurrency": {
-              "prop": "valueCurrency",
-              "mapping": {
-                "type": "value",
-                "value": {
-                  "id": "c-USD"
-                }
-              }
+            "Currency": {
+              "prop": "currency"
             }
           }
         },
