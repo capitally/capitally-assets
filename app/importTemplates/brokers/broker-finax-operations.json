@@ -29,7 +29,11 @@
                 "type": "value",
                 "value": {
                   "$template": "Finax",
-                  "name": "Finax"
+                  "name": "Finax",
+                  "icon": {
+                    "type": "logo",
+                    "id": "brokers/finax"
+                  }
                 }
               }
             },

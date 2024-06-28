@@ -70,7 +70,11 @@
                 "type": "value",
                 "value": {
                   "$template": "Obligacje Skarbowe",
-                  "name": "Obligacje Skarbowe"
+                  "name": "Obligacje Skarbowe",
+                  "icon": {
+                    "type": "logo",
+                    "id": "brokers/ministerstwo-finansow"
+                  }
                 }
               }
             },

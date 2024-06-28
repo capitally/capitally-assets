@@ -17,14 +17,8 @@
           "allowPaste": false,
           "csv": {
             "replace": [
-              [
-                "/^Date downloaded.+$/gm",
-                ""
-              ],
-              [
-                "/^\".+\"$/gm",
-                ""
-              ]
+              ["/^Date downloaded.+$/gm", ""],
+              ["/^\".+\"$/gm", ""]
             ],
             "skipUntil": "Run Date"
           }
@@ -38,7 +32,11 @@
                 "type": "value",
                 "value": {
                   "$template": "Fidelity",
-                  "name": "Fidelity"
+                  "name": "Fidelity",
+                  "icon": {
+                    "type": "logo",
+                    "id": "brokers/fidelity"
+                  }
                 }
               }
             },

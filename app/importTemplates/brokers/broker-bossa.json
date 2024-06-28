@@ -27,7 +27,11 @@
                 "type": "value",
                 "value": {
                   "$template": "Bossa",
-                  "name": "Bossa"
+                  "name": "Bossa",
+                  "icon": {
+                    "type": "logo",
+                    "id": "brokers/bossa"
+                  }
                 }
               }
             },

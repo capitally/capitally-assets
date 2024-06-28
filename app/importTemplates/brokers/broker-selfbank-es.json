@@ -16,12 +16,7 @@
           "id": "csv",
           "csv": {
             "header": true,
-            "replace": [
-              [
-                "/^.+\\n.+\"(BUY|SELL) \\(Ca\\.\\)\".*$/gm",
-                ""
-              ]
-            ]
+            "replace": [["/^.+\\n.+\"(BUY|SELL) \\(Ca\\.\\)\".*$/gm", ""]]
           }
         },
         "resolver": {
@@ -33,7 +28,11 @@
                 "type": "value",
                 "value": {
                   "$template": "Self Bank",
-                  "name": "Self Bank"
+                  "name": "Self Bank",
+                  "icon": {
+                    "type": "logo",
+                    "id": "brokers/selfbank"
+                  }
                 }
               }
             },

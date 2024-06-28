@@ -26,7 +26,11 @@
                 "type": "value",
                 "value": {
                   "$template": "Trading 212",
-                  "name": "Trading 212"
+                  "name": "Trading 212",
+                  "icon": {
+                    "type": "logo",
+                    "id": "brokers/trading212"
+                  }
                 }
               }
             },

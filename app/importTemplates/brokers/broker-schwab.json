@@ -17,20 +17,12 @@
           "csv": {
             "header": true,
             "skipUntil": "Date",
-            "replace": [
-              [
-                "/^Transactions Total.+$/m",
-                ""
-              ]
-            ]
+            "replace": [["/^Transactions Total.+$/m", ""]]
           }
         },
         "resolver": {
           "id": "transaction",
-          "assetTypeIn": [
-            "STOCK",
-            "ETF"
-          ],
+          "assetTypeIn": ["STOCK", "ETF"],
           "columns": {
             "$account": {
               "prop": "account",
@@ -38,18 +30,17 @@
                 "type": "value",
                 "value": {
                   "$template": "Schwab",
-                  "name": "Schwab"
+                  "name": "Schwab",
+                  "icon": {
+                    "type": "logo",
+                    "id": "brokers/schwab"
+                  }
                 }
               }
             },
             "Symbol": {
               "prop": "asset",
-              "replace": [
-                [
-                  ".+",
-                  "$&.US"
-                ]
-              ]
+              "replace": [[".+", "$&.US"]]
             },
             "Description": {},
             "Date": {
@@ -72,21 +63,11 @@
             },
             "Quantity": {
               "prop": "qty",
-              "replace": [
-                [
-                  ",",
-                  ""
-                ]
-              ]
+              "replace": [[",", ""]]
             },
             "Price": {
               "prop": "price",
-              "replace": [
-                [
-                  ",",
-                  ""
-                ]
-              ]
+              "replace": [[",", ""]]
             },
             "Fees & Comm": {
               "prop": "fee"

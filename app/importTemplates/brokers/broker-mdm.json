@@ -20,10 +20,7 @@
         },
         "resolver": {
           "id": "transaction",
-          "assetTypeIn": [
-            "STOCK",
-            "ETF"
-          ],
+          "assetTypeIn": ["STOCK", "ETF"],
           "columns": {
             "$account": {
               "prop": "account",
@@ -31,18 +28,17 @@
                 "type": "value",
                 "value": {
                   "$template": "mBank Dom Maklerski",
-                  "name": "mBank Dom Maklerski"
+                  "name": "mBank Dom Maklerski",
+                  "icon": {
+                    "type": "logo",
+                    "id": "brokers/mbank"
+                  }
                 }
               }
             },
             "Walor": {
               "prop": "asset",
-              "replace": [
-                [
-                  " GR ETF$",
-                  ".EU"
-                ]
-              ]
+              "replace": [[" GR ETF$", ".EU"]]
             },
             "Czas transakcji": {
               "prop": "date"

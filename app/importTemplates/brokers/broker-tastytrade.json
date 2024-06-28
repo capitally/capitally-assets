@@ -28,7 +28,11 @@
                 "type": "value",
                 "value": {
                   "$template": "TastyTrade",
-                  "name": "TastyTrade"
+                  "name": "TastyTrade",
+                  "icon": {
+                    "type": "logo",
+                    "id": "brokers/tastyworks"
+                  }
                 }
               }
             },

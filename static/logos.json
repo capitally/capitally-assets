@@ -1,0 +1,40 @@
+{
+  "brokers/bitstamp": { "file": "brokers/bitstamp.png", "kw": "bitstamp" },
+  "brokers/bittrex": { "file": "brokers/bittrex.png", "kw": "bittrex" },
+  "brokers/bossa": { "file": "brokers/bossa.png", "kw": "bossa" },
+  "brokers/coinbase": { "file": "brokers/coinbase.png", "kw": "coinbase" },
+  "brokers/degiro": { "file": "brokers/degiro.png", "kw": "degiro" },
+  "brokers/fidelity": { "file": "brokers/fidelity.png", "kw": "fidelity" },
+  "brokers/finax": { "file": "brokers/finax.png", "kw": "finax" },
+  "brokers/ibkr": {
+    "file": "brokers/ibkr.png",
+    "kw": "ibkr interactive brokers"
+  },
+  "brokers/ing": { "file": "brokers/ing.png", "kw": "ing" },
+  "brokers/kraken": { "file": "brokers/kraken.png", "kw": "kraken" },
+  "brokers/kucoin": { "file": "brokers/kucoin.png", "kw": "kucoin" },
+  "brokers/mbank": { "file": "brokers/mbank.png", "kw": "mbank emakler mdm" },
+  "brokers/ministerstwo-finansow": {
+    "file": "brokers/ministerstwo-finansow.png",
+    "kw": "ministerstwo finansow polish ministry of finance"
+  },
+  "brokers/robinhood": { "file": "brokers/robinhood.png", "kw": "robinhood" },
+  "brokers/saxo": { "file": "brokers/saxo.png", "kw": "saxo" },
+  "brokers/schwab": {
+    "file": "brokers/schwab.png",
+    "kw": "schwab charles schwab"
+  },
+  "brokers/selfbank": {
+    "file": "brokers/selfbank.png",
+    "kw": "selfbank self bank"
+  },
+  "brokers/tastyworks": {
+    "file": "brokers/tastyworks.png",
+    "kw": "tastyworks"
+  },
+  "brokers/trading212": {
+    "file": "brokers/trading212.png",
+    "kw": "trading212 trading 212"
+  },
+  "brokers/xtb": { "file": "brokers/xtb.png", "kw": "xtb" }
+}

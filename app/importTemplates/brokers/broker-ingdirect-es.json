@@ -26,7 +26,11 @@
                 "type": "value",
                 "value": {
                   "$template": "ING Direct España",
-                  "name": "ING Direct España"
+                  "name": "ING Direct España",
+                  "icon": {
+                    "type": "logo",
+                    "id": "brokers/ing"
+                  }
                 }
               }
             },

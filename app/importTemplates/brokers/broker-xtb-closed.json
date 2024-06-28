@@ -15,12 +15,7 @@
         "parser": {
           "id": "csv",
           "csv": {
-            "replace": [
-              [
-                "/^.+$/gm",
-                "$&;Open\n$&;Close"
-              ]
-            ],
+            "replace": [["/^.+$/gm", "$&;Open\n$&;Close"]],
             "skipUntil": "1"
           }
         },
@@ -33,7 +28,11 @@
                 "type": "value",
                 "value": {
                   "$template": "XTB",
-                  "name": "XTB"
+                  "name": "XTB",
+                  "icon": {
+                    "type": "logo",
+                    "id": "brokers/xtb"
+                  }
                 }
               }
             },

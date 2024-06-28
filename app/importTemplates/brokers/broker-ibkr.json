@@ -28,7 +28,11 @@
                 "type": "value",
                 "value": {
                   "$template": "IBKR",
-                  "name": "Interactive Brokers"
+                  "name": "Interactive Brokers",
+                  "icon": {
+                    "type": "logo",
+                    "id": "brokers/ibkr"
+                  }
                 }
               }
             },

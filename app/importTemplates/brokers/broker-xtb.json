@@ -25,7 +25,11 @@
                 "type": "value",
                 "value": {
                   "$template": "XTB",
-                  "name": "XTB"
+                  "name": "XTB",
+                  "icon": {
+                    "type": "logo",
+                    "id": "brokers/xtb"
+                  }
                 }
               }
             },

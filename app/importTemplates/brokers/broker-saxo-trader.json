@@ -26,7 +26,11 @@
                 "type": "value",
                 "value": {
                   "$template": "Saxo Trader Go",
-                  "name": "Saxo Trader Go"
+                  "name": "Saxo Trader Go",
+                  "icon": {
+                    "type": "logo",
+                    "id": "brokers/saxo"
+                  }
                 }
               }
             },

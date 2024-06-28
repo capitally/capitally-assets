@@ -29,7 +29,11 @@
                 "type": "value",
                 "value": {
                   "$template": "mBank eMakler",
-                  "name": "mBank eMakler"
+                  "name": "mBank eMakler",
+                  "icon": {
+                    "type": "logo",
+                    "id": "brokers/mbank"
+                  }
                 }
               }
             },

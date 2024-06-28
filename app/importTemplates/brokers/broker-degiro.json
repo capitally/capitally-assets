@@ -28,7 +28,11 @@
                 "type": "value",
                 "value": {
                   "$template": "Degiro",
-                  "name": "Degiro"
+                  "name": "Degiro",
+                  "icon": {
+                    "type": "logo",
+                    "id": "brokers/degiro"
+                  }
                 }
               }
             },
