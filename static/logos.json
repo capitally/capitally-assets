@@ -18,6 +18,7 @@
     "file": "brokers/ministerstwo-finansow.png",
     "kw": "ministerstwo finansow polish ministry of finance"
   },
+  "brokers/revolut": { "file": "brokers/revolut.png", "kw": "revolut" },
   "brokers/robinhood": { "file": "brokers/robinhood.png", "kw": "robinhood" },
   "brokers/saxo": { "file": "brokers/saxo.png", "kw": "saxo" },
   "brokers/schwab": {

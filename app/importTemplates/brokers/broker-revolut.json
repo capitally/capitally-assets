@@ -1,0 +1,83 @@
+{
+  "version": 3,
+  "type": "Capitally Data Export",
+  "exportedAt": "2024-07-02T15:36:59.730Z",
+  "data": {
+    "importTemplates": {
+      "u-broker-revolut": {
+        "name": "Revolut",
+        "id": "u-broker-revolut",
+        "author": "Revolut",
+        "info": "To import your transactions from Revolut:\n\n1. Open the Revolut app\n1. Open **Invest** tab\n1. Click on the **More** menu with `...` and choose **Documents**\n1. Select **Brokerage Account**\n1. Select **Account statement**\n1. Choose **Excel**, select date period and click **Get statement**\n1. Download the file and open or drop that file here\n",
+        "logoUrl": "/static/brokers/revolut.png",
+        "group": "Brokers",
+        "updatedAt": "2024-07-02",
+        "parser": {
+          "id": "csv",
+          "allowPaste": false,
+          "csv": {}
+        },
+        "resolver": {
+          "id": "transaction",
+          "columns": {
+            "$account": {
+              "prop": "account",
+              "mapping": {
+                "type": "value",
+                "value": {
+                  "$template": "Revolut",
+                  "name": "Revolut",
+                  "icon": {
+                    "type": "logo",
+                    "id": "brokers/revolut"
+                  }
+                }
+              }
+            },
+            "Ticker": {
+              "prop": "asset"
+            },
+            "Date": {
+              "prop": "date"
+            },
+            "Type": {
+              "prop": "type",
+              "valueMap": {
+                "CASH TOP-UP": null,
+                "BUY - MARKET": "OPEN",
+                "SELL - MARKET": "CLOSE",
+                "DIVIDEND": null,
+                "CUSTODY FEE": "OTHER",
+                "STOCK SPLIT": null,
+                "CASH WITHDRAWAL": null,
+                "BUY - LIMIT": "OPEN",
+                "SELL - LIMIT": "CLOSE",
+                "TRANSFER FROM REVOLUT BANK UAB TO REVOLUT SECURITIES EUROPE UAB": null,
+                "TRANSFER FROM REVOLUT TRADING LTD TO REVOLUT SECURITIES EUROPE UAB": "TRANSFER"
+              }
+            },
+            "Quantity": {
+              "prop": "qty"
+            },
+            "Price per share": {
+              "prop": "price"
+            },
+            "$fee": {
+              "prop": "fee",
+              "mapping": {
+                "type": "formula",
+                "value": "=col(\"Type\") == \"CUSTODY FEE\" ? -N(col(\"Total Amount\")) : null"
+              }
+            },
+            "Currency": {
+              "prop": "currency"
+            }
+          }
+        },
+        "generator": {
+          "id": "transaction"
+        }
+      }
+    }
+  }
+}
