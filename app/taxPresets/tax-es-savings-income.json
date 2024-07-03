@@ -1,0 +1,147 @@
+{
+  "version": 3,
+  "type": "Capitally Data Export",
+  "exportedAt": "2024-07-02T20:09:39.474Z",
+  "data": {
+    "taxPresets": {
+      "u-FgDWIUrkK4pYTd7": {
+        "id": "u-FgDWIUrkK4pYTd7",
+        "name": "Savings Income",
+        "countryISO": "ES",
+        "note": "🚧 Please note that this Tax Preset is in its early stages and may contain inaccuracies. If you encounter any errors, we would appreciate your feedback.\n\n**Savings Income** Tax is estimated jointly from all sources, but reported in a tree structure divided by type of income and account country for clarity.\n\n**Dividend Income** is taxed according to a progressive scale. Remember, that on most foreign dividends you will have tax that was already withheld. If the withheld amount is *lower* than tax due, you only need to pay the difference. If the withheld amount is *higher* than tax due, you don't pay anything more, but it also does not reduce your tax due from other countries.\n\n> 🦉 Your actual tax will vary based on additional sources of income, allowances and deductions. You may adjust the progressive tax rates to better fit your personal situation for a more accurate estimate.",
+        "currencyId": "c-EUR",
+        "taxProgram": {
+          "stmts": [
+            {
+              "type": "if",
+              "ifs": [
+                {
+                  "xpr": {
+                    "type": "and",
+                    "xprs": [
+                      {
+                        "type": "in",
+                        "xpr": {
+                          "type": "prop",
+                          "prop": "type"
+                        },
+                        "v": {
+                          "type": "value",
+                          "value": ["SELL"]
+                        }
+                      },
+                      {
+                        "type": "in",
+                        "xpr": {
+                          "type": "prop",
+                          "prop": "asset.type"
+                        },
+                        "v": {
+                          "type": "value",
+                          "value": ["STOCK", "ETF", "CRYPTO"]
+                        }
+                      }
+                    ]
+                  },
+                  "stmts": [
+                    {
+                      "type": "comment",
+                      "md": "**Capital Gains Tax**"
+                    },
+                    {
+                      "type": "selectGroup",
+                      "group": {
+                        "type": "formula",
+                        "formula": "=\"Savings Income/Capital Gains/\" + (account.country || \"<No account country>\")"
+                      },
+                      "accumulateAt": 1
+                    }
+                  ]
+                },
+                {
+                  "xpr": {
+                    "type": "and",
+                    "xprs": [
+                      {
+                        "type": "in",
+                        "xpr": {
+                          "type": "prop",
+                          "prop": "type"
+                        },
+                        "v": {
+                          "type": "value",
+                          "value": ["DIVIDEND"]
+                        }
+                      },
+                      {
+                        "type": "in",
+                        "xpr": {
+                          "type": "prop",
+                          "prop": "asset.type"
+                        },
+                        "v": {
+                          "type": "value",
+                          "value": ["STOCK", "ETF", "CRYPTO", "VENTURE"]
+                        }
+                      }
+                    ]
+                  },
+                  "stmts": [
+                    {
+                      "type": "comment",
+                      "md": "**Dividends**"
+                    },
+                    {
+                      "type": "selectGroup",
+                      "group": {
+                        "type": "formula",
+                        "formula": "=\"Savings Income/Dividends/\" + (account.country  || \"<No account country>\")"
+                      },
+                      "accumulateAt": 1
+                    }
+                  ]
+                },
+                {
+                  "stmts": [
+                    {
+                      "type": "return"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "comment",
+              "md": "All types of savings income use the same tax rates ladder"
+            },
+            {
+              "type": "applyProgressiveTax",
+              "brackets": [
+                {
+                  "limit": 0,
+                  "tax": 0.19
+                },
+                {
+                  "limit": 6000,
+                  "tax": 0.21
+                },
+                {
+                  "limit": 50000,
+                  "tax": 0.23
+                },
+                {
+                  "limit": 200000,
+                  "tax": 0.27
+                },
+                {
+                  "limit": 300000,
+                  "tax": 0.28
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  }
+}
