@@ -14,9 +14,7 @@
             },
             "v": {
               "type": "value",
-              "value": [
-                "DIVIDEND"
-              ]
+              "value": ["DIVIDEND"]
             }
           },
           "stmts": [
@@ -36,9 +34,7 @@
                     },
                     "v": {
                       "type": "value",
-                      "value": [
-                        "US"
-                      ]
+                      "value": ["US"]
                     }
                   },
                   "stmts": [
@@ -66,9 +62,7 @@
                     },
                     "v": {
                       "type": "value",
-                      "value": [
-                        "DE"
-                      ]
+                      "value": ["DE"]
                     }
                   },
                   "stmts": [

@@ -38,9 +38,7 @@
                             },
                             "v": {
                               "type": "value",
-                              "value": [
-                                "SELL"
-                              ]
+                              "value": ["SELL"]
                             }
                           },
                           "stmts": [
@@ -60,9 +58,7 @@
                                     },
                                     "v": {
                                       "type": "value",
-                                      "value": [
-                                        "PL"
-                                      ]
+                                      "value": ["PL"]
                                     }
                                   },
                                   "stmts": [
@@ -100,11 +96,7 @@
                                     },
                                     "v": {
                                       "type": "value",
-                                      "value": [
-                                        "STOCK",
-                                        "ETF",
-                                        "CRYPTO"
-                                      ]
+                                      "value": ["STOCK", "ETF", "CRYPTO"]
                                     }
                                   },
                                   "stmts": [
@@ -135,9 +127,7 @@
                             },
                             "v": {
                               "type": "value",
-                              "value": [
-                                "DIVIDEND"
-                              ]
+                              "value": ["DIVIDEND"]
                             }
                           },
                           "stmts": [
@@ -160,9 +150,7 @@
                                         },
                                         "v": {
                                           "type": "value",
-                                          "value": [
-                                            "PL"
-                                          ]
+                                          "value": ["PL"]
                                         }
                                       },
                                       {
@@ -173,9 +161,7 @@
                                         },
                                         "v": {
                                           "type": "value",
-                                          "value": [
-                                            "PL"
-                                          ]
+                                          "value": ["PL"]
                                         }
                                       }
                                     ]

@@ -47,11 +47,7 @@
                                 },
                                 "v": {
                                   "type": "value",
-                                  "value": [
-                                    "ETF",
-                                    "FUND",
-                                    "STOCK"
-                                  ]
+                                  "value": ["ETF", "FUND", "STOCK"]
                                 }
                               },
                               {
@@ -62,9 +58,7 @@
                                 },
                                 "v": {
                                   "type": "value",
-                                  "value": [
-                                    "SELL"
-                                  ]
+                                  "value": ["SELL"]
                                 }
                               }
                             ]

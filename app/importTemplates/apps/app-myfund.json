@@ -25,14 +25,8 @@
             "Konto inwestycyjne": {
               "prop": "account",
               "replace": [
-                [
-                  "&oacute;",
-                  "ó"
-                ],
-                [
-                  "&nbsp;",
-                  ""
-                ]
+                ["&oacute;", "ó"],
+                ["&nbsp;", ""]
               ],
               "mapping": {
                 "type": "formula",
@@ -42,14 +36,8 @@
             "Walor": {
               "prop": "asset",
               "replace": [
-                [
-                  "&oacute;",
-                  "ó"
-                ],
-                [
-                  "&nbsp;",
-                  ""
-                ]
+                ["&oacute;", "ó"],
+                ["&nbsp;", ""]
               ],
               "mapping": {
                 "type": "formula",
@@ -95,14 +83,8 @@
             "Komentarz": {
               "prop": "notes",
               "replace": [
-                [
-                  "&oacute;",
-                  "ó"
-                ],
-                [
-                  "&nbsp;",
-                  ""
-                ]
+                ["&oacute;", "ó"],
+                ["&nbsp;", ""]
               ]
             }
           }

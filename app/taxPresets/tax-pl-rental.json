@@ -41,9 +41,7 @@
                                 },
                                 "v": {
                                   "type": "value",
-                                  "value": [
-                                    "RENT"
-                                  ]
+                                  "value": ["RENT"]
                                 }
                               },
                               {
@@ -54,9 +52,7 @@
                                 },
                                 "v": {
                                   "type": "value",
-                                  "value": [
-                                    "ESTATE"
-                                  ]
+                                  "value": ["ESTATE"]
                                 }
                               }
                             ]

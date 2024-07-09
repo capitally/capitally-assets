@@ -44,11 +44,7 @@
                             },
                             "v": {
                               "type": "value",
-                              "value": [
-                                "SELL",
-                                "DIVIDEND",
-                                "INTEREST"
-                              ]
+                              "value": ["SELL", "DIVIDEND", "INTEREST"]
                             }
                           },
                           "stmts": [

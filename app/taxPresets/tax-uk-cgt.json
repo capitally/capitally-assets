@@ -47,9 +47,7 @@
                                 },
                                 "v": {
                                   "type": "value",
-                                  "value": [
-                                    "ESTATE"
-                                  ]
+                                  "value": ["ESTATE"]
                                 }
                               },
                               {
@@ -60,9 +58,7 @@
                                 },
                                 "v": {
                                   "type": "value",
-                                  "value": [
-                                    "SELL"
-                                  ]
+                                  "value": ["SELL"]
                                 }
                               }
                             ]
@@ -102,10 +98,7 @@
                                 },
                                 "v": {
                                   "type": "value",
-                                  "value": [
-                                    "STOCK",
-                                    "ETF"
-                                  ]
+                                  "value": ["STOCK", "ETF"]
                                 }
                               },
                               {
@@ -116,9 +109,7 @@
                                 },
                                 "v": {
                                   "type": "value",
-                                  "value": [
-                                    "DIVIDEND"
-                                  ]
+                                  "value": ["DIVIDEND"]
                                 }
                               }
                             ]
@@ -159,9 +150,7 @@
                             },
                             "v": {
                               "type": "value",
-                              "value": [
-                                "SELL"
-                              ]
+                              "value": ["SELL"]
                             }
                           },
                           "stmts": [

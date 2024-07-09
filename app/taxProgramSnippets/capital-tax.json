@@ -24,14 +24,7 @@
                 },
                 "v": {
                   "type": "value",
-                  "value": [
-                    "ESTATE",
-                    "DEPOSIT",
-                    "FUND",
-                    "ETF",
-                    "CASH",
-                    "BOND"
-                  ]
+                  "value": ["ESTATE", "DEPOSIT", "FUND", "ETF", "CASH", "BOND"]
                 }
               },
               "stmts": [
