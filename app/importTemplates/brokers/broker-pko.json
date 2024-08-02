@@ -1,0 +1,80 @@
+{
+  "version": 3,
+  "type": "Capitally Data Export",
+  "exportedAt": "2024-08-02T15:27:31.561Z",
+  "data": {
+    "importTemplates": {
+      "u-broker-pko": {
+        "name": "PKO BP Biuro Maklerskie",
+        "id": "u-broker-pko",
+        "author": "Capitally",
+        "info": "To import your transactions from PKO:\n\n1. \n1. Open or drop that file here",
+        "logoUrl": "/static/brokers/pko.png",
+        "group": "Brokers",
+        "updatedAt": "2024-08-02T17:27",
+        "parser": {
+          "id": "csv",
+          "csv": {}
+        },
+        "resolver": {
+          "id": "transaction",
+          "info": "☝️ PKO does not provide official market symbols. Make sure to verify your assets, or manually search for the [right symbol](https://www.mycapitally.com/help/choosing-the-right-asset-symbol).",
+          "columns": {
+            "$account": {
+              "prop": "account",
+              "mapping": {
+                "type": "value",
+                "value": {
+                  "$template": "PKO",
+                  "name": "PKO",
+                  "icon": {
+                    "type": "logo",
+                    "id": "brokers/pko"
+                  }
+                }
+              }
+            },
+            "Czas zawarcia": {
+              "prop": "date"
+            },
+            "Walor": {
+              "prop": "asset",
+              "mapping": {
+                "type": "formula",
+                "value": "=lowerCase(value)"
+              }
+            },
+            "Oferta": {
+              "prop": "type",
+              "valueMap": {
+                "Kupno": "OPEN",
+                "Sprzedaż": "CLOSE"
+              }
+            },
+            "Ilość": {
+              "prop": "qty"
+            },
+            "Kurs": {
+              "prop": "price"
+            },
+            "Waluta Kurs": {
+              "prop": "valueCurrency"
+            },
+            "Prowizja": {
+              "prop": "fee"
+            },
+            "Waluta Prowizja": {
+              "prop": "feeCurrency"
+            },
+            "Numer transakcji": {
+              "prop": "reference"
+            }
+          }
+        },
+        "generator": {
+          "id": "transaction"
+        }
+      }
+    }
+  }
+}
