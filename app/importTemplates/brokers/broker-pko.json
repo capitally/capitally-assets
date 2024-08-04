@@ -8,7 +8,7 @@
         "name": "PKO BP Biuro Maklerskie",
         "id": "u-broker-pko",
         "author": "Capitally",
-        "info": "To import your transactions from PKO:\n\n1. \n1. Open or drop that file here",
+        "info": "To import transactions from PKO:\n\n1. Open [pkosupermakler.pl](https://pkosupermakler.pl)\n1. Open **Historia** → **Historia Transakcji**\n1. Open **Historyczne** tab\n1. Choose time frame\n1. Click **Eksportuj do CSV**\n1. Open or drop that file here",
         "logoUrl": "/static/brokers/pko.png",
         "group": "Brokers",
         "updatedAt": "2024-08-02T17:27",
