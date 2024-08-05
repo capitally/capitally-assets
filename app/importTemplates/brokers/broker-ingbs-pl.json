@@ -1,0 +1,83 @@
+{
+  "version": 3,
+  "type": "Capitally Data Export",
+  "exportedAt": "2024-08-05T10:19:13.741Z",
+  "data": {
+    "importTemplates": {
+      "u-4pndQtIGq4KPMr6": {
+        "name": "ING Bank Śląski",
+        "id": "u-4pndQtIGq4KPMr6",
+        "author": "Capitally",
+        "info": "To import your transactions from ING Bank Śląski:\n\n1. Go to ING BŚ brokerage account\n1. Open **Historia** → **Transakcje**\n 1. Choose date period\n 1. Click **Pobierz jako CSV**\n1. Download the file and open or drop it here",
+        "logoUrl": "/static/brokers/ing.png",
+        "group": "Brokers",
+        "updatedAt": "2024-08-05T12:19",
+        "parser": {
+          "id": "csv",
+          "allowPaste": false,
+          "csv": {
+            "header": false,
+            "codepage": "windows-1250"
+          }
+        },
+        "resolver": {
+          "id": "transaction",
+          "columns": {
+            "$account": {
+              "prop": "account",
+              "mapping": {
+                "type": "value",
+                "value": {
+                  "$template": "ING Bank Śląski",
+                  "name": "ING Bank Śląski",
+                  "icon": {
+                    "type": "logo",
+                    "id": "brokers/ing"
+                  }
+                }
+              }
+            },
+            "Column 3": {
+              "prop": "asset",
+              "mapping": {
+                "type": "formula",
+                "value": "=lowerCase(value)"
+              }
+            },
+            "Column 1": {
+              "prop": "date"
+            },
+            "Column 4": {
+              "prop": "type",
+              "valueMap": {
+                "Kupno": "OPEN",
+                "Sprzedaż": "CLOSE"
+              }
+            },
+            "Column 5": {
+              "prop": "qty"
+            },
+            "Column 6": {
+              "prop": "price"
+            },
+            "Column 8": {
+              "prop": "fee"
+            },
+            "$currency": {
+              "prop": "currency",
+              "mapping": {
+                "type": "value",
+                "value": {
+                  "id": "c-PLN"
+                }
+              }
+            }
+          }
+        },
+        "generator": {
+          "id": "transaction"
+        }
+      }
+    }
+  }
+}
