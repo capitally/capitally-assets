@@ -6,7 +6,7 @@
     "importTemplates": {
       "u-broker-coinbase": {
         "id": "u-broker-coinbase-convert",
-        "name": "Coinbase (conversions)",
+        "name": "Coinbase - conversions",
         "author": "Capitally",
         "info": "> ☝️ This template is used only to import token conversions. If you had any, import the same file with the regular `Coinbase` template.\n\nTo import your conversions from Coinbase:\n\n1. Go to [Coinbase Statements](https://accounts.coinbase.com/statements) (by clicking your avatar in top-right corner)\n1. Choose All assets and a timeframe **Transactions** → **Generate custom statement** box \n1. Choose **CSV** format\n1. Click **Download**\n1. Open or drop that file here\n1. Import the same file with `Coinbase` template",
         "logoUrl": "/static/brokers/coinbase.png",
