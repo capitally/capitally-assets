@@ -1,7 +1,7 @@
 {
   "version": 3,
   "type": "Capitally Data Export",
-  "exportedAt": "2024-06-13T10:34:11.715Z",
+  "exportedAt": "2024-08-28T19:28:17.190Z",
   "data": {
     "importTemplates": {
       "u-broker-tastytrade": {
@@ -60,10 +60,18 @@
               "prop": "qty"
             },
             "Value": {
-              "prop": "value"
+              "prop": "value",
+              "mapping": {
+                "type": "formula",
+                "value": "=abs(N(value))"
+              }
             },
             "Fees": {
-              "prop": "fee"
+              "prop": "fee",
+              "mapping": {
+                "type": "formula",
+                "value": "=abs(N(value))"
+              }
             },
             "Currency": {
               "prop": "currency"
