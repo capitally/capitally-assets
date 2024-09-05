@@ -15,7 +15,7 @@
         "parser": {
           "id": "csv",
           "csv": {
-            "skipUntil": "Czas transakcji\\tWalor",
+            "skipUntil": "Czas transakcji\\tPapier",
             "codepage": "windows-1250"
           }
         },
@@ -40,7 +40,7 @@
             "Czas transakcji": {
               "prop": "date"
             },
-            "Walor": {
+            "Papier": {
               "prop": "asset",
               "mapping": {
                 "type": "formula",
