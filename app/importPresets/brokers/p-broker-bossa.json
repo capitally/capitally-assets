@@ -1,0 +1,591 @@
+{
+  "version": 3,
+  "type": "Capitally Data Export",
+  "exportedAt": "2024-10-23T20:08:29.744Z",
+  "data": {
+    "importPresets": {
+      "u-53BK7h8Z1QvEAXT": {
+        "id": "u-53BK7h8Z1QvEAXT",
+        "name": "Transactions & dividends #beta",
+        "updatedAt": "2024-10-23T22:08",
+        "author": "Rafal <CEzOZ77nYhZX6L0qXPKXSs6GBho2>",
+        "info": "To import your transactions from Bossa:\n\n1. Go to [Bossa](https://online.bossa.pl/bossaapp/login)\n2. Open **Portfel** → **Historia finansowa** \n3. Set **Pokaż** → **Wszystkie**\n4. Choose time frame\n5. Select **Eksportuj do CSV**\n6. Click **Wykonaj** and save the file\n7. Open or drop that file here\n",
+        "mappingInfo": "🦉 If you previously imported transactions using the `Transakcje` table format, importing overlapping dates will create duplicate entries.",
+        "sourceId": "p-broker-bossa",
+        "provider": "Bossa",
+        "providerIcon": {
+          "type": "logo",
+          "id": "brokers/bossa"
+        },
+        "providerGroup": "Brokers",
+        "parser": {
+          "dateOrder": "ymd",
+          "decimalSeparator": "auto",
+          "allowClipboard": false,
+          "codepage": "windows-1250",
+          "csv": {}
+        },
+        "sections": {
+          "main": {
+            "csv": {
+              "header": true
+            },
+            "enabledColumns": ["data", "tytuł operacji", "szczegóły", "kwota"],
+            "program": {
+              "stmts": [
+                {
+                  "type": "addAccount",
+                  "optional": true,
+                  "stmts": [
+                    {
+                      "type": "set",
+                      "prop": "account.name",
+                      "xpr": {
+                        "type": "value",
+                        "value": "Bossa"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "account.icon",
+                      "xpr": {
+                        "type": "value",
+                        "value": {
+                          "type": "logo",
+                          "id": "brokers/bossa"
+                        }
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "account.countryISO",
+                      "xpr": {
+                        "type": "value",
+                        "value": "PL"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "if",
+                  "ifs": [
+                    {
+                      "xpr": {
+                        "type": "pattern",
+                        "xpr": {
+                          "type": "prop",
+                          "prop": "cols.tytuł operacji"
+                        },
+                        "pattern": "~Rozliczenie transakcji~^"
+                      },
+                      "stmts": [
+                        {
+                          "type": "comment",
+                          "md": "## Transactions"
+                        },
+                        {
+                          "type": "addTransaction",
+                          "stmts": [
+                            {
+                              "type": "set",
+                              "prop": "transaction.account",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "addedAccount"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.asset",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.szczegóły"
+                              },
+                              "trfms": [
+                                {
+                                  "type": "replace",
+                                  "pattern": "/[- \\d.,]+ x .+/i$",
+                                  "replace": ""
+                                },
+                                {
+                                  "type": "trim"
+                                },
+                                {
+                                  "type": "lower"
+                                }
+                              ],
+                              "cast": {
+                                "asset": {
+                                  "assetTypes": {
+                                    "type": "value",
+                                    "value": ["STOCK", "ETF"]
+                                  },
+                                  "markets": {
+                                    "type": "value",
+                                    "value": [
+                                      {
+                                        "id": "mic-XWAR"
+                                      },
+                                      {
+                                        "id": "mic-XNAS"
+                                      },
+                                      {
+                                        "id": "mic-XNYS"
+                                      },
+                                      {
+                                        "id": "mic-XASE"
+                                      },
+                                      {
+                                        "id": "mic-ARCX"
+                                      },
+                                      {
+                                        "id": "mic-XETR"
+                                      },
+                                      {
+                                        "id": "mic-XPAR"
+                                      },
+                                      {
+                                        "id": "mic-XAMS"
+                                      },
+                                      {
+                                        "id": "mic-XSWX"
+                                      },
+                                      {
+                                        "id": "mic-XLIS"
+                                      },
+                                      {
+                                        "id": "mic-XMIL"
+                                      },
+                                      {
+                                        "id": "mic-XLON"
+                                      },
+                                      {
+                                        "id": "mic-XFRA"
+                                      },
+                                      {
+                                        "id": "mic-XBRU"
+                                      },
+                                      {
+                                        "id": "mic-BMEX"
+                                      },
+                                      {
+                                        "id": "mic-XTSE"
+                                      },
+                                      {
+                                        "id": "mic-XTSX"
+                                      }
+                                    ]
+                                  },
+                                  "remote": {
+                                    "type": "value",
+                                    "value": true
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.qty",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.szczegóły"
+                              },
+                              "trfms": [
+                                {
+                                  "type": "extract",
+                                  "pattern": "/([- \\d.,]+) x .+/i"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.price",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.szczegóły"
+                              },
+                              "trfms": [
+                                {
+                                  "type": "extract",
+                                  "pattern": "/ x ([- \\d.,]+)/i"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.valueCurrency",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.szczegóły"
+                              },
+                              "trfms": [
+                                {
+                                  "type": "extract",
+                                  "pattern": "/ x [- \\d.,]+ ([A-Z]{3}) nr/"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.feeCurrency",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "transaction.valueCurrency"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.fee",
+                              "xpr": {
+                                "type": "formula",
+                                "formula": "=abs(Number(col(\"kwota\"))) - transaction.price * transaction.qty"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.reference",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.szczegóły"
+                              },
+                              "trfms": [
+                                {
+                                  "type": "extract",
+                                  "pattern": "/ nr ([A-Z0-9]+)/$"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.type",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.kwota"
+                              },
+                              "map": [
+                                {
+                                  "cmp": {
+                                    "type": "<=",
+                                    "v": {
+                                      "type": "value",
+                                      "value": "0"
+                                    }
+                                  },
+                                  "target": {
+                                    "type": "value",
+                                    "value": "OPEN"
+                                  }
+                                },
+                                {
+                                  "target": {
+                                    "type": "value",
+                                    "value": "CLOSE"
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.date",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.data"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.note",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.szczegóły"
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "xpr": {
+                        "type": "pattern",
+                        "xpr": {
+                          "type": "prop",
+                          "prop": "cols.tytuł operacji"
+                        },
+                        "pattern": "~Wypłata dywidendy~^"
+                      },
+                      "stmts": [
+                        {
+                          "type": "comment",
+                          "md": "## Dividends"
+                        },
+                        {
+                          "type": "addTransaction",
+                          "stmts": [
+                            {
+                              "type": "set",
+                              "prop": "transaction.account",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "addedAccount"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.asset",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.tytuł operacji"
+                              },
+                              "trfms": [
+                                {
+                                  "type": "replace",
+                                  "pattern": "/Wypłata dywidendy( brutto)? /^",
+                                  "replace": ""
+                                },
+                                {
+                                  "type": "replace",
+                                  "pattern": "/ (PLN|EUR|USD|GBP|CHF)/$",
+                                  "replace": ""
+                                },
+                                {
+                                  "type": "lower"
+                                }
+                              ],
+                              "cast": {
+                                "asset": {
+                                  "assetTypes": {
+                                    "type": "value",
+                                    "value": ["STOCK", "ETF"]
+                                  },
+                                  "markets": {
+                                    "type": "value",
+                                    "value": [
+                                      {
+                                        "id": "mic-XWAR"
+                                      },
+                                      {
+                                        "id": "mic-XNAS"
+                                      },
+                                      {
+                                        "id": "mic-XNYS"
+                                      },
+                                      {
+                                        "id": "mic-XASE"
+                                      },
+                                      {
+                                        "id": "mic-ARCX"
+                                      },
+                                      {
+                                        "id": "mic-XETR"
+                                      },
+                                      {
+                                        "id": "mic-XPAR"
+                                      },
+                                      {
+                                        "id": "mic-XAMS"
+                                      },
+                                      {
+                                        "id": "mic-XSWX"
+                                      },
+                                      {
+                                        "id": "mic-XLIS"
+                                      },
+                                      {
+                                        "id": "mic-XMIL"
+                                      },
+                                      {
+                                        "id": "mic-XLON"
+                                      },
+                                      {
+                                        "id": "mic-XFRA"
+                                      },
+                                      {
+                                        "id": "mic-XBRU"
+                                      },
+                                      {
+                                        "id": "mic-BMEX"
+                                      },
+                                      {
+                                        "id": "mic-XTSE"
+                                      },
+                                      {
+                                        "id": "mic-XTSX"
+                                      }
+                                    ]
+                                  },
+                                  "remote": {
+                                    "type": "value",
+                                    "value": true
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.type",
+                              "xpr": {
+                                "type": "value",
+                                "value": "DIVIDEND"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.date",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.data"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.value",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.kwota"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.note",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.tytuł operacji"
+                              }
+                            },
+                            {
+                              "type": "if",
+                              "ifs": [
+                                {
+                                  "xpr": {
+                                    "type": "pattern",
+                                    "xpr": {
+                                      "type": "prop",
+                                      "prop": "cols.tytuł operacji"
+                                    },
+                                    "pattern": "/ (PLN|EUR|USD|GBP|CHF)/$"
+                                  },
+                                  "stmts": [
+                                    {
+                                      "type": "set",
+                                      "prop": "transaction.valueCurrency",
+                                      "xpr": {
+                                        "type": "prop",
+                                        "prop": "cols.tytuł operacji"
+                                      },
+                                      "trfms": [
+                                        {
+                                          "type": "extract",
+                                          "pattern": "/[A-Z]{3}/i$"
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "stmts": [
+                                    {
+                                      "type": "set",
+                                      "prop": "transaction.valueCurrency",
+                                      "xpr": {
+                                        "type": "value",
+                                        "value": {
+                                          "id": "c-PLN"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "addRowNote",
+                              "note": {
+                                "type": "value",
+                                "value": "🧑‍⚖️ Bossa does *not* include information about the dividend tax withheld"
+                              }
+                            },
+                            {
+                              "type": "addRowNote",
+                              "note": {
+                                "type": "value",
+                                "value": "☝️ Bossa reports dividends under a different symbol then buy/sell transactions. Make sure they both refer to the same asset!"
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "xpr": {
+                        "type": "pattern",
+                        "xpr": {
+                          "type": "prop",
+                          "prop": "cols.tytuł operacji"
+                        },
+                        "pattern": "~Przelew ~^"
+                      },
+                      "stmts": [
+                        {
+                          "type": "addRowNote",
+                          "note": {
+                            "type": "value",
+                            "value": "💸 Cash transfers are currently not imported"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "xpr": {
+                        "type": "pattern",
+                        "xpr": {
+                          "type": "prop",
+                          "prop": "cols.tytuł operacji"
+                        },
+                        "pattern": "~Wymiana waluty~"
+                      },
+                      "stmts": [
+                        {
+                          "type": "addRowNote",
+                          "note": {
+                            "type": "value",
+                            "value": "💴 Currency exchanges are currently not imported"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "stmts": [
+                        {
+                          "type": "addRowNote",
+                          "note": {
+                            "type": "formula",
+                            "formula": "=\"⚠️ Unknown operation `\" + col(\"tytuł operacji\") + \"`\""
+                          },
+                          "urgency": "warn"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "options": {
+          "valueMap": {
+            "asset": {
+              "cdprojekt": {
+                "id": "isin-PLOPTTC00011",
+                "dataSourceSymbol": "ms-XWAR-CDR-aea"
+              },
+              "rainbowt": {
+                "id": "isin-PLRNBWT00031",
+                "dataSourceSymbol": "ms-XWAR-RBW-ltb"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

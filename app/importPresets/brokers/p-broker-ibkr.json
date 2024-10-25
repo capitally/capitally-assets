@@ -1,0 +1,1200 @@
+{
+  "version": 3,
+  "type": "Capitally Data Export",
+  "exportedAt": "2024-10-23T08:55:40.392Z",
+  "data": {
+    "importPresets": {
+      "u-FBJMmDnBkwn4scW": {
+        "id": "u-FBJMmDnBkwn4scW",
+        "name": "Transactions & dividends #beta",
+        "updatedAt": "2024-10-23T10:53",
+        "author": "Rafal <CEzOZ77nYhZX6L0qXPKXSs6GBho2>",
+        "info": "To import your transactions from Interactive Brokers:\n\n1. Go to [IBKR](https://www.interactivebrokers.co.uk/)\n2. Open **Performance & Reports** → **Flex Queries** → **Activity Flex Query** \n3. Create new Flex Query with a **+** sign\n4. From **Sections** choose the: \n**- Cash Transactions**\n**- Trades**\n**- Transfers**\n5. Set Format to **CSV**\n6. Set Date Format to **yyyy-MM-dd**\n7. Set Time Format to **HH:mm:ss**\n8. Save the query\n9. Run created query with the arrow sign (**→**)\n10. Choose date period (maximum is one year, you will need an export per each year), ensure Format is **CSV** format and save the file somewhere\n11. Open or drop that file here\n\n> 🦉 If your IBKR account was recently migrated from HU to IE, first import transactions from the HU account, and then continue with the new one. You can select your account near the `Flex Queries` title.",
+        "provider": "Interactive Brokers",
+        "providerIcon": {
+          "type": "logo",
+          "id": "brokers/ibkr"
+        },
+        "providerGroup": "Brokers",
+        "parser": {
+          "dateOrder": "ymd",
+          "decimalSeparator": ".",
+          "allowClipboard": false,
+          "csv": {}
+        },
+        "sections": {
+          "main": {
+            "csv": {
+              "fromRow": "~Proceeds~",
+              "untilRow": "~ClientAccountID~",
+              "header": true
+            },
+            "replaceHeaders": [
+              ["~Commission~^$", "IBCommission"],
+              ["~CommissionCurrency~^$", "IBCommissionCurrency"],
+              ["~Price~^$", "TradePrice"],
+              ["~Tax~^$", "Taxes"],
+              ["~Date/Time~^$", "DateTime"]
+            ],
+            "enabledColumns": [
+              "ClientAccountID",
+              "CurrencyPrimary",
+              "AssetClass",
+              "SubCategory",
+              "Symbol",
+              "Description",
+              "Conid",
+              "SecurityID",
+              "SecurityIDType",
+              "ISIN",
+              "ListingExchange",
+              "IssuerCountryCode",
+              "TradeID",
+              "Multiplier",
+              "ReportDate",
+              "DateTime",
+              "TradeDate",
+              "SettleDateTarget",
+              "TransactionType",
+              "Exchange",
+              "Quantity",
+              "TradePrice",
+              "TradeMoney",
+              "Proceeds",
+              "Taxes",
+              "IBCommission",
+              "IBCommissionCurrency",
+              "NetCash",
+              "ClosePrice",
+              "Open CloseIndicator",
+              "Notes Codes",
+              "CostBasis",
+              "FifoPnlRealized",
+              "MtmPnl",
+              "OrigTradePrice",
+              "OrigTradeDate",
+              "OrigTradeID",
+              "OrigOrderID",
+              "OrigTransactionID",
+              "Buy Sell",
+              "ClearingFirmID",
+              "IBOrderID",
+              "TransactionID",
+              "IBExecID",
+              "RelatedTransactionID",
+              "BrokerageOrderID",
+              "OrderType"
+            ],
+            "disabledColumns": [
+              "IsAPIOrder",
+              "AccruedInterest",
+              "InitialInvestment",
+              "SerialNumber",
+              "DeliveryType",
+              "CommodityType",
+              "Fineness",
+              "Weight",
+              "TraderID",
+              "ChangeInPrice",
+              "ChangeInQuantity",
+              "LevelOfDetail",
+              "WhenReopened",
+              "WhenRealized",
+              "HoldingPeriodDateTime",
+              "OpenDateTime",
+              "ExchOrderID",
+              "VolatilityOrderLink",
+              "OrderReference",
+              "RTN",
+              "Model",
+              "ExtExecID",
+              "OrderTime",
+              "AccountAlias",
+              "FXRateToBase",
+              "CUSIP",
+              "FIGI",
+              "UnderlyingConid",
+              "UnderlyingSymbol",
+              "UnderlyingSecurityID",
+              "UnderlyingListingExchange",
+              "Issuer",
+              "RelatedTradeID",
+              "Strike",
+              "Expiry",
+              "Put Call",
+              "PrincipalAdjustFactor"
+            ],
+            "program": {
+              "stmts": [
+                {
+                  "type": "if",
+                  "ifs": [
+                    {
+                      "xpr": {
+                        "type": "=",
+                        "xpr": {
+                          "type": "prop",
+                          "prop": "cols.TransactionType"
+                        },
+                        "v": {
+                          "type": "value",
+                          "value": "TradeCancel"
+                        }
+                      },
+                      "stmts": [
+                        {
+                          "type": "comment",
+                          "md": "First, we need to ignore transactions that were cancelled"
+                        },
+                        {
+                          "type": "lookupRows",
+                          "direction": "after",
+                          "offset": {
+                            "type": "value",
+                            "value": 1
+                          },
+                          "limit": {
+                            "type": "value",
+                            "value": 10
+                          },
+                          "stmts": [
+                            {
+                              "type": "if",
+                              "ifs": [
+                                {
+                                  "xpr": {
+                                    "type": "=",
+                                    "xpr": {
+                                      "type": "prop",
+                                      "prop": "cols.TradeID"
+                                    },
+                                    "v": {
+                                      "type": "prop",
+                                      "prop": "lookup.cols.OrigTradeID"
+                                    }
+                                  },
+                                  "stmts": [
+                                    {
+                                      "type": "ignoreRow"
+                                    },
+                                    {
+                                      "type": "return",
+                                      "levels": null
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "if",
+                  "ifs": [
+                    {
+                      "xpr": {
+                        "type": "=",
+                        "xpr": {
+                          "type": "prop",
+                          "prop": "cols.AssetClass"
+                        },
+                        "v": {
+                          "type": "value",
+                          "value": "STK"
+                        }
+                      },
+                      "stmts": [
+                        {
+                          "type": "comment",
+                          "md": "We handle stocks down below"
+                        }
+                      ]
+                    },
+                    {
+                      "xpr": {
+                        "type": "=",
+                        "xpr": {
+                          "type": "prop",
+                          "prop": "cols.AssetClass"
+                        },
+                        "v": {
+                          "type": "value",
+                          "value": "CASH"
+                        }
+                      },
+                      "stmts": [
+                        {
+                          "type": "addRowNote",
+                          "note": {
+                            "type": "value",
+                            "value": "💰 Cash transactions are currently not imported"
+                          }
+                        },
+                        {
+                          "type": "return"
+                        }
+                      ]
+                    },
+                    {
+                      "xpr": {
+                        "type": "=",
+                        "xpr": {
+                          "type": "prop",
+                          "prop": "cols.AssetClass"
+                        },
+                        "v": {
+                          "type": "value",
+                          "value": "OPT"
+                        }
+                      },
+                      "stmts": [
+                        {
+                          "type": "addRowNote",
+                          "note": {
+                            "type": "value",
+                            "value": "🎰 Options are currently not imported"
+                          }
+                        },
+                        {
+                          "type": "return"
+                        }
+                      ]
+                    },
+                    {
+                      "xpr": {
+                        "type": "=",
+                        "xpr": {
+                          "type": "prop",
+                          "prop": "cols.AssetClass"
+                        },
+                        "v": {
+                          "type": "value",
+                          "value": "BOND"
+                        }
+                      },
+                      "stmts": [
+                        {
+                          "type": "addRowNote",
+                          "note": {
+                            "type": "value",
+                            "value": "🏦 Bonds are currently not imported"
+                          }
+                        },
+                        {
+                          "type": "return"
+                        }
+                      ]
+                    },
+                    {
+                      "stmts": [
+                        {
+                          "type": "addRowNote",
+                          "note": {
+                            "type": "formula",
+                            "formula": "=\"🥺 Asset class `\" + col(\"AssetClass\") + \"` is currently not supported\""
+                          },
+                          "urgency": "warn"
+                        },
+                        {
+                          "type": "return"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "addAccount",
+                  "optional": true,
+                  "stmts": [
+                    {
+                      "type": "set",
+                      "prop": "account.name",
+                      "xpr": {
+                        "type": "value",
+                        "value": "Interactive Brokers"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "account.icon",
+                      "xpr": {
+                        "type": "value",
+                        "value": {
+                          "type": "logo",
+                          "id": "brokers/ibkr"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "comment",
+                  "md": "## Stock transactions"
+                },
+                {
+                  "type": "addTransaction",
+                  "stmts": [
+                    {
+                      "type": "set",
+                      "prop": "transaction.account",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "addedAccount"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.date",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.DateTime"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.type",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Buy Sell"
+                      },
+                      "trfms": [],
+                      "map": []
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.asset",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.ISIN"
+                      },
+                      "trfms": [],
+                      "cast": {
+                        "asset": {
+                          "assetTypes": {
+                            "type": "value",
+                            "value": ["STOCK", "ETF", "FUND"]
+                          },
+                          "markets": {
+                            "type": "value",
+                            "value": []
+                          },
+                          "remote": {
+                            "type": "value",
+                            "value": true
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.qty",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Quantity"
+                      },
+                      "trfms": [
+                        {
+                          "type": "abs"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.price",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.TradePrice"
+                      },
+                      "trfms": [
+                        {
+                          "type": "abs"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.valueCurrency",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.CurrencyPrimary"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.taxPaid",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Taxes"
+                      },
+                      "trfms": [
+                        {
+                          "type": "abs"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.fee",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.IBCommission"
+                      },
+                      "trfms": [
+                        {
+                          "type": "abs"
+                        }
+                      ],
+                      "map": []
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.feeCurrency",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.IBCommissionCurrency"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.reference",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.TradeID"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "Cash": {
+            "optional": true,
+            "csv": {
+              "fromRow": "~AvailableForTradingDate~",
+              "untilRow": "~ClientAccountID~",
+              "header": true
+            },
+            "enabledColumns": [
+              "ClientAccountID",
+              "CurrencyPrimary",
+              "FXRateToBase",
+              "AssetClass",
+              "SubCategory",
+              "Symbol",
+              "Description",
+              "SecurityID",
+              "SecurityIDType",
+              "ISIN",
+              "ListingExchange",
+              "UnderlyingListingExchange",
+              "Issuer",
+              "IssuerCountryCode",
+              "Date Time",
+              "SettleDate",
+              "AvailableForTradingDate",
+              "Amount",
+              "Type",
+              "TradeID",
+              "Code",
+              "TransactionID",
+              "ReportDate",
+              "ExDate",
+              "ClientReference",
+              "ActionID",
+              "SerialNumber"
+            ],
+            "disabledColumns": [
+              "AccountAlias",
+              "Model",
+              "Conid",
+              "CUSIP",
+              "FIGI",
+              "UnderlyingConid",
+              "UnderlyingSymbol",
+              "UnderlyingSecurityID",
+              "Multiplier",
+              "Strike",
+              "Expiry",
+              "Put Call",
+              "PrincipalAdjustFactor",
+              "LevelOfDetail",
+              "DeliveryType",
+              "CommodityType",
+              "Fineness",
+              "Weight"
+            ],
+            "program": {
+              "stmts": [
+                {
+                  "type": "addAccount",
+                  "optional": true,
+                  "stmts": [
+                    {
+                      "type": "set",
+                      "prop": "account.name",
+                      "xpr": {
+                        "type": "value",
+                        "value": "Interactive Brokers"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "account.icon",
+                      "xpr": {
+                        "type": "value",
+                        "value": {
+                          "type": "logo",
+                          "id": "brokers/ibkr"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "if",
+                  "ifs": [
+                    {
+                      "xpr": {
+                        "type": "or",
+                        "xprs": [
+                          {
+                            "type": "=",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Type"
+                            },
+                            "v": {
+                              "type": "value",
+                              "value": "Dividends"
+                            }
+                          },
+                          {
+                            "type": "=",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Type"
+                            },
+                            "v": {
+                              "type": "value",
+                              "value": "Withholding Tax"
+                            }
+                          },
+                          {
+                            "type": "=",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Type"
+                            },
+                            "v": {
+                              "type": "value",
+                              "value": "Payment In Lieu Of Dividends"
+                            }
+                          }
+                        ]
+                      },
+                      "stmts": [
+                        {
+                          "type": "comment",
+                          "md": "## Dividends"
+                        },
+                        {
+                          "type": "addTransaction",
+                          "stmts": [
+                            {
+                              "type": "set",
+                              "prop": "transaction.asset",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.ISIN"
+                              },
+                              "cast": {
+                                "asset": {
+                                  "assetTypes": {
+                                    "type": "value",
+                                    "value": ["STOCK", "ETF"]
+                                  },
+                                  "remote": {
+                                    "type": "value",
+                                    "value": true
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.account",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "addedAccount"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.type",
+                              "xpr": {
+                                "type": "value",
+                                "value": "DIVIDEND"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.date",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Date Time"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.valueCurrency",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.CurrencyPrimary"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.reference",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.ActionID"
+                              }
+                            },
+                            {
+                              "type": "comment",
+                              "md": "Dividends can be spread out through multiple rows with the same `ActionID`.\nWe collect all these rows and create a single transaction."
+                            },
+                            {
+                              "type": "lookupRows",
+                              "direction": "start",
+                              "stmts": [
+                                {
+                                  "type": "if",
+                                  "ifs": [
+                                    {
+                                      "xpr": {
+                                        "type": "=",
+                                        "xpr": {
+                                          "type": "prop",
+                                          "prop": "cols.ActionID"
+                                        },
+                                        "v": {
+                                          "type": "prop",
+                                          "prop": "lookup.cols.ActionID"
+                                        }
+                                      },
+                                      "stmts": [
+                                        {
+                                          "type": "if",
+                                          "ifs": [
+                                            {
+                                              "xpr": {
+                                                "type": "=",
+                                                "xpr": {
+                                                  "type": "prop",
+                                                  "prop": "lookup.cols.Type"
+                                                },
+                                                "v": {
+                                                  "type": "value",
+                                                  "value": "Withholding Tax"
+                                                }
+                                              },
+                                              "stmts": [
+                                                {
+                                                  "type": "set",
+                                                  "prop": "transaction.taxPaid",
+                                                  "op": "+=",
+                                                  "xpr": {
+                                                    "type": "prop",
+                                                    "prop": "lookup.cols.Amount"
+                                                  },
+                                                  "trfms": [
+                                                    {
+                                                      "type": "abs"
+                                                    }
+                                                  ]
+                                                }
+                                              ]
+                                            },
+                                            {
+                                              "stmts": [
+                                                {
+                                                  "type": "set",
+                                                  "prop": "transaction.value",
+                                                  "op": "+=",
+                                                  "xpr": {
+                                                    "type": "prop",
+                                                    "prop": "lookup.cols.Amount"
+                                                  }
+                                                },
+                                                {
+                                                  "type": "set",
+                                                  "prop": "transaction.paymentDate",
+                                                  "op": "=",
+                                                  "xpr": {
+                                                    "type": "prop",
+                                                    "prop": "lookup.cols.Date Time"
+                                                  }
+                                                },
+                                                {
+                                                  "type": "if",
+                                                  "ifs": [
+                                                    {
+                                                      "xpr": {
+                                                        "type": "truthy",
+                                                        "xpr": {
+                                                          "type": "prop",
+                                                          "prop": "lookup.cols.ExDate"
+                                                        }
+                                                      },
+                                                      "stmts": [
+                                                        {
+                                                          "type": "set",
+                                                          "prop": "transaction.date",
+                                                          "xpr": {
+                                                            "type": "prop",
+                                                            "prop": "lookup.cols.ExDate"
+                                                          }
+                                                        }
+                                                      ]
+                                                    }
+                                                  ]
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "type": "ignoreRow"
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "xpr": {
+                        "type": "=",
+                        "xpr": {
+                          "type": "prop",
+                          "prop": "cols.Type"
+                        },
+                        "v": {
+                          "type": "value",
+                          "value": "Broker Fees"
+                        }
+                      },
+                      "stmts": [
+                        {
+                          "type": "comment",
+                          "md": "## Broker fees\n\nBroker fees can be positive (🤯) - when IBKR is paying us, or negative, when it's a regular fee"
+                        },
+                        {
+                          "type": "addTransaction",
+                          "stmts": [
+                            {
+                              "type": "set",
+                              "prop": "transaction.asset",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.CurrencyPrimary"
+                              },
+                              "cast": {
+                                "asset": {
+                                  "assetTypes": {
+                                    "type": "value",
+                                    "value": ["CASH"]
+                                  },
+                                  "remote": {
+                                    "type": "value",
+                                    "value": true
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.account",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "addedAccount"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.date",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Date Time"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.reference",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.TradeID"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.valueCurrency",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.CurrencyPrimary"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.note",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Description"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.type",
+                              "xpr": {
+                                "type": "value",
+                                "value": "OTHER"
+                              }
+                            },
+                            {
+                              "type": "if",
+                              "ifs": [
+                                {
+                                  "xpr": {
+                                    "type": ">",
+                                    "xpr": {
+                                      "type": "prop",
+                                      "prop": "cols.Amount"
+                                    },
+                                    "v": {
+                                      "type": "value",
+                                      "value": "0"
+                                    }
+                                  },
+                                  "stmts": [
+                                    {
+                                      "type": "set",
+                                      "prop": "transaction.value",
+                                      "xpr": {
+                                        "type": "prop",
+                                        "prop": "cols.Amount"
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "stmts": [
+                                    {
+                                      "type": "set",
+                                      "prop": "transaction.value",
+                                      "xpr": {
+                                        "type": "value",
+                                        "value": 0
+                                      }
+                                    },
+                                    {
+                                      "type": "set",
+                                      "prop": "transaction.fee",
+                                      "xpr": {
+                                        "type": "prop",
+                                        "prop": "cols.Amount"
+                                      },
+                                      "trfms": [
+                                        {
+                                          "type": "abs"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "set",
+                                      "prop": "transaction.feeCurrency",
+                                      "xpr": {
+                                        "type": "prop",
+                                        "prop": "cols.CurrencyPrimary"
+                                      }
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "xpr": {
+                        "type": "=",
+                        "xpr": {
+                          "type": "prop",
+                          "prop": "cols.Type"
+                        },
+                        "v": {
+                          "type": "value",
+                          "value": "Deposits/Withdrawals"
+                        }
+                      },
+                      "stmts": [
+                        {
+                          "type": "comment",
+                          "md": "## Cash deposits/withdrawals"
+                        },
+                        {
+                          "type": "addRowNote",
+                          "note": {
+                            "type": "value",
+                            "value": "💸 Cash deposits and withdrawals are currently not imported"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "stmts": [
+                        {
+                          "type": "addRowNote",
+                          "note": {
+                            "type": "formula",
+                            "formula": "=\"🥺 Cash transactions of type `\" + col(\"Type\") + \"` are currently not supported\""
+                          },
+                          "urgency": "warn"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "Transfers": {
+            "optional": true,
+            "csv": {
+              "fromRow": "~TransferAccount~",
+              "untilRow": "~ClientAccountID~",
+              "header": true
+            },
+            "enabledColumns": [
+              "ClientAccountID",
+              "CurrencyPrimary",
+              "FXRateToBase",
+              "AssetClass",
+              "SubCategory",
+              "Symbol",
+              "Description",
+              "SecurityID",
+              "SecurityIDType",
+              "ISIN",
+              "ListingExchange",
+              "Issuer",
+              "IssuerCountryCode",
+              "ReportDate",
+              "Date",
+              "DateTime",
+              "SettleDate",
+              "Type",
+              "Direction",
+              "TransferCompany",
+              "TransferAccount",
+              "TransferAccountName",
+              "DeliveringBroker",
+              "Quantity",
+              "TransferPrice",
+              "PositionAmount",
+              "PositionAmountInBase",
+              "PnlAmount",
+              "PnlAmountInBase",
+              "CashTransfer",
+              "Code",
+              "ClientReference",
+              "TransactionID"
+            ],
+            "disabledColumns": [
+              "AccountAlias",
+              "Model",
+              "Conid",
+              "CUSIP",
+              "FIGI",
+              "UnderlyingConid",
+              "UnderlyingSymbol",
+              "UnderlyingListingExchange",
+              "UnderlyingSecurityID",
+              "Multiplier",
+              "Strike",
+              "Put Call",
+              "Expiry",
+              "PrincipalAdjustFactor",
+              "LevelOfDetail",
+              "PositionInstructionID",
+              "PositionInstructionSetID",
+              "SerialNumber",
+              "DeliveryType",
+              "CommodityType",
+              "Fineness",
+              "Weight"
+            ],
+            "program": {
+              "stmts": [
+                {
+                  "type": "addAccount",
+                  "optional": true,
+                  "stmts": [
+                    {
+                      "type": "set",
+                      "prop": "account.name",
+                      "xpr": {
+                        "type": "value",
+                        "value": "Interactive Brokers"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "account.icon",
+                      "xpr": {
+                        "type": "value",
+                        "value": {
+                          "type": "logo",
+                          "id": "brokers/ibkr"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "if",
+                  "ifs": [
+                    {
+                      "xpr": {
+                        "type": "=",
+                        "xpr": {
+                          "type": "prop",
+                          "prop": "cols.AssetClass"
+                        },
+                        "v": {
+                          "type": "value",
+                          "value": "STK"
+                        }
+                      },
+                      "stmts": [
+                        {
+                          "type": "comment",
+                          "md": "## Stock transfers"
+                        },
+                        {
+                          "type": "if",
+                          "ifs": [
+                            {
+                              "xpr": {
+                                "type": "=",
+                                "xpr": {
+                                  "type": "prop",
+                                  "prop": "cols.Type"
+                                },
+                                "v": {
+                                  "type": "value",
+                                  "value": "INTERCOMPANY"
+                                }
+                              },
+                              "stmts": [
+                                {
+                                  "type": "addRowNote",
+                                  "note": {
+                                    "type": "value",
+                                    "value": "☝️ An internal stock transfer has been found. If your IBKR account was recently moved (ie. from Hungary to Ireland), this is probably it.\n\nIf you already imported the history of the previous account - remove these transactions by ignoring them in the table."
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "addTransaction",
+                          "stmts": [
+                            {
+                              "type": "set",
+                              "prop": "transaction.account",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "addedAccount"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.asset",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.ISIN"
+                              },
+                              "cast": {
+                                "asset": {
+                                  "assetTypes": {
+                                    "type": "value",
+                                    "value": ["STOCK", "ETF"]
+                                  },
+                                  "remote": {
+                                    "type": "value",
+                                    "value": true
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.type",
+                              "xpr": {
+                                "type": "value",
+                                "value": "TRANSFER"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.date",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.DateTime"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.qty",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Quantity"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.valueCurrency",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.CurrencyPrimary"
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "options": {
+          "valueMap": {
+            "asset": {}
+          }
+        }
+      }
+    }
+  }
+}

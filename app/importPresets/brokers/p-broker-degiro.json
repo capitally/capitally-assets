@@ -1,0 +1,1416 @@
+{
+  "version": 3,
+  "type": "Capitally Data Export",
+  "exportedAt": "2024-10-24T14:29:17.894Z",
+  "data": {
+    "importPresets": {
+      "u-YCpup8N4qrhF73B": {
+        "id": "u-YCpup8N4qrhF73B",
+        "name": "Transactions & dividends #beta",
+        "updatedAt": "2024-10-24T10:50",
+        "author": "Rafal <CEzOZ77nYhZX6L0qXPKXSs6GBho2>",
+        "info": "To import your transactions from Degiro:\n\n1. Go to [Degiro](https://degiro.com/)\n2. Open **Inbox** → **Account statements** \n3. Pick a date range\n4. Click the **↓ Export** button, choose **CSV** format and save the file somewhere\n5. Open or drop that file here",
+        "mappingInfo": "🦉 If you previously imported transactions using the `Transactions` table format, importing overlapping dates may create duplicate entries.",
+        "sourceId": "p-broker-degiro",
+        "provider": "Degiro",
+        "providerIcon": {
+          "type": "logo",
+          "id": "brokers/degiro"
+        },
+        "providerGroup": "Brokers",
+        "parser": {
+          "dateOrder": "dmy",
+          "allowClipboard": false,
+          "csv": {}
+        },
+        "sections": {
+          "main": {
+            "csv": {
+              "header": true
+            },
+            "replaceHeaders": [
+              ["~Datum~^$", "Date"],
+              ["~Tijd~^$", "Time"],
+              ["~Valutadatum~^$", "Value date"],
+              ["~Omschrijving~^$", "Description"],
+              ["~Mutatie~^$", "Change currency"],
+              ["~Column 9~", "Change"],
+              ["~Saldo~^$", "Balance currency"],
+              ["~Column 11~", "Balance"],
+              ["~Data~^$", "Date"],
+              ["~Czas~^$", "Time"],
+              ["~Date (1)~^$", "Value date"],
+              ["~Produkt~^$", "Product"],
+              ["~Opis~^$", "Description"],
+              ["~Kurs~^$", "FX"],
+              ["~Zmiana~^$", "Change currency"],
+              ["~Identyfikator zlecenia~^$", "Order Id"]
+            ],
+            "enabledColumns": [
+              "Date",
+              "Time",
+              "Value date",
+              "Product",
+              "ISIN",
+              "Description",
+              "FX",
+              "Change currency",
+              "Change",
+              "Balance currency",
+              "Balance",
+              "Order Id"
+            ],
+            "program": {
+              "stmts": [
+                {
+                  "type": "addAccount",
+                  "optional": true,
+                  "stmts": [
+                    {
+                      "type": "set",
+                      "prop": "account.name",
+                      "xpr": {
+                        "type": "value",
+                        "value": "Degiro"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "account.icon",
+                      "xpr": {
+                        "type": "value",
+                        "value": {
+                          "type": "logo",
+                          "id": "brokers/degiro"
+                        }
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "account.countryISO",
+                      "xpr": {
+                        "type": "value",
+                        "value": "NL"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "if",
+                  "ifs": [
+                    {
+                      "xpr": {
+                        "type": "falsy",
+                        "xpr": {
+                          "type": "prop",
+                          "prop": "cols.Date"
+                        }
+                      },
+                      "stmts": [
+                        {
+                          "type": "comment",
+                          "md": "Silently ignore - Degiro wraps rows, which will be handled later"
+                        }
+                      ]
+                    },
+                    {
+                      "xpr": {
+                        "type": "truthy",
+                        "xpr": {
+                          "type": "prop",
+                          "prop": "cols.Order Id"
+                        }
+                      },
+                      "stmts": [
+                        {
+                          "type": "comment",
+                          "md": "## Regular Buy/Sell orders"
+                        },
+                        {
+                          "type": "addTransaction",
+                          "stmts": [
+                            {
+                              "type": "set",
+                              "prop": "transaction.account",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "addedAccount"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.asset",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.ISIN"
+                              },
+                              "cast": {
+                                "asset": {
+                                  "assetTypes": {
+                                    "type": "value",
+                                    "value": ["STOCK", "ETF"]
+                                  },
+                                  "markets": {
+                                    "type": "value",
+                                    "value": [
+                                      {
+                                        "id": "mic-XNYS"
+                                      },
+                                      {
+                                        "id": "mic-XNAS"
+                                      },
+                                      {
+                                        "id": "mic-ARCX"
+                                      },
+                                      {
+                                        "id": "mic-XASE"
+                                      },
+                                      {
+                                        "id": "mic-XETR"
+                                      },
+                                      {
+                                        "id": "mic-XFRA"
+                                      },
+                                      {
+                                        "id": "mic-XLON"
+                                      },
+                                      {
+                                        "id": "mic-XPAR"
+                                      },
+                                      {
+                                        "id": "mic-BMEX"
+                                      },
+                                      {
+                                        "id": "mic-XMIL"
+                                      },
+                                      {
+                                        "id": "mic-XSWX"
+                                      },
+                                      {
+                                        "id": "mic-XAMS"
+                                      },
+                                      {
+                                        "id": "mic-XWAR"
+                                      },
+                                      {
+                                        "id": "mic-XCSE"
+                                      },
+                                      {
+                                        "id": "mic-XMUN"
+                                      },
+                                      {
+                                        "id": "mic-XHAM"
+                                      },
+                                      {
+                                        "id": "mic-XBER"
+                                      },
+                                      {
+                                        "id": "mic-XBSE"
+                                      },
+                                      {
+                                        "id": "mic-XSTU"
+                                      },
+                                      {
+                                        "id": "mic-XOSL"
+                                      },
+                                      {
+                                        "id": "mic-XWBO"
+                                      },
+                                      {
+                                        "id": "mic-XLIS"
+                                      },
+                                      {
+                                        "id": "mic-XPRA"
+                                      },
+                                      {
+                                        "id": "mic-XLUX"
+                                      },
+                                      {
+                                        "id": "mic-XIST"
+                                      },
+                                      {
+                                        "id": "mic-XBUD"
+                                      },
+                                      {
+                                        "id": "mic-XHEL"
+                                      },
+                                      {
+                                        "id": "mic-XDUB"
+                                      },
+                                      {
+                                        "id": "mic-XDUS"
+                                      },
+                                      {
+                                        "id": "mic-XHAN"
+                                      },
+                                      {
+                                        "id": "mic-XICE"
+                                      },
+                                      {
+                                        "id": "mic-XZAG"
+                                      },
+                                      {
+                                        "id": "mic-XBRU"
+                                      },
+                                      {
+                                        "id": "mic-XSTO"
+                                      },
+                                      {
+                                        "id": "mic-ASEX"
+                                      },
+                                      {
+                                        "id": "mic-XTSE"
+                                      },
+                                      {
+                                        "id": "mic-XTSX"
+                                      },
+                                      {
+                                        "id": "mic-XASX"
+                                      },
+                                      {
+                                        "id": "mic-XHKG"
+                                      },
+                                      {
+                                        "id": "mic-XSES"
+                                      },
+                                      {
+                                        "id": "mic-XJPX"
+                                      }
+                                    ]
+                                  },
+                                  "remote": {
+                                    "type": "value",
+                                    "value": true
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.date",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Date"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.time",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Time"
+                              }
+                            },
+                            {
+                              "type": "comment",
+                              "md": "🤯 Degiro can wrap description and order id to the second row - we need to glue them back."
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.reference",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Order Id"
+                              }
+                            },
+                            {
+                              "type": "lookupRows",
+                              "direction": "after",
+                              "offset": {
+                                "type": "value",
+                                "value": 1
+                              },
+                              "limit": {
+                                "type": "value",
+                                "value": 1
+                              },
+                              "stmts": [
+                                {
+                                  "type": "if",
+                                  "ifs": [
+                                    {
+                                      "xpr": {
+                                        "type": "falsy",
+                                        "xpr": {
+                                          "type": "prop",
+                                          "prop": "lookup.cols.Date"
+                                        }
+                                      },
+                                      "stmts": [
+                                        {
+                                          "type": "set",
+                                          "prop": "transaction.reference",
+                                          "op": "append",
+                                          "xpr": {
+                                            "type": "prop",
+                                            "prop": "lookup.cols.Order Id"
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "comment",
+                              "md": "Orders are spread-out in multiple rows. We have to collect them"
+                            },
+                            {
+                              "type": "lookupRows",
+                              "direction": "start",
+                              "stmts": [
+                                {
+                                  "type": "comment",
+                                  "md": "🤯 Degiro can wrap description and order id to the second row - we need to glue them back.\n\nWe have to make a *second, deeper* lookup"
+                                },
+                                {
+                                  "type": "var",
+                                  "varId": "lookupDescription",
+                                  "varType": "string",
+                                  "multiple": false,
+                                  "xpr": {
+                                    "type": "prop",
+                                    "prop": "lookup.cols.Description"
+                                  }
+                                },
+                                {
+                                  "type": "var",
+                                  "varId": "lookupOrderId",
+                                  "varType": "string",
+                                  "multiple": false,
+                                  "xpr": {
+                                    "type": "prop",
+                                    "prop": "lookup.cols.Order Id"
+                                  }
+                                },
+                                {
+                                  "type": "lookupRows",
+                                  "direction": "after",
+                                  "offset": {
+                                    "type": "value",
+                                    "value": 1
+                                  },
+                                  "limit": {
+                                    "type": "value",
+                                    "value": 1
+                                  },
+                                  "stmts": [
+                                    {
+                                      "type": "if",
+                                      "ifs": [
+                                        {
+                                          "xpr": {
+                                            "type": "falsy",
+                                            "xpr": {
+                                              "type": "prop",
+                                              "prop": "lookup.cols.Date"
+                                            }
+                                          },
+                                          "stmts": [
+                                            {
+                                              "type": "set",
+                                              "prop": "$lookupDescription",
+                                              "xpr": {
+                                                "type": "prop",
+                                                "prop": "lookup.cols.Description"
+                                              },
+                                              "op": "append"
+                                            },
+                                            {
+                                              "type": "set",
+                                              "prop": "$lookupOrderId",
+                                              "op": "append",
+                                              "xpr": {
+                                                "type": "prop",
+                                                "prop": "lookup.cols.Order Id"
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "if",
+                                  "ifs": [
+                                    {
+                                      "xpr": {
+                                        "type": "=",
+                                        "xpr": {
+                                          "type": "prop",
+                                          "prop": "$lookupOrderId"
+                                        },
+                                        "v": {
+                                          "type": "prop",
+                                          "prop": "transaction.reference"
+                                        }
+                                      },
+                                      "stmts": [
+                                        {
+                                          "type": "ignoreRow"
+                                        },
+                                        {
+                                          "type": "if",
+                                          "ifs": [
+                                            {
+                                              "xpr": {
+                                                "type": "pattern",
+                                                "xpr": {
+                                                  "type": "prop",
+                                                  "prop": "$lookupDescription"
+                                                },
+                                                "pattern": "/@\\d/i"
+                                              },
+                                              "stmts": [
+                                                {
+                                                  "type": "set",
+                                                  "prop": "transaction.type",
+                                                  "xpr": {
+                                                    "type": "prop",
+                                                    "prop": "$lookupDescription"
+                                                  },
+                                                  "map": [
+                                                    {
+                                                      "cmp": {
+                                                        "type": "pattern",
+                                                        "pattern": "~Buy~i^"
+                                                      },
+                                                      "target": {
+                                                        "type": "value",
+                                                        "value": "OPEN"
+                                                      }
+                                                    },
+                                                    {
+                                                      "cmp": {
+                                                        "type": "pattern",
+                                                        "pattern": "~Sell~i^"
+                                                      },
+                                                      "target": {
+                                                        "type": "value",
+                                                        "value": "CLOSE"
+                                                      }
+                                                    },
+                                                    {
+                                                      "cmp": {
+                                                        "type": "pattern",
+                                                        "pattern": "~Koop~i^"
+                                                      },
+                                                      "target": {
+                                                        "type": "value",
+                                                        "value": "OPEN"
+                                                      }
+                                                    },
+                                                    {
+                                                      "cmp": {
+                                                        "type": "pattern",
+                                                        "pattern": "~Verkoop~i^"
+                                                      },
+                                                      "target": {
+                                                        "type": "value",
+                                                        "value": "CLOSE"
+                                                      }
+                                                    },
+                                                    {
+                                                      "cmp": {
+                                                        "type": "pattern",
+                                                        "pattern": "~Achat~i^"
+                                                      },
+                                                      "target": {
+                                                        "type": "value",
+                                                        "value": "OPEN"
+                                                      }
+                                                    },
+                                                    {
+                                                      "cmp": {
+                                                        "type": "pattern",
+                                                        "pattern": "~Vente~i^"
+                                                      },
+                                                      "target": {
+                                                        "type": "value",
+                                                        "value": "CLOSE"
+                                                      }
+                                                    },
+                                                    {
+                                                      "cmp": {
+                                                        "type": "pattern",
+                                                        "pattern": "~Kupno~i^"
+                                                      },
+                                                      "target": {
+                                                        "type": "value",
+                                                        "value": "OPEN"
+                                                      }
+                                                    },
+                                                    {
+                                                      "cmp": {
+                                                        "type": "pattern",
+                                                        "pattern": "~Sprzedaż~i^"
+                                                      },
+                                                      "target": {
+                                                        "type": "value",
+                                                        "value": "CLOSE"
+                                                      }
+                                                    },
+                                                    {
+                                                      "cmp": {
+                                                        "type": "pattern",
+                                                        "pattern": "~Compra~"
+                                                      },
+                                                      "target": {
+                                                        "type": "value",
+                                                        "value": "OPEN"
+                                                      }
+                                                    },
+                                                    {
+                                                      "cmp": {
+                                                        "type": "pattern",
+                                                        "pattern": "~Venta~"
+                                                      },
+                                                      "target": {
+                                                        "type": "value",
+                                                        "value": "CLOSE"
+                                                      }
+                                                    }
+                                                  ]
+                                                },
+                                                {
+                                                  "type": "var",
+                                                  "varId": "lookupQty",
+                                                  "varType": "number",
+                                                  "multiple": false,
+                                                  "xpr": {
+                                                    "type": "prop",
+                                                    "prop": "$lookupDescription"
+                                                  },
+                                                  "trfms": [
+                                                    {
+                                                      "type": "extract",
+                                                      "pattern": "/.+?([.,\\d\\s]+)/i^"
+                                                    }
+                                                  ]
+                                                },
+                                                {
+                                                  "type": "var",
+                                                  "varId": "lookupPrice",
+                                                  "varType": "number",
+                                                  "multiple": false,
+                                                  "xpr": {
+                                                    "type": "prop",
+                                                    "prop": "$lookupDescription"
+                                                  },
+                                                  "trfms": [
+                                                    {
+                                                      "type": "extract",
+                                                      "pattern": "/@\\s*([.,\\d\\s]+)/i"
+                                                    }
+                                                  ]
+                                                },
+                                                {
+                                                  "type": "set",
+                                                  "prop": "transaction.qty",
+                                                  "op": "+=",
+                                                  "xpr": {
+                                                    "type": "prop",
+                                                    "prop": "$lookupQty"
+                                                  }
+                                                },
+                                                {
+                                                  "type": "set",
+                                                  "prop": "transaction.value",
+                                                  "op": "+=",
+                                                  "xpr": {
+                                                    "type": "formula",
+                                                    "formula": "=$lookupQty * $lookupPrice"
+                                                  }
+                                                },
+                                                {
+                                                  "type": "set",
+                                                  "prop": "transaction.valueCurrency",
+                                                  "xpr": {
+                                                    "type": "prop",
+                                                    "prop": "lookup.cols.Change currency"
+                                                  }
+                                                },
+                                                {
+                                                  "type": "set",
+                                                  "prop": "transaction.note",
+                                                  "xpr": {
+                                                    "type": "prop",
+                                                    "prop": "$lookupDescription"
+                                                  }
+                                                }
+                                              ]
+                                            },
+                                            {
+                                              "xpr": {
+                                                "type": "pattern",
+                                                "xpr": {
+                                                  "type": "prop",
+                                                  "prop": "lookup.cols.Description"
+                                                },
+                                                "pattern": "~DEGIRO~"
+                                              },
+                                              "stmts": [
+                                                {
+                                                  "type": "set",
+                                                  "prop": "transaction.fee",
+                                                  "op": "+=",
+                                                  "xpr": {
+                                                    "type": "prop",
+                                                    "prop": "lookup.cols.Change"
+                                                  },
+                                                  "trfms": [
+                                                    {
+                                                      "type": "abs"
+                                                    }
+                                                  ]
+                                                },
+                                                {
+                                                  "type": "set",
+                                                  "prop": "transaction.feeCurrency",
+                                                  "xpr": {
+                                                    "type": "prop",
+                                                    "prop": "lookup.cols.Change currency"
+                                                  }
+                                                }
+                                              ]
+                                            },
+                                            {
+                                              "stmts": [
+                                                {
+                                                  "type": "comment",
+                                                  "md": "We silently ignore foreign currency exchange"
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "xpr": {
+                        "type": "or",
+                        "xprs": [
+                          {
+                            "type": "pattern",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Description"
+                            },
+                            "pattern": "~dividend~i"
+                          },
+                          {
+                            "type": "pattern",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Description"
+                            },
+                            "pattern": "~dywidenda~i"
+                          }
+                        ]
+                      },
+                      "stmts": [
+                        {
+                          "type": "comment",
+                          "md": "## Dividends"
+                        },
+                        {
+                          "type": "addTransaction",
+                          "stmts": [
+                            {
+                              "type": "set",
+                              "prop": "transaction.account",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "addedAccount"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.asset",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.ISIN"
+                              },
+                              "cast": {
+                                "asset": {
+                                  "assetTypes": {
+                                    "type": "value",
+                                    "value": ["STOCK", "ETF"]
+                                  },
+                                  "markets": {
+                                    "type": "value",
+                                    "value": [
+                                      {
+                                        "id": "mic-XNYS"
+                                      },
+                                      {
+                                        "id": "mic-XNAS"
+                                      },
+                                      {
+                                        "id": "mic-ARCX"
+                                      },
+                                      {
+                                        "id": "mic-XASE"
+                                      },
+                                      {
+                                        "id": "mic-XETR"
+                                      },
+                                      {
+                                        "id": "mic-XFRA"
+                                      },
+                                      {
+                                        "id": "mic-XLON"
+                                      },
+                                      {
+                                        "id": "mic-XPAR"
+                                      },
+                                      {
+                                        "id": "mic-BMEX"
+                                      },
+                                      {
+                                        "id": "mic-XMIL"
+                                      },
+                                      {
+                                        "id": "mic-XSWX"
+                                      },
+                                      {
+                                        "id": "mic-XAMS"
+                                      },
+                                      {
+                                        "id": "mic-XWAR"
+                                      },
+                                      {
+                                        "id": "mic-XCSE"
+                                      },
+                                      {
+                                        "id": "mic-XMUN"
+                                      },
+                                      {
+                                        "id": "mic-XHAM"
+                                      },
+                                      {
+                                        "id": "mic-XBER"
+                                      },
+                                      {
+                                        "id": "mic-XBSE"
+                                      },
+                                      {
+                                        "id": "mic-XSTU"
+                                      },
+                                      {
+                                        "id": "mic-XOSL"
+                                      },
+                                      {
+                                        "id": "mic-XWBO"
+                                      },
+                                      {
+                                        "id": "mic-XLIS"
+                                      },
+                                      {
+                                        "id": "mic-XPRA"
+                                      },
+                                      {
+                                        "id": "mic-XLUX"
+                                      },
+                                      {
+                                        "id": "mic-XIST"
+                                      },
+                                      {
+                                        "id": "mic-XBUD"
+                                      },
+                                      {
+                                        "id": "mic-XHEL"
+                                      },
+                                      {
+                                        "id": "mic-XDUB"
+                                      },
+                                      {
+                                        "id": "mic-XDUS"
+                                      },
+                                      {
+                                        "id": "mic-XHAN"
+                                      },
+                                      {
+                                        "id": "mic-XICE"
+                                      },
+                                      {
+                                        "id": "mic-XZAG"
+                                      },
+                                      {
+                                        "id": "mic-XBRU"
+                                      },
+                                      {
+                                        "id": "mic-XSTO"
+                                      },
+                                      {
+                                        "id": "mic-ASEX"
+                                      },
+                                      {
+                                        "id": "mic-XTSE"
+                                      },
+                                      {
+                                        "id": "mic-XTSX"
+                                      },
+                                      {
+                                        "id": "mic-XASX"
+                                      },
+                                      {
+                                        "id": "mic-XHKG"
+                                      },
+                                      {
+                                        "id": "mic-XSES"
+                                      },
+                                      {
+                                        "id": "mic-XJPX"
+                                      }
+                                    ]
+                                  },
+                                  "remote": {
+                                    "type": "value",
+                                    "value": true
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.date",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Date"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.time",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Time"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.reference",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Order Id"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.type",
+                              "xpr": {
+                                "type": "value",
+                                "value": "DIVIDEND"
+                              }
+                            },
+                            {
+                              "type": "comment",
+                              "md": "Dividends are also on multiple rows..."
+                            },
+                            {
+                              "type": "lookupRows",
+                              "direction": "start",
+                              "stmts": [
+                                {
+                                  "type": "if",
+                                  "ifs": [
+                                    {
+                                      "xpr": {
+                                        "type": "and",
+                                        "xprs": [
+                                          {
+                                            "type": "=",
+                                            "xpr": {
+                                              "type": "prop",
+                                              "prop": "cols.ISIN"
+                                            },
+                                            "v": {
+                                              "type": "prop",
+                                              "prop": "lookup.cols.ISIN"
+                                            }
+                                          },
+                                          {
+                                            "type": "=",
+                                            "xpr": {
+                                              "type": "prop",
+                                              "prop": "cols.Date"
+                                            },
+                                            "v": {
+                                              "type": "prop",
+                                              "prop": "lookup.cols.Date"
+                                            }
+                                          },
+                                          {
+                                            "type": "=",
+                                            "xpr": {
+                                              "type": "prop",
+                                              "prop": "cols.Time"
+                                            },
+                                            "v": {
+                                              "type": "prop",
+                                              "prop": "lookup.cols.Time"
+                                            }
+                                          }
+                                        ]
+                                      },
+                                      "stmts": [
+                                        {
+                                          "type": "ignoreRow"
+                                        },
+                                        {
+                                          "type": "if",
+                                          "ifs": [
+                                            {
+                                              "xpr": {
+                                                "type": ">",
+                                                "xpr": {
+                                                  "type": "prop",
+                                                  "prop": "lookup.cols.Change"
+                                                },
+                                                "v": {
+                                                  "type": "value",
+                                                  "value": "0"
+                                                }
+                                              },
+                                              "stmts": [
+                                                {
+                                                  "type": "set",
+                                                  "prop": "transaction.value",
+                                                  "op": "+=",
+                                                  "xpr": {
+                                                    "type": "prop",
+                                                    "prop": "lookup.cols.Change"
+                                                  }
+                                                },
+                                                {
+                                                  "type": "set",
+                                                  "prop": "transaction.valueCurrency",
+                                                  "xpr": {
+                                                    "type": "prop",
+                                                    "prop": "lookup.cols.Change currency"
+                                                  }
+                                                }
+                                              ]
+                                            },
+                                            {
+                                              "stmts": [
+                                                {
+                                                  "type": "comment",
+                                                  "md": "Otherwise it's a tax withheld.\n\nValue received is pre-tax, so we need to subtract it"
+                                                },
+                                                {
+                                                  "type": "set",
+                                                  "prop": "transaction.taxPaid",
+                                                  "op": "+=",
+                                                  "xpr": {
+                                                    "type": "prop",
+                                                    "prop": "lookup.cols.Change"
+                                                  },
+                                                  "trfms": [
+                                                    {
+                                                      "type": "abs"
+                                                    }
+                                                  ]
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "xpr": {
+                        "type": "or",
+                        "xprs": [
+                          {
+                            "type": "pattern",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Description"
+                            },
+                            "pattern": "~DEGIRO Aansluitingskosten~i"
+                          },
+                          {
+                            "type": "pattern",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Description"
+                            },
+                            "pattern": "~Connection fee~i"
+                          }
+                        ]
+                      },
+                      "stmts": [
+                        {
+                          "type": "comment",
+                          "md": "## Account fees"
+                        },
+                        {
+                          "type": "addTransaction",
+                          "stmts": [
+                            {
+                              "type": "set",
+                              "prop": "transaction.account",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "addedAccount"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.asset",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Change currency"
+                              },
+                              "cast": {
+                                "asset": {
+                                  "assetTypes": {
+                                    "type": "value",
+                                    "value": ["CASH"]
+                                  },
+                                  "remote": {
+                                    "type": "value",
+                                    "value": true
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.type",
+                              "xpr": {
+                                "type": "value",
+                                "value": "OTHER"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.date",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Date"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.value",
+                              "xpr": {
+                                "type": "value",
+                                "value": 0
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.fee",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Change"
+                              },
+                              "trfms": [
+                                {
+                                  "type": "negate"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.feeCurrency",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Change currency"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.note",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Description"
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "xpr": {
+                        "type": "or",
+                        "xprs": [
+                          {
+                            "type": "pattern",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Description"
+                            },
+                            "pattern": "~odsetki~i"
+                          }
+                        ]
+                      },
+                      "stmts": [
+                        {
+                          "type": "comment",
+                          "md": "## Account fees"
+                        },
+                        {
+                          "type": "addTransaction",
+                          "stmts": [
+                            {
+                              "type": "set",
+                              "prop": "transaction.account",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "addedAccount"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.asset",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Change currency"
+                              },
+                              "cast": {
+                                "asset": {
+                                  "assetTypes": {
+                                    "type": "value",
+                                    "value": ["CASH"]
+                                  },
+                                  "remote": {
+                                    "type": "value",
+                                    "value": true
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.type",
+                              "xpr": {
+                                "type": "value",
+                                "value": "OTHER"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.date",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Date"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.value",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Change"
+                              },
+                              "trfms": []
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.valueCurrency",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Change currency"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.note",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Description"
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "xpr": {
+                        "type": "or",
+                        "xprs": [
+                          {
+                            "type": "pattern",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Description"
+                            },
+                            "pattern": "~valuta~i"
+                          },
+                          {
+                            "type": "pattern",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Description"
+                            },
+                            "pattern": "~divisa~i"
+                          },
+                          {
+                            "type": "pattern",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Description"
+                            },
+                            "pattern": "/fx credit|fx withdrawal/i"
+                          },
+                          {
+                            "type": "pattern",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Description"
+                            },
+                            "pattern": "~konwersja funduszu~i"
+                          }
+                        ]
+                      },
+                      "stmts": [
+                        {
+                          "type": "comment",
+                          "md": "## Forex conversions\n\nSilently ignore them"
+                        }
+                      ]
+                    },
+                    {
+                      "xpr": {
+                        "type": "or",
+                        "xprs": [
+                          {
+                            "type": "pattern",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Description"
+                            },
+                            "pattern": "~deposit~i"
+                          },
+                          {
+                            "type": "pattern",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Description"
+                            },
+                            "pattern": "~withdrawal~i"
+                          },
+                          {
+                            "type": "pattern",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Description"
+                            },
+                            "pattern": "~cash sweep~i"
+                          },
+                          {
+                            "type": "pattern",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Description"
+                            },
+                            "pattern": "~ingreso~i"
+                          },
+                          {
+                            "type": "pattern",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Description"
+                            },
+                            "pattern": "~overboeking~i"
+                          },
+                          {
+                            "type": "pattern",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Description"
+                            },
+                            "pattern": "~cash account~i"
+                          },
+                          {
+                            "type": "pattern",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Description"
+                            },
+                            "pattern": "~terugstorting~i"
+                          },
+                          {
+                            "type": "pattern",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Description"
+                            },
+                            "pattern": "~flatex~i"
+                          },
+                          {
+                            "type": "pattern",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Description"
+                            },
+                            "pattern": "~depozyt~i"
+                          },
+                          {
+                            "type": "pattern",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Description"
+                            },
+                            "pattern": "~wypłata~i"
+                          }
+                        ]
+                      },
+                      "stmts": [
+                        {
+                          "type": "comment",
+                          "md": "## Cash transactions"
+                        },
+                        {
+                          "type": "addRowNote",
+                          "note": {
+                            "type": "value",
+                            "value": "💸 Cash transactions are currently not imported"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "stmts": [
+                        {
+                          "type": "addRowNote",
+                          "note": {
+                            "type": "formula",
+                            "formula": "=\"🥺 Transaction `\" + col(\"Description\") + \"` is currently not supported\""
+                          },
+                          "urgency": "warn"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+}

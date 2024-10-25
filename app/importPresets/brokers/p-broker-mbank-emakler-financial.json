@@ -1,0 +1,400 @@
+{
+  "version": 3,
+  "type": "Capitally Data Export",
+  "exportedAt": "2024-10-23T18:43:31.119Z",
+  "data": {
+    "importPresets": {
+      "u-e18fpUY1gUdKBz1": {
+        "id": "u-e18fpUY1gUdKBz1",
+        "name": "2 of 2 - Dividends #beta",
+        "updatedAt": "2024-10-23T20:43",
+        "author": "Rafal <CEzOZ77nYhZX6L0qXPKXSs6GBho2>",
+        "info": "To import your dividends and fees from eMakler:\n\n1. Go to [mBank](https://online.mbank.pl/)\n2. Open **Produkty** → **Inwestycje** → **Wszystkie** → **eMakler** \n3. Open **Operacje** \n4. Choose option **Typ** → **Historia finansowa**\n5. Choose time frame\n6. Click **Pobierz listę** → **CSV**\n7. Open or drop that file here\n\n> 🦉 To import transactions, use the other preset - **eMakler - Transactions**",
+        "mappingInfo": "> 🧑‍💼 Assets are only searched within the project. Make sure you import the **Transactions** first",
+        "sourceId": "p-broker-mbank-emakler-financial",
+        "provider": "mBank eMakler",
+        "providerIcon": {
+          "type": "logo",
+          "id": "brokers/mbank"
+        },
+        "providerGroup": "Brokers",
+        "parser": {
+          "dateOrder": "dmy",
+          "decimalSeparator": ",",
+          "allowClipboard": false,
+          "codepage": "windows-1250",
+          "csv": {
+            "delimiter": ";"
+          }
+        },
+        "sections": {
+          "main": {
+            "csv": {
+              "fromRow": "~Data;Opis~",
+              "header": true
+            },
+            "replaceHeaders": [["~Column 4~", "Kwota 2"]],
+            "enabledColumns": ["Data", "Opis", "Kwota", "Kwota 2"],
+            "disabledColumns": ["Column 5", "Column 6", "Column 7"],
+            "program": {
+              "stmts": [
+                {
+                  "type": "addAccount",
+                  "optional": true,
+                  "stmts": [
+                    {
+                      "type": "set",
+                      "prop": "account.name",
+                      "xpr": {
+                        "type": "value",
+                        "value": "mBank eMakler"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "account.icon",
+                      "xpr": {
+                        "type": "value",
+                        "value": {
+                          "type": "logo",
+                          "id": "brokers/mbank"
+                        }
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "account.countryISO",
+                      "xpr": {
+                        "type": "value",
+                        "value": "PL"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "if",
+                  "ifs": [
+                    {
+                      "xpr": {
+                        "type": "pattern",
+                        "xpr": {
+                          "type": "prop",
+                          "prop": "cols.Opis"
+                        },
+                        "pattern": "~Dywidenda~^"
+                      },
+                      "stmts": [
+                        {
+                          "type": "comment",
+                          "md": "## Dividends"
+                        },
+                        {
+                          "type": "addTransaction",
+                          "stmts": [
+                            {
+                              "type": "set",
+                              "prop": "transaction.account",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "addedAccount"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.asset",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Opis"
+                              },
+                              "trfms": [
+                                {
+                                  "type": "extract",
+                                  "pattern": "/Dywidenda: DP: \\d{4}-\\d{2}-\\d{2} ([A-Z0-9]+)/^"
+                                }
+                              ],
+                              "cast": {
+                                "asset": {
+                                  "assetTypes": {
+                                    "type": "value",
+                                    "value": ["STOCK", "ETF"]
+                                  },
+                                  "remote": {
+                                    "type": "value",
+                                    "value": false
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.type",
+                              "xpr": {
+                                "type": "value",
+                                "value": "DIVIDEND"
+                              },
+                              "map": []
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.date",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Data"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.value",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Kwota 2"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.valueCurrency",
+                              "xpr": {
+                                "type": "value",
+                                "value": {
+                                  "id": "c-PLN"
+                                }
+                              }
+                            },
+                            {
+                              "type": "comment",
+                              "md": "We need to collect the tax from other rows"
+                            },
+                            {
+                              "type": "lookupRows",
+                              "direction": "start",
+                              "stmts": [
+                                {
+                                  "type": "if",
+                                  "ifs": [
+                                    {
+                                      "xpr": {
+                                        "type": "and",
+                                        "xprs": [
+                                          {
+                                            "type": "=",
+                                            "xpr": {
+                                              "type": "prop",
+                                              "prop": "lookup.cols.Data"
+                                            },
+                                            "v": {
+                                              "type": "prop",
+                                              "prop": "cols.Data"
+                                            }
+                                          },
+                                          {
+                                            "type": "pattern",
+                                            "xpr": {
+                                              "type": "prop",
+                                              "prop": "lookup.cols.Opis"
+                                            },
+                                            "pattern": "~Podatek od dywidendy: DP:~"
+                                          }
+                                        ]
+                                      },
+                                      "stmts": [
+                                        {
+                                          "type": "set",
+                                          "prop": "transaction.taxPaid",
+                                          "op": "+=",
+                                          "xpr": {
+                                            "type": "prop",
+                                            "prop": "lookup.cols.Kwota 2"
+                                          },
+                                          "trfms": [
+                                            {
+                                              "type": "abs"
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "type": "ignoreRow"
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "xpr": {
+                        "type": "pattern",
+                        "xpr": {
+                          "type": "prop",
+                          "prop": "cols.Opis"
+                        },
+                        "pattern": "~Opłata ~^"
+                      },
+                      "stmts": [
+                        {
+                          "type": "comment",
+                          "md": "## Fees"
+                        },
+                        {
+                          "type": "addTransaction",
+                          "stmts": [
+                            {
+                              "type": "set",
+                              "prop": "transaction.account",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "addedAccount"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.type",
+                              "xpr": {
+                                "type": "value",
+                                "value": "OTHER"
+                              },
+                              "map": []
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.date",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Data"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.value",
+                              "xpr": {
+                                "type": "value",
+                                "value": 0
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.valueCurrency",
+                              "xpr": {
+                                "type": "value",
+                                "value": {
+                                  "id": "c-PLN"
+                                }
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.fee",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Kwota"
+                              },
+                              "trfms": [
+                                {
+                                  "type": "abs"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.feeCurrency",
+                              "xpr": {
+                                "type": "value",
+                                "value": {
+                                  "id": "c-PLN"
+                                }
+                              }
+                            },
+                            {
+                              "type": "comment",
+                              "md": "Fees are typically recorded on the account's cash asset, but it may be a regular asset as well"
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.asset",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "transaction.valueCurrency"
+                              },
+                              "map": [],
+                              "cast": {
+                                "asset": {
+                                  "markets": {
+                                    "type": "value",
+                                    "value": []
+                                  }
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "xpr": {
+                        "type": "or",
+                        "xprs": [
+                          {
+                            "type": "pattern",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Opis"
+                            },
+                            "pattern": "~Blokada środków~^"
+                          },
+                          {
+                            "type": "pattern",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Opis"
+                            },
+                            "pattern": "~Odblokowanie środków ~^"
+                          },
+                          {
+                            "type": "pattern",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Opis"
+                            },
+                            "pattern": "~WYC~^"
+                          },
+                          {
+                            "type": "pattern",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Opis"
+                            },
+                            "pattern": "~(W)~^"
+                          },
+                          {
+                            "type": "pattern",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Opis"
+                            },
+                            "pattern": "~Podatek od dywidendy~^"
+                          }
+                        ]
+                      },
+                      "stmts": [
+                        {
+                          "type": "comment",
+                          "md": "Silently ignore"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "options": {
+          "valueMap": {}
+        }
+      }
+    }
+  }
+}

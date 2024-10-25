@@ -1,0 +1,101 @@
+{
+  "id": "import-transaction-buysell",
+  "name": "Add Transaction: Buy/Sell",
+  "stmts": [
+    {
+      "type": "addTransaction",
+      "stmts": [
+        {
+          "type": "set",
+          "prop": "transaction.account",
+          "xpr": { "type": "value" }
+        },
+        {
+          "type": "set",
+          "prop": "transaction.asset",
+          "xpr": {
+            "type": "prop",
+            "prop": "cols.pick a property or enter value"
+          },
+          "cast": { "asset": { "remote": { "type": "value", "value": true } } }
+        },
+        {
+          "type": "set",
+          "prop": "transaction.type",
+          "xpr": {
+            "type": "prop",
+            "prop": "cols.pick a property or enter value"
+          },
+          "map": [
+            {
+              "cmp": { "type": "=", "v": { "type": "value" } },
+              "target": { "type": "value", "value": "OPEN" }
+            },
+            {
+              "cmp": { "type": "=", "v": { "type": "value" } },
+              "target": { "type": "value", "value": "CLOSE" }
+            }
+          ]
+        },
+        {
+          "type": "set",
+          "prop": "transaction.date",
+          "xpr": {
+            "type": "prop",
+            "prop": "cols.pick a property or enter value"
+          }
+        },
+        {
+          "type": "set",
+          "prop": "transaction.qty",
+          "xpr": {
+            "type": "prop",
+            "prop": "cols.pick a property or enter value"
+          }
+        },
+        {
+          "type": "set",
+          "prop": "transaction.price",
+          "xpr": {
+            "type": "prop",
+            "prop": "cols.pick a property or enter value"
+          }
+        },
+        {
+          "type": "set",
+          "prop": "transaction.valueCurrency",
+          "xpr": {
+            "type": "prop",
+            "prop": "cols.pick a property or enter value"
+          }
+        },
+        {
+          "type": "set",
+          "prop": "transaction.fee",
+          "xpr": {
+            "type": "prop",
+            "prop": "cols.pick a property or enter value"
+          },
+          "trfms": [{ "type": "abs" }]
+        },
+        {
+          "type": "set",
+          "prop": "transaction.feeCurrency",
+          "xpr": {
+            "type": "prop",
+            "prop": "cols.pick a property or enter value"
+          }
+        },
+        {
+          "type": "set",
+          "prop": "transaction.taxPaid",
+          "xpr": {
+            "type": "prop",
+            "prop": "cols.pick a property or enter value"
+          },
+          "trfms": [{ "type": "abs" }]
+        }
+      ]
+    }
+  ]
+}

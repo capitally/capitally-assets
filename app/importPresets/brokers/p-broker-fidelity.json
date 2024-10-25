@@ -1,0 +1,377 @@
+{
+  "version": 3,
+  "type": "Capitally Data Export",
+  "exportedAt": "2024-10-10T19:05:29.478Z",
+  "data": {
+    "importPresets": {
+      "u-7xaHCUFcKrLKZyd": {
+        "id": "u-7xaHCUFcKrLKZyd",
+        "name": "Transactions & dividends #beta",
+        "updatedAt": "2024-10-10T21:05",
+        "author": "Capitally",
+        "info": "To import your transactions from Fidelity:\n\n1. Login to your Fidelity Client Portal\n2. Choose **Account** → **Activity & Orders**\n3. Choose a time period\n4. Download transactions in CSV format with the green ↓ icon\n5. Open or drop that file here",
+        "provider": "Fidelity",
+        "providerIcon": {
+          "type": "logo",
+          "id": "brokers/fidelity"
+        },
+        "providerGroup": "Brokers",
+        "parser": {
+          "dateOrder": "mdy",
+          "decimalSeparator": ".",
+          "allowClipboard": false,
+          "csv": {}
+        },
+        "sections": {
+          "main": {
+            "csv": {
+              "fromRow": 6,
+              "untilRow": -16,
+              "header": true
+            },
+            "replaceHeaders": [["~( )~", ""]],
+            "enabledColumns": [
+              "Run Date",
+              "Action",
+              "Symbol",
+              "Security Description",
+              "Security Type",
+              "Quantity",
+              "Price ",
+              "Commission ",
+              "Fees ",
+              "Accrued Interest ",
+              "Amount ",
+              "Settlement Date"
+            ],
+            "program": {
+              "stmts": [
+                {
+                  "type": "addAccount",
+                  "optional": true,
+                  "stmts": [
+                    {
+                      "type": "set",
+                      "prop": "account.name",
+                      "xpr": {
+                        "type": "value",
+                        "value": "Fidelity"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "account.icon",
+                      "xpr": {
+                        "type": "value",
+                        "value": {
+                          "type": "logo",
+                          "id": "brokers/fidelity"
+                        }
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "account.countryISO",
+                      "xpr": {
+                        "type": "value",
+                        "value": "US"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "addTransaction",
+                  "stmts": [
+                    {
+                      "type": "set",
+                      "prop": "transaction.account",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "addedAccount"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.date",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Run Date"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.type",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Action"
+                      },
+                      "trfms": [
+                        {
+                          "type": "trim"
+                        }
+                      ],
+                      "map": [
+                        {
+                          "cmp": {
+                            "type": "pattern",
+                            "pattern": "~YOU BOUGHT~^"
+                          },
+                          "target": {
+                            "type": "value",
+                            "value": "OPEN"
+                          }
+                        },
+                        {
+                          "cmp": {
+                            "type": "pattern",
+                            "pattern": "~YOU SOLD~^"
+                          },
+                          "target": {
+                            "type": "value",
+                            "value": "CLOSE"
+                          }
+                        },
+                        {
+                          "cmp": {
+                            "type": "pattern",
+                            "pattern": "~DIVIDEND RECEIVED~^"
+                          },
+                          "target": {
+                            "type": "value",
+                            "value": "DIVIDEND"
+                          }
+                        },
+                        {
+                          "cmp": {
+                            "type": "pattern",
+                            "pattern": "~REINVESTED~^"
+                          },
+                          "target": {
+                            "type": "value",
+                            "value": "OPEN"
+                          }
+                        },
+                        {
+                          "target": {
+                            "type": "value"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "if",
+                      "ifs": [
+                        {
+                          "xpr": {
+                            "type": "in",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "transaction.type"
+                            },
+                            "v": {
+                              "type": "value",
+                              "value": ["OPEN", "CLOSE"]
+                            }
+                          },
+                          "stmts": [
+                            {
+                              "type": "set",
+                              "prop": "transaction.qty",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Quantity"
+                              },
+                              "trfms": [
+                                {
+                                  "type": "abs"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.price",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Price "
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "xpr": {
+                            "type": "in",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "transaction.type"
+                            },
+                            "v": {
+                              "type": "value",
+                              "value": ["DIVIDEND"]
+                            }
+                          },
+                          "stmts": [
+                            {
+                              "type": "set",
+                              "prop": "transaction.value",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Amount "
+                              }
+                            },
+                            {
+                              "type": "comment",
+                              "md": "Look for dividend reinvestment that should be added to this transaction"
+                            },
+                            {
+                              "type": "lookupRows",
+                              "direction": "after",
+                              "limit": {
+                                "type": "value",
+                                "value": 1
+                              },
+                              "stmts": [
+                                {
+                                  "type": "if",
+                                  "ifs": [
+                                    {
+                                      "xpr": {
+                                        "type": "and",
+                                        "xprs": [
+                                          {
+                                            "type": "pattern",
+                                            "xpr": {
+                                              "type": "prop",
+                                              "prop": "lookup.cols.Action"
+                                            },
+                                            "pattern": "~ REINVESTMENT~^"
+                                          },
+                                          {
+                                            "type": "=",
+                                            "xpr": {
+                                              "type": "prop",
+                                              "prop": "lookup.cols.Symbol"
+                                            },
+                                            "v": {
+                                              "type": "prop",
+                                              "prop": "cols.Symbol"
+                                            }
+                                          }
+                                        ]
+                                      },
+                                      "stmts": [
+                                        {
+                                          "type": "set",
+                                          "prop": "transaction.incomeQty",
+                                          "xpr": {
+                                            "type": "prop",
+                                            "prop": "lookup.cols.Quantity"
+                                          }
+                                        },
+                                        {
+                                          "type": "ignoreRow"
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "xpr": {
+                            "type": "in",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "transaction.type"
+                            },
+                            "v": {
+                              "type": "value"
+                            }
+                          },
+                          "stmts": [
+                            {
+                              "type": "addRowNote",
+                              "note": {
+                                "type": "formula",
+                                "formula": "=\"Transaction `\" + col(\"Action\") + \"` is currently not supported\""
+                              }
+                            },
+                            {
+                              "type": "return"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.asset",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Symbol"
+                      },
+                      "cast": {
+                        "asset": {
+                          "assetTypes": {
+                            "type": "value",
+                            "value": ["STOCK", "ETF", "FUND"]
+                          },
+                          "markets": {
+                            "type": "value",
+                            "value": [
+                              {
+                                "id": "mic-XNAS"
+                              },
+                              {
+                                "id": "mic-XASE"
+                              },
+                              {
+                                "id": "mic-BATS"
+                              },
+                              {
+                                "id": "mic-XNYS"
+                              },
+                              {
+                                "id": "mic-ARCX"
+                              },
+                              {
+                                "id": "m-OTC"
+                              }
+                            ]
+                          },
+                          "remote": {
+                            "type": "value",
+                            "value": true
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.fee",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Fees "
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.currency",
+                      "xpr": {
+                        "type": "value",
+                        "value": {
+                          "id": "c-USD"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+}

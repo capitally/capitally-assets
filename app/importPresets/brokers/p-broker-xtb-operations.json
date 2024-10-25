@@ -1,0 +1,1365 @@
+{
+  "version": 3,
+  "type": "Capitally Data Export",
+  "exportedAt": "2024-10-23T08:56:13.699Z",
+  "data": {
+    "importPresets": {
+      "u-NFzAT42vld2pcwQ": {
+        "id": "u-NFzAT42vld2pcwQ",
+        "name": "Transactions & dividends #beta",
+        "updatedAt": "2024-10-23T00:03",
+        "author": "Rafal <CEzOZ77nYhZX6L0qXPKXSs6GBho2>",
+        "info": "To import your stock transactions from XTB (CFDs or shorts are not supported yet):\n\n1. Go to [xStation](https://xstation5.xtb.com/)\n2. Open **Account History/Historia** → **Cash operations/Operacje gotówkowe** \n3. Choose timeframe\n4. Click **Export/Eksportuj** → **Excel** and download it\n5. Open or drop that file here\n",
+        "provider": "XTB",
+        "providerIcon": {
+          "type": "logo",
+          "id": "brokers/xtb"
+        },
+        "providerGroup": "Brokers",
+        "parser": {
+          "dateOrder": "ymd",
+          "decimalSeparator": ".",
+          "allowClipboard": false
+        },
+        "sections": {
+          "main": {
+            "csv": {
+              "fromRow": "~Waluta~",
+              "untilRow": "~Balance~",
+              "header": true,
+              "sheetName": "CLOSED POSITION HISTORY"
+            },
+            "replaceHeaders": [["/.+ GMT\\+.+/", ""]],
+            "enabledColumns": ["Waluta"],
+            "disabledColumns": [
+              "Column 1",
+              "Column 2",
+              "Column 3",
+              "Column 4",
+              "Column 6",
+              "Imię i nazwisko",
+              "Column 7",
+              "Konto",
+              "Column 9",
+              "Column 12",
+              "Column 10",
+              "Column 13",
+              "Column 14",
+              "Column 15",
+              "Column 16",
+              "Column 18",
+              "Column 19",
+              "Column 17",
+              "Column 20"
+            ],
+            "program": {
+              "stmts": [
+                {
+                  "type": "var",
+                  "varId": "currency",
+                  "varType": "string",
+                  "shared": true,
+                  "multiple": false,
+                  "xpr": {
+                    "type": "prop",
+                    "prop": "cols.Waluta"
+                  }
+                }
+              ]
+            }
+          },
+          "Operations": {
+            "csv": {
+              "fromRow": "~ID~^",
+              "untilRow": "~Total~^",
+              "header": true,
+              "sheetName": "CASH OPERATION HISTORY"
+            },
+            "enabledColumns": [
+              "ID",
+              "Typ",
+              "Czas",
+              "Komentarz",
+              "Symbol",
+              "Kwota"
+            ],
+            "disabledColumns": ["Column 7"],
+            "program": {
+              "stmts": [
+                {
+                  "type": "addAccount",
+                  "optional": true,
+                  "stmts": [
+                    {
+                      "type": "set",
+                      "prop": "account.name",
+                      "xpr": {
+                        "type": "value",
+                        "value": "XTB"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "account.icon",
+                      "xpr": {
+                        "type": "value",
+                        "value": {
+                          "type": "logo",
+                          "id": "brokers/xtb"
+                        }
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "account.countryISO",
+                      "xpr": {
+                        "type": "value",
+                        "value": "PL"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "if",
+                  "ifs": [
+                    {
+                      "xpr": {
+                        "type": "=",
+                        "xpr": {
+                          "type": "prop",
+                          "prop": "cols.Typ"
+                        },
+                        "v": {
+                          "type": "value",
+                          "value": "Zakup akcji/ETF"
+                        }
+                      },
+                      "stmts": [
+                        {
+                          "type": "comment",
+                          "md": "## Buying stock"
+                        },
+                        {
+                          "type": "addTransaction",
+                          "stmts": [
+                            {
+                              "type": "set",
+                              "prop": "transaction.account",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "addedAccount"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.asset",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Symbol"
+                              },
+                              "cast": {
+                                "asset": {
+                                  "assetTypes": {
+                                    "type": "value",
+                                    "value": ["STOCK", "ETF"]
+                                  },
+                                  "remote": {
+                                    "type": "value",
+                                    "value": true
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.type",
+                              "xpr": {
+                                "type": "value",
+                                "value": "OPEN"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.date",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Czas"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.currency",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "$currency"
+                              }
+                            },
+                            {
+                              "type": "comment",
+                              "md": "Transactions are spread on multiple rows, we need to collect all the info"
+                            },
+                            {
+                              "type": "lookupRows",
+                              "direction": "start",
+                              "stmts": [
+                                {
+                                  "type": "if",
+                                  "ifs": [
+                                    {
+                                      "xpr": {
+                                        "type": "and",
+                                        "xprs": [
+                                          {
+                                            "type": "=",
+                                            "xpr": {
+                                              "type": "prop",
+                                              "prop": "lookup.cols.Symbol"
+                                            },
+                                            "v": {
+                                              "type": "prop",
+                                              "prop": "cols.Symbol"
+                                            }
+                                          },
+                                          {
+                                            "type": "=",
+                                            "xpr": {
+                                              "type": "prop",
+                                              "prop": "lookup.cols.Czas"
+                                            },
+                                            "v": {
+                                              "type": "prop",
+                                              "prop": "cols.Czas"
+                                            }
+                                          }
+                                        ]
+                                      },
+                                      "stmts": [
+                                        {
+                                          "type": "ignoreRow"
+                                        },
+                                        {
+                                          "type": "if",
+                                          "ifs": [
+                                            {
+                                              "xpr": {
+                                                "type": "=",
+                                                "xpr": {
+                                                  "type": "prop",
+                                                  "prop": "lookup.cols.Typ"
+                                                },
+                                                "v": {
+                                                  "type": "value",
+                                                  "value": "Prowizja"
+                                                }
+                                              },
+                                              "stmts": [
+                                                {
+                                                  "type": "set",
+                                                  "prop": "transaction.fee",
+                                                  "op": "+=",
+                                                  "xpr": {
+                                                    "type": "prop",
+                                                    "prop": "lookup.cols.Kwota"
+                                                  },
+                                                  "trfms": [
+                                                    {
+                                                      "type": "abs"
+                                                    }
+                                                  ]
+                                                },
+                                                {
+                                                  "type": "if",
+                                                  "ifs": [
+                                                    {
+                                                      "xpr": {
+                                                        "type": "pattern",
+                                                        "xpr": {
+                                                          "type": "prop",
+                                                          "prop": "lookup.cols.Komentarz"
+                                                        },
+                                                        "pattern": "/BUY [.,\\d]+/^"
+                                                      },
+                                                      "stmts": [
+                                                        {
+                                                          "type": "comment",
+                                                          "md": "Old type of transaction - we take the quantity here"
+                                                        },
+                                                        {
+                                                          "type": "set",
+                                                          "prop": "transaction.qty",
+                                                          "op": "+=",
+                                                          "xpr": {
+                                                            "type": "prop",
+                                                            "prop": "lookup.cols.Komentarz"
+                                                          },
+                                                          "trfms": [
+                                                            {
+                                                              "type": "extract",
+                                                              "pattern": "/BUY ([.,\\d]+)/^"
+                                                            }
+                                                          ]
+                                                        }
+                                                      ]
+                                                    },
+                                                    {
+                                                      "stmts": [
+                                                        {
+                                                          "type": "addRowNote",
+                                                          "note": {
+                                                            "type": "formula",
+                                                            "formula": "=\"🥺 stock buy fee operation type `\" + lookup.col(\"Komentarz\") + \"` is not supported\""
+                                                          },
+                                                          "urgency": "warn"
+                                                        }
+                                                      ]
+                                                    }
+                                                  ]
+                                                }
+                                              ]
+                                            },
+                                            {
+                                              "xpr": {
+                                                "type": "=",
+                                                "xpr": {
+                                                  "type": "prop",
+                                                  "prop": "lookup.cols.Typ"
+                                                },
+                                                "v": {
+                                                  "type": "value",
+                                                  "value": "Zakup akcji/ETF"
+                                                }
+                                              },
+                                              "stmts": [
+                                                {
+                                                  "type": "set",
+                                                  "prop": "transaction.value",
+                                                  "op": "+=",
+                                                  "xpr": {
+                                                    "type": "prop",
+                                                    "prop": "lookup.cols.Kwota"
+                                                  },
+                                                  "trfms": [
+                                                    {
+                                                      "type": "abs"
+                                                    }
+                                                  ]
+                                                },
+                                                {
+                                                  "type": "if",
+                                                  "ifs": [
+                                                    {
+                                                      "xpr": {
+                                                        "type": "pattern",
+                                                        "xpr": {
+                                                          "type": "prop",
+                                                          "prop": "lookup.cols.Komentarz"
+                                                        },
+                                                        "pattern": "/OPEN BUY [.,\\d]+/^"
+                                                      },
+                                                      "stmts": [
+                                                        {
+                                                          "type": "comment",
+                                                          "md": "New type of transaction - we take the quantity here"
+                                                        },
+                                                        {
+                                                          "type": "set",
+                                                          "prop": "transaction.qty",
+                                                          "op": "+=",
+                                                          "xpr": {
+                                                            "type": "prop",
+                                                            "prop": "lookup.cols.Komentarz"
+                                                          },
+                                                          "trfms": [
+                                                            {
+                                                              "type": "extract",
+                                                              "pattern": "/OPEN BUY ([.,\\d]+)/^"
+                                                            }
+                                                          ]
+                                                        },
+                                                        {
+                                                          "type": "set",
+                                                          "prop": "transaction.note",
+                                                          "op": "newline",
+                                                          "xpr": {
+                                                            "type": "prop",
+                                                            "prop": "lookup.cols.Komentarz"
+                                                          }
+                                                        }
+                                                      ]
+                                                    },
+                                                    {
+                                                      "xpr": {
+                                                        "type": "pattern",
+                                                        "xpr": {
+                                                          "type": "prop",
+                                                          "prop": "lookup.cols.Komentarz"
+                                                        },
+                                                        "pattern": "~Order #~^"
+                                                      },
+                                                      "stmts": [
+                                                        {
+                                                          "type": "comment",
+                                                          "md": "Old type of transaction - everything is already collected"
+                                                        }
+                                                      ]
+                                                    },
+                                                    {
+                                                      "stmts": [
+                                                        {
+                                                          "type": "addRowNote",
+                                                          "note": {
+                                                            "type": "formula",
+                                                            "formula": "=\"🥺 stock buy fee operation type `\" + lookup.col(\"Komentarz\") + \"` is not supported\""
+                                                          },
+                                                          "urgency": "warn"
+                                                        }
+                                                      ]
+                                                    }
+                                                  ]
+                                                }
+                                              ]
+                                            },
+                                            {
+                                              "stmts": [
+                                                {
+                                                  "type": "addRowNote",
+                                                  "note": {
+                                                    "type": "formula",
+                                                    "formula": "=\"🥺 stock buy operation type `\" + lookup.col(\"Typ\") + \"` is not supported\""
+                                                  },
+                                                  "urgency": "warn"
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "xpr": {
+                        "type": "=",
+                        "xpr": {
+                          "type": "prop",
+                          "prop": "cols.Typ"
+                        },
+                        "v": {
+                          "type": "value",
+                          "value": "Sprzedaż akcji/ETF"
+                        }
+                      },
+                      "stmts": [
+                        {
+                          "type": "comment",
+                          "md": "## Selling stock"
+                        },
+                        {
+                          "type": "addTransaction",
+                          "stmts": [
+                            {
+                              "type": "set",
+                              "prop": "transaction.account",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "addedAccount"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.asset",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Symbol"
+                              },
+                              "cast": {
+                                "asset": {
+                                  "assetTypes": {
+                                    "type": "value",
+                                    "value": ["STOCK", "ETF"]
+                                  },
+                                  "remote": {
+                                    "type": "value",
+                                    "value": true
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.type",
+                              "xpr": {
+                                "type": "value",
+                                "value": "CLOSE"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.date",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Czas"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.currency",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "$currency"
+                              }
+                            },
+                            {
+                              "type": "comment",
+                              "md": "Transactions are spread on multiple rows, we need to collect all the info"
+                            },
+                            {
+                              "type": "lookupRows",
+                              "direction": "start",
+                              "stmts": [
+                                {
+                                  "type": "if",
+                                  "ifs": [
+                                    {
+                                      "xpr": {
+                                        "type": "and",
+                                        "xprs": [
+                                          {
+                                            "type": "=",
+                                            "xpr": {
+                                              "type": "prop",
+                                              "prop": "lookup.cols.Symbol"
+                                            },
+                                            "v": {
+                                              "type": "prop",
+                                              "prop": "cols.Symbol"
+                                            }
+                                          },
+                                          {
+                                            "type": "=",
+                                            "xpr": {
+                                              "type": "prop",
+                                              "prop": "lookup.cols.Czas"
+                                            },
+                                            "v": {
+                                              "type": "prop",
+                                              "prop": "cols.Czas"
+                                            }
+                                          }
+                                        ]
+                                      },
+                                      "stmts": [
+                                        {
+                                          "type": "ignoreRow"
+                                        },
+                                        {
+                                          "type": "if",
+                                          "ifs": [
+                                            {
+                                              "xpr": {
+                                                "type": "=",
+                                                "xpr": {
+                                                  "type": "prop",
+                                                  "prop": "lookup.cols.Typ"
+                                                },
+                                                "v": {
+                                                  "type": "value",
+                                                  "value": "Prowizja"
+                                                }
+                                              },
+                                              "stmts": [
+                                                {
+                                                  "type": "set",
+                                                  "prop": "transaction.fee",
+                                                  "op": "+=",
+                                                  "xpr": {
+                                                    "type": "prop",
+                                                    "prop": "lookup.cols.Kwota"
+                                                  },
+                                                  "trfms": [
+                                                    {
+                                                      "type": "abs"
+                                                    }
+                                                  ]
+                                                },
+                                                {
+                                                  "type": "if",
+                                                  "ifs": [
+                                                    {
+                                                      "xpr": {
+                                                        "type": "pattern",
+                                                        "xpr": {
+                                                          "type": "prop",
+                                                          "prop": "lookup.cols.Komentarz"
+                                                        },
+                                                        "pattern": "/BUY [.,\\d]+/^"
+                                                      },
+                                                      "stmts": [
+                                                        {
+                                                          "type": "comment",
+                                                          "md": "Old type of transaction - we take the quantity here"
+                                                        },
+                                                        {
+                                                          "type": "set",
+                                                          "prop": "transaction.qty",
+                                                          "op": "+=",
+                                                          "xpr": {
+                                                            "type": "prop",
+                                                            "prop": "lookup.cols.Komentarz"
+                                                          },
+                                                          "trfms": [
+                                                            {
+                                                              "type": "extract",
+                                                              "pattern": "/BUY ([.,\\d]+)/^"
+                                                            }
+                                                          ]
+                                                        }
+                                                      ]
+                                                    },
+                                                    {
+                                                      "stmts": [
+                                                        {
+                                                          "type": "addRowNote",
+                                                          "note": {
+                                                            "type": "formula",
+                                                            "formula": "=\"🥺 stock sell value operation type `\" + lookup.col(\"Komentarz\") + \"` is not supported\""
+                                                          },
+                                                          "urgency": "warn"
+                                                        }
+                                                      ]
+                                                    }
+                                                  ]
+                                                }
+                                              ]
+                                            },
+                                            {
+                                              "xpr": {
+                                                "type": "=",
+                                                "xpr": {
+                                                  "type": "prop",
+                                                  "prop": "lookup.cols.Typ"
+                                                },
+                                                "v": {
+                                                  "type": "value",
+                                                  "value": "Zysk/Strata"
+                                                }
+                                              },
+                                              "stmts": [
+                                                {
+                                                  "type": "set",
+                                                  "prop": "transaction.value",
+                                                  "op": "+=",
+                                                  "xpr": {
+                                                    "type": "prop",
+                                                    "prop": "lookup.cols.Kwota"
+                                                  }
+                                                }
+                                              ]
+                                            },
+                                            {
+                                              "xpr": {
+                                                "type": "=",
+                                                "xpr": {
+                                                  "type": "prop",
+                                                  "prop": "lookup.cols.Typ"
+                                                },
+                                                "v": {
+                                                  "type": "value",
+                                                  "value": "Sprzedaż akcji/ETF"
+                                                }
+                                              },
+                                              "stmts": [
+                                                {
+                                                  "type": "set",
+                                                  "prop": "transaction.value",
+                                                  "op": "+=",
+                                                  "xpr": {
+                                                    "type": "prop",
+                                                    "prop": "lookup.cols.Kwota"
+                                                  },
+                                                  "trfms": [
+                                                    {
+                                                      "type": "abs"
+                                                    }
+                                                  ]
+                                                },
+                                                {
+                                                  "type": "if",
+                                                  "ifs": [
+                                                    {
+                                                      "xpr": {
+                                                        "type": "pattern",
+                                                        "xpr": {
+                                                          "type": "prop",
+                                                          "prop": "lookup.cols.Komentarz"
+                                                        },
+                                                        "pattern": "/CLOSE BUY [.,\\d]+/^"
+                                                      },
+                                                      "stmts": [
+                                                        {
+                                                          "type": "comment",
+                                                          "md": "New type of transaction - we take the quantity here"
+                                                        },
+                                                        {
+                                                          "type": "set",
+                                                          "prop": "transaction.qty",
+                                                          "op": "+=",
+                                                          "xpr": {
+                                                            "type": "prop",
+                                                            "prop": "lookup.cols.Komentarz"
+                                                          },
+                                                          "trfms": [
+                                                            {
+                                                              "type": "extract",
+                                                              "pattern": "/CLOSE BUY ([.,\\d]+)/^"
+                                                            }
+                                                          ]
+                                                        },
+                                                        {
+                                                          "type": "set",
+                                                          "prop": "transaction.note",
+                                                          "op": "newline",
+                                                          "xpr": {
+                                                            "type": "prop",
+                                                            "prop": "lookup.cols.Komentarz"
+                                                          }
+                                                        }
+                                                      ]
+                                                    },
+                                                    {
+                                                      "xpr": {
+                                                        "type": "pattern",
+                                                        "xpr": {
+                                                          "type": "prop",
+                                                          "prop": "lookup.cols.Komentarz"
+                                                        },
+                                                        "pattern": "~Return position #~^"
+                                                      },
+                                                      "stmts": [
+                                                        {
+                                                          "type": "comment",
+                                                          "md": "Old type of transaction - everything is already collected"
+                                                        }
+                                                      ]
+                                                    },
+                                                    {
+                                                      "stmts": [
+                                                        {
+                                                          "type": "addRowNote",
+                                                          "note": {
+                                                            "type": "formula",
+                                                            "formula": "=\"🥺 stock sell value operation type `\" + lookup.col(\"Komentarz\") + \"` is not supported\""
+                                                          },
+                                                          "urgency": "warn"
+                                                        }
+                                                      ]
+                                                    }
+                                                  ]
+                                                }
+                                              ]
+                                            },
+                                            {
+                                              "stmts": [
+                                                {
+                                                  "type": "addRowNote",
+                                                  "note": {
+                                                    "type": "formula",
+                                                    "formula": "=\"🥺 stock sell operation type `\" + lookup.col(\"Typ\") + \"` is not supported\""
+                                                  },
+                                                  "urgency": "warn"
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "xpr": {
+                        "type": "=",
+                        "xpr": {
+                          "type": "prop",
+                          "prop": "cols.Typ"
+                        },
+                        "v": {
+                          "type": "value",
+                          "value": "Dywidenda"
+                        }
+                      },
+                      "stmts": [
+                        {
+                          "type": "comment",
+                          "md": "## Dividends"
+                        },
+                        {
+                          "type": "addTransaction",
+                          "stmts": [
+                            {
+                              "type": "set",
+                              "prop": "transaction.account",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "addedAccount"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.asset",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Symbol"
+                              },
+                              "cast": {
+                                "asset": {
+                                  "assetTypes": {
+                                    "type": "value",
+                                    "value": ["STOCK", "ETF"]
+                                  },
+                                  "remote": {
+                                    "type": "value",
+                                    "value": true
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.type",
+                              "xpr": {
+                                "type": "value",
+                                "value": "DIVIDEND"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.date",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Czas"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.reference",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.ID"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.value",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Kwota"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.valueCurrency",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "$currency"
+                              },
+                              "trfms": []
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.note",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Komentarz"
+                              }
+                            },
+                            {
+                              "type": "lookupRows",
+                              "direction": "after",
+                              "offset": {
+                                "type": "value",
+                                "value": 1
+                              },
+                              "limit": {
+                                "type": "value",
+                                "value": 5
+                              },
+                              "stmts": [
+                                {
+                                  "type": "if",
+                                  "ifs": [
+                                    {
+                                      "xpr": {
+                                        "type": "and",
+                                        "xprs": [
+                                          {
+                                            "type": "=",
+                                            "xpr": {
+                                              "type": "prop",
+                                              "prop": "lookup.cols.Typ"
+                                            },
+                                            "v": {
+                                              "type": "value",
+                                              "value": "Podatek od dywidend"
+                                            }
+                                          },
+                                          {
+                                            "type": "=",
+                                            "xpr": {
+                                              "type": "prop",
+                                              "prop": "lookup.cols.Symbol"
+                                            },
+                                            "v": {
+                                              "type": "prop",
+                                              "prop": "cols.Symbol"
+                                            }
+                                          }
+                                        ]
+                                      },
+                                      "stmts": [
+                                        {
+                                          "type": "set",
+                                          "prop": "transaction.taxPaid",
+                                          "xpr": {
+                                            "type": "prop",
+                                            "prop": "lookup.cols.Kwota"
+                                          },
+                                          "trfms": [
+                                            {
+                                              "type": "abs"
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "type": "set",
+                                          "prop": "transaction.note",
+                                          "op": "newline",
+                                          "xpr": {
+                                            "type": "prop",
+                                            "prop": "lookup.cols.Komentarz"
+                                          }
+                                        },
+                                        {
+                                          "type": "ignoreRow"
+                                        },
+                                        {
+                                          "type": "return",
+                                          "levels": 1
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "xpr": {
+                        "type": "=",
+                        "xpr": {
+                          "type": "prop",
+                          "prop": "cols.Typ"
+                        },
+                        "v": {
+                          "type": "value",
+                          "value": "Sec Fee"
+                        }
+                      },
+                      "stmts": [
+                        {
+                          "type": "comment",
+                          "md": "## Fees"
+                        },
+                        {
+                          "type": "addTransaction",
+                          "stmts": [
+                            {
+                              "type": "set",
+                              "prop": "transaction.account",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "addedAccount"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.asset",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Symbol"
+                              },
+                              "cast": {
+                                "asset": {
+                                  "assetTypes": {
+                                    "type": "value",
+                                    "value": ["STOCK", "ETF"]
+                                  },
+                                  "remote": {
+                                    "type": "value",
+                                    "value": true
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.type",
+                              "xpr": {
+                                "type": "value",
+                                "value": "OTHER"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.date",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Czas"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.value",
+                              "xpr": {
+                                "type": "value",
+                                "value": 0
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.fee",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Kwota"
+                              },
+                              "trfms": [
+                                {
+                                  "type": "abs"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.feeCurrency",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "$currency"
+                              },
+                              "trfms": []
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.note",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Komentarz"
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "xpr": {
+                        "type": "=",
+                        "xpr": {
+                          "type": "prop",
+                          "prop": "cols.Typ"
+                        },
+                        "v": {
+                          "type": "value",
+                          "value": "Free-funds Interest"
+                        }
+                      },
+                      "stmts": [
+                        {
+                          "type": "comment",
+                          "md": "## Interest"
+                        },
+                        {
+                          "type": "addTransaction",
+                          "stmts": [
+                            {
+                              "type": "set",
+                              "prop": "transaction.account",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "addedAccount"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.asset",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "$currency"
+                              },
+                              "cast": {
+                                "asset": {
+                                  "assetTypes": {
+                                    "type": "value",
+                                    "value": ["CASH"]
+                                  },
+                                  "remote": {
+                                    "type": "value",
+                                    "value": true
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.type",
+                              "xpr": {
+                                "type": "value",
+                                "value": "INTEREST"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.date",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Czas"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.value",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Kwota"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.note",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Komentarz"
+                              }
+                            },
+                            {
+                              "type": "lookupRows",
+                              "direction": "after",
+                              "offset": {
+                                "type": "value",
+                                "value": -5
+                              },
+                              "limit": {
+                                "type": "value",
+                                "value": 10
+                              },
+                              "stmts": [
+                                {
+                                  "type": "if",
+                                  "ifs": [
+                                    {
+                                      "xpr": {
+                                        "type": "and",
+                                        "xprs": [
+                                          {
+                                            "type": "=",
+                                            "xpr": {
+                                              "type": "prop",
+                                              "prop": "lookup.cols.Typ"
+                                            },
+                                            "v": {
+                                              "type": "value",
+                                              "value": "Free-funds Interest Tax"
+                                            }
+                                          }
+                                        ]
+                                      },
+                                      "stmts": [
+                                        {
+                                          "type": "set",
+                                          "prop": "transaction.taxPaid",
+                                          "xpr": {
+                                            "type": "prop",
+                                            "prop": "lookup.cols.Kwota"
+                                          },
+                                          "trfms": [
+                                            {
+                                              "type": "abs"
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "type": "set",
+                                          "prop": "transaction.note",
+                                          "op": "newline",
+                                          "xpr": {
+                                            "type": "prop",
+                                            "prop": "lookup.cols.Komentarz"
+                                          }
+                                        },
+                                        {
+                                          "type": "ignoreRow"
+                                        },
+                                        {
+                                          "type": "return",
+                                          "levels": 1
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "xpr": {
+                        "type": "or",
+                        "xprs": [
+                          {
+                            "type": "=",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Typ"
+                            },
+                            "v": {
+                              "type": "value",
+                              "value": "Wpłata"
+                            }
+                          },
+                          {
+                            "type": "=",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Typ"
+                            },
+                            "v": {
+                              "type": "value",
+                              "value": "Wypłata"
+                            }
+                          }
+                        ]
+                      },
+                      "stmts": [
+                        {
+                          "type": "comment",
+                          "md": "## Cash transfers"
+                        },
+                        {
+                          "type": "addRowNote",
+                          "note": {
+                            "type": "value",
+                            "value": "💸 Cash transactions are currently not imported"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "xpr": {
+                        "type": "or",
+                        "xprs": [
+                          {
+                            "type": "=",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Typ"
+                            },
+                            "v": {
+                              "type": "value",
+                              "value": "Prowizja"
+                            }
+                          },
+                          {
+                            "type": "=",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Typ"
+                            },
+                            "v": {
+                              "type": "value",
+                              "value": "Sprzedaż akcji/ETF"
+                            }
+                          },
+                          {
+                            "type": "=",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Typ"
+                            },
+                            "v": {
+                              "type": "value",
+                              "value": "Zakup akcji/ETF"
+                            }
+                          },
+                          {
+                            "type": "=",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Typ"
+                            },
+                            "v": {
+                              "type": "value",
+                              "value": "Zysk/Strata"
+                            }
+                          },
+                          {
+                            "type": "=",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Typ"
+                            },
+                            "v": {
+                              "type": "value",
+                              "value": "Free-funds Interest Tax"
+                            }
+                          }
+                        ]
+                      },
+                      "stmts": [
+                        {
+                          "type": "comment",
+                          "md": "Silently ignore - these are handled in other sections"
+                        }
+                      ]
+                    },
+                    {
+                      "stmts": [
+                        {
+                          "type": "addRowNote",
+                          "note": {
+                            "type": "formula",
+                            "formula": "=\"🥺 cash operation type `\" + col(\"Typ\") + \"` is not supported\""
+                          },
+                          "urgency": "warn"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "options": {
+          "valueMap": {
+            "asset": {}
+          }
+        }
+      }
+    }
+  }
+}

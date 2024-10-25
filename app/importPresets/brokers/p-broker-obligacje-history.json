@@ -1,0 +1,692 @@
+{
+  "version": 3,
+  "type": "Capitally Data Export",
+  "exportedAt": "2024-10-20T19:12:55.902Z",
+  "data": {
+    "importPresets": {
+      "u-c1PHmIys258rTgZ": {
+        "id": "u-c1PHmIys258rTgZ",
+        "name": "1 of 2 - Transactions #beta",
+        "updatedAt": "2024-10-20T09:31",
+        "author": "Rafal <CEzOZ77nYhZX6L0qXPKXSs6GBho2>",
+        "info": "To import your transactions from Obligacje Skarbowe (Polish National Bonds):\n\n1. Go to [Serwis Obligacji Skarbowych](https://www.zakup.obligacjeskarbowe.pl/login.html)\n2. Open **Rachunek Rejestrowy**\n3. Open **Historia dyspozycji na Rachunku Rejestrowym**\n4. Choose dates and click **Dalej**\n5. Click the **[↓]** button below the table to download the XLS file\n6. Open or drop that file here\n\n> ☝️ This imports only transactions. As Capitally does not automatically update Bond prices, you will need to regularly update your current bonds value with the separate import **Obligacje Skarbowe: 2 of 2 - Balances**",
+        "provider": "Obligacje Skarbowe",
+        "providerIcon": {
+          "type": "logo",
+          "id": "brokers/ministerstwo-finansow"
+        },
+        "providerGroup": "Brokers",
+        "parser": {
+          "dateOrder": "ymd",
+          "allowClipboard": false
+        },
+        "sections": {
+          "main": {
+            "csv": {
+              "header": true
+            },
+            "enabledColumns": [
+              "DATA DYSPOZYCJI",
+              "RODZAJ DYSPOZYCJI",
+              "KOD OBLIGACJI",
+              "NR ZAPISU",
+              "SERIA",
+              "LICZBA OBLIGACJI",
+              "KWOTA OPERACJI",
+              "STATUS",
+              "UWAGI"
+            ],
+            "program": {
+              "stmts": [
+                {
+                  "type": "if",
+                  "ifs": [
+                    {
+                      "xpr": {
+                        "type": "!=",
+                        "xpr": {
+                          "type": "prop",
+                          "prop": "cols.STATUS"
+                        },
+                        "v": {
+                          "type": "value",
+                          "value": "zrealizowana"
+                        }
+                      },
+                      "stmts": [
+                        {
+                          "type": "return"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "addAccount",
+                  "optional": true,
+                  "stmts": [
+                    {
+                      "type": "set",
+                      "prop": "account.name",
+                      "xpr": {
+                        "type": "value",
+                        "value": "Obligacje Skarbowe"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "account.icon",
+                      "xpr": {
+                        "type": "value",
+                        "value": {
+                          "type": "logo",
+                          "id": "brokers/ministerstwo-finansow"
+                        }
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "account.countryISO",
+                      "xpr": {
+                        "type": "value",
+                        "value": "PL"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "if",
+                  "ifs": [
+                    {
+                      "xpr": {
+                        "type": "=",
+                        "xpr": {
+                          "type": "prop",
+                          "prop": "cols.RODZAJ DYSPOZYCJI"
+                        },
+                        "v": {
+                          "type": "value",
+                          "value": "zakup papierów"
+                        }
+                      },
+                      "stmts": [
+                        {
+                          "type": "comment",
+                          "md": "## Buy transaction\n\nCreates the custom asset"
+                        },
+                        {
+                          "type": "addAsset",
+                          "optional": true,
+                          "stmts": [
+                            {
+                              "type": "set",
+                              "prop": "asset.name",
+                              "xpr": {
+                                "type": "value",
+                                "value": "Obligacja "
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "asset.name",
+                              "op": "append",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.KOD OBLIGACJI"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "asset.symbol",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.KOD OBLIGACJI"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "asset.type",
+                              "xpr": {
+                                "type": "value",
+                                "value": "BOND"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "asset.icon",
+                              "xpr": {
+                                "type": "value",
+                                "value": {
+                                  "type": "logo",
+                                  "id": "brokers/ministerstwo-finansow"
+                                }
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "asset.currency",
+                              "xpr": {
+                                "type": "value",
+                                "value": {
+                                  "id": "c-PLN"
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "addTransaction",
+                          "stmts": [
+                            {
+                              "type": "set",
+                              "prop": "transaction.asset",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "addedAsset"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.account",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "addedAccount"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.date",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.DATA DYSPOZYCJI"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.type",
+                              "xpr": {
+                                "type": "value",
+                                "value": "OPEN"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.qty",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.LICZBA OBLIGACJI"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.price",
+                              "xpr": {
+                                "type": "value",
+                                "value": 100
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "xpr": {
+                        "type": "pattern",
+                        "xpr": {
+                          "type": "prop",
+                          "prop": "cols.RODZAJ DYSPOZYCJI"
+                        },
+                        "pattern": "~naliczenie odsetek~i^"
+                      },
+                      "stmts": [
+                        {
+                          "type": "comment",
+                          "md": "## Interest coupons + tax"
+                        },
+                        {
+                          "type": "addTransaction",
+                          "stmts": [
+                            {
+                              "type": "set",
+                              "prop": "transaction.asset",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.KOD OBLIGACJI"
+                              },
+                              "cast": {
+                                "asset": {
+                                  "assetTypes": {
+                                    "type": "value",
+                                    "value": ["BOND"]
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.account",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "addedAccount"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.date",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.DATA DYSPOZYCJI"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.type",
+                              "xpr": {
+                                "type": "value",
+                                "value": "INTEREST"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.value",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.KWOTA OPERACJI"
+                              }
+                            },
+                            {
+                              "type": "comment",
+                              "md": "Collect tax paid"
+                            },
+                            {
+                              "type": "lookupRows",
+                              "direction": "after",
+                              "offset": {
+                                "type": "value",
+                                "value": 1
+                              },
+                              "stmts": [
+                                {
+                                  "type": "if",
+                                  "ifs": [
+                                    {
+                                      "xpr": {
+                                        "type": "and",
+                                        "xprs": [
+                                          {
+                                            "type": "=",
+                                            "xpr": {
+                                              "type": "prop",
+                                              "prop": "lookup.cols.KOD OBLIGACJI"
+                                            },
+                                            "v": {
+                                              "type": "prop",
+                                              "prop": "cols.KOD OBLIGACJI"
+                                            }
+                                          },
+                                          {
+                                            "type": "=",
+                                            "xpr": {
+                                              "type": "prop",
+                                              "prop": "lookup.cols.RODZAJ DYSPOZYCJI"
+                                            },
+                                            "v": {
+                                              "type": "value",
+                                              "value": "podatek"
+                                            }
+                                          }
+                                        ]
+                                      },
+                                      "stmts": [
+                                        {
+                                          "type": "set",
+                                          "prop": "transaction.taxPaid",
+                                          "xpr": {
+                                            "type": "prop",
+                                            "prop": "lookup.cols.KWOTA OPERACJI"
+                                          },
+                                          "trfms": [
+                                            {
+                                              "type": "abs"
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "type": "ignoreRow"
+                                        },
+                                        {
+                                          "type": "return",
+                                          "levels": 1
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "xpr": {
+                        "type": "pattern",
+                        "xpr": {
+                          "type": "prop",
+                          "prop": "cols.RODZAJ DYSPOZYCJI"
+                        },
+                        "pattern": "~podatek~i^"
+                      },
+                      "stmts": [
+                        {
+                          "type": "comment",
+                          "md": "## Tax (if imported separately)"
+                        },
+                        {
+                          "type": "addTransaction",
+                          "stmts": [
+                            {
+                              "type": "set",
+                              "prop": "transaction.asset",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.KOD OBLIGACJI"
+                              },
+                              "cast": {
+                                "asset": {
+                                  "assetTypes": {
+                                    "type": "value",
+                                    "value": ["BOND"]
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.account",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "addedAccount"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.date",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.DATA DYSPOZYCJI"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.type",
+                              "xpr": {
+                                "type": "value",
+                                "value": "OTHER"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.value",
+                              "xpr": {
+                                "type": "value",
+                                "value": 0
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.taxPaid",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.KWOTA OPERACJI"
+                              },
+                              "trfms": [
+                                {
+                                  "type": "abs"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "xpr": {
+                        "type": "=",
+                        "xpr": {
+                          "type": "prop",
+                          "prop": "cols.RODZAJ DYSPOZYCJI"
+                        },
+                        "v": {
+                          "type": "value",
+                          "value": "przedterminowy wykup"
+                        }
+                      },
+                      "stmts": [
+                        {
+                          "type": "comment",
+                          "md": "## Buyout before expiration"
+                        },
+                        {
+                          "type": "addTransaction",
+                          "stmts": [
+                            {
+                              "type": "set",
+                              "prop": "transaction.asset",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.KOD OBLIGACJI"
+                              },
+                              "cast": {
+                                "asset": {
+                                  "assetTypes": {
+                                    "type": "value",
+                                    "value": ["BOND"]
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.account",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "addedAccount"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.date",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.DATA DYSPOZYCJI"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.type",
+                              "xpr": {
+                                "type": "value",
+                                "value": "CLOSE"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.qty",
+                              "xpr": {
+                                "type": "formula",
+                                "formula": "=N(col(\"KWOTA OPERACJI\")) / 100"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.value",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.KWOTA OPERACJI"
+                              }
+                            },
+                            {
+                              "type": "comment",
+                              "md": "Collect interest and costs - they will have no date and same symbol"
+                            },
+                            {
+                              "type": "lookupRows",
+                              "direction": "after",
+                              "offset": {
+                                "type": "value",
+                                "value": 1
+                              },
+                              "stmts": [
+                                {
+                                  "type": "if",
+                                  "ifs": [
+                                    {
+                                      "xpr": {
+                                        "type": "and",
+                                        "xprs": [
+                                          {
+                                            "type": "=",
+                                            "xpr": {
+                                              "type": "prop",
+                                              "prop": "lookup.cols.KOD OBLIGACJI"
+                                            },
+                                            "v": {
+                                              "type": "prop",
+                                              "prop": "cols.KOD OBLIGACJI"
+                                            }
+                                          },
+                                          {
+                                            "type": "falsy",
+                                            "xpr": {
+                                              "type": "prop",
+                                              "prop": "lookup.cols.DATA DYSPOZYCJI"
+                                            }
+                                          }
+                                        ]
+                                      },
+                                      "stmts": [
+                                        {
+                                          "type": "set",
+                                          "prop": "transaction.value",
+                                          "op": "+=",
+                                          "xpr": {
+                                            "type": "prop",
+                                            "prop": "lookup.cols.KWOTA OPERACJI"
+                                          }
+                                        },
+                                        {
+                                          "type": "ignoreRow"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "stmts": [
+                                        {
+                                          "type": "return",
+                                          "levels": 1
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "xpr": {
+                        "type": "=",
+                        "xpr": {
+                          "type": "prop",
+                          "prop": "cols.RODZAJ DYSPOZYCJI"
+                        },
+                        "v": {
+                          "type": "value",
+                          "value": "wypłata przelewem"
+                        }
+                      },
+                      "stmts": [
+                        {
+                          "type": "comment",
+                          "md": "## Cash transfers"
+                        },
+                        {
+                          "type": "addRowNote",
+                          "note": {
+                            "type": "value",
+                            "value": "💸 Cash transfers are currently not imported"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "xpr": {
+                        "type": "or",
+                        "xprs": [
+                          {
+                            "type": "=",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.RODZAJ DYSPOZYCJI"
+                            },
+                            "v": {
+                              "type": "value",
+                              "value": "dyspozycja zakupu"
+                            }
+                          },
+                          {
+                            "type": "=",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.RODZAJ DYSPOZYCJI"
+                            },
+                            "v": {
+                              "type": "value",
+                              "value": "dyspozycja przedterminowego wykupu"
+                            }
+                          }
+                        ]
+                      },
+                      "stmts": [
+                        {
+                          "type": "comment",
+                          "md": "Silently ignore"
+                        },
+                        {
+                          "type": "addRowNote",
+                          "note": {
+                            "type": "value",
+                            "value": "Ignored"
+                          },
+                          "urgency": "log"
+                        },
+                        {
+                          "type": "return"
+                        }
+                      ]
+                    },
+                    {
+                      "stmts": [
+                        {
+                          "type": "addRowNote",
+                          "note": {
+                            "type": "formula",
+                            "formula": "=\"Unknown transaction `\" + col(\"RODZAJ DYSPOZYCJI\") + \"`\""
+                          },
+                          "urgency": "warn"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+}

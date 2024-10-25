@@ -1,0 +1,307 @@
+{
+  "version": 3,
+  "type": "Capitally Data Export",
+  "exportedAt": "2024-10-21T12:27:02.413Z",
+  "data": {
+    "importPresets": {
+      "u-fiCC8NhObgSgnx8": {
+        "id": "u-fiCC8NhObgSgnx8",
+        "name": "2 of 2 - Dividends & fees #beta",
+        "updatedAt": "2024-10-21T14:26",
+        "author": "Rafal <CEzOZ77nYhZX6L0qXPKXSs6GBho2>",
+        "info": "To import your fees from Finax:\n\n1. Login to [Finax](https://finax.eu/en/login)\n2. Choose **Transactions** from the top menu\n3. Choose **Operations** from the second-level menu\n4. Choose a time period\n5. Select the whole table and **copy** it (`Ctrl+C` / `Cmd+C`)\n6. Click **paste** below\n\n> 🦉 Use the **Finax: Transactions** to import the actual transactions",
+        "mappingInfo": "",
+        "provider": "Finax",
+        "providerIcon": {
+          "type": "logo",
+          "id": "brokers/finax"
+        },
+        "providerGroup": "Brokers",
+        "parser": {
+          "formats": ["csv"],
+          "allowClipboard": true,
+          "csv": {}
+        },
+        "sections": {
+          "main": {
+            "csv": {
+              "fromRow": "//",
+              "header": true
+            },
+            "replaceHeaders": [
+              ["~Data~", "Date"],
+              ["~Rodzaj~", "Type"],
+              ["~Uwaga~", "Comment"],
+              ["~Kwota~", "Amount"]
+            ],
+            "enabledColumns": ["Date", "Type", "Comment", "Amount"],
+            "program": {
+              "stmts": [
+                {
+                  "type": "addAccount",
+                  "optional": true,
+                  "stmts": [
+                    {
+                      "type": "set",
+                      "prop": "account.name",
+                      "xpr": {
+                        "type": "value",
+                        "value": "Finax"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "account.icon",
+                      "xpr": {
+                        "type": "value",
+                        "value": {
+                          "type": "logo",
+                          "id": "brokers/finax"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "if",
+                  "ifs": [
+                    {
+                      "xpr": {
+                        "type": "or",
+                        "xprs": [
+                          {
+                            "type": "pattern",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Type"
+                            },
+                            "pattern": "~fee~"
+                          },
+                          {
+                            "type": "pattern",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Type"
+                            },
+                            "pattern": "~opłata~"
+                          }
+                        ]
+                      },
+                      "stmts": [
+                        {
+                          "type": "comment",
+                          "md": "## Fees"
+                        },
+                        {
+                          "type": "addTransaction",
+                          "stmts": [
+                            {
+                              "type": "set",
+                              "prop": "transaction.account",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "addedAccount"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.asset",
+                              "xpr": {
+                                "type": "value",
+                                "value": {
+                                  "id": "c-EUR"
+                                }
+                              },
+                              "cast": {
+                                "asset": {
+                                  "remote": {
+                                    "type": "value",
+                                    "value": true
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.date",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Date"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.type",
+                              "xpr": {
+                                "type": "value",
+                                "value": "OTHER"
+                              },
+                              "map": []
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.value",
+                              "xpr": {
+                                "type": "value",
+                                "value": 0
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.fee",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Amount"
+                              },
+                              "trfms": [
+                                {
+                                  "type": "abs"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.currency",
+                              "xpr": {
+                                "type": "value",
+                                "value": {
+                                  "id": "c-EUR"
+                                }
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.note",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Type"
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "xpr": {
+                        "type": "or",
+                        "xprs": [
+                          {
+                            "type": "=",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Type"
+                            },
+                            "v": {
+                              "type": "value",
+                              "value": "Deposit"
+                            }
+                          },
+                          {
+                            "type": "=",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Type"
+                            },
+                            "v": {
+                              "type": "value",
+                              "value": "Wpłata"
+                            }
+                          },
+                          {
+                            "type": "=",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Type"
+                            },
+                            "v": {
+                              "type": "value",
+                              "value": "Withdrawal"
+                            }
+                          },
+                          {
+                            "type": "=",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Type"
+                            },
+                            "v": {
+                              "type": "value",
+                              "value": "Wypłata"
+                            }
+                          }
+                        ]
+                      },
+                      "stmts": [
+                        {
+                          "type": "comment",
+                          "md": "## Cash transfers"
+                        },
+                        {
+                          "type": "addRowNote",
+                          "note": {
+                            "type": "value",
+                            "value": "💸 Cash transactions are currently not imported"
+                          }
+                        },
+                        {
+                          "type": "comment",
+                          "md": "Transfers have amount on the second row"
+                        },
+                        {
+                          "type": "lookupRows",
+                          "direction": "after",
+                          "offset": {
+                            "type": "value",
+                            "value": 1
+                          },
+                          "limit": {
+                            "type": "value",
+                            "value": 5
+                          },
+                          "stmts": [
+                            {
+                              "type": "if",
+                              "ifs": [
+                                {
+                                  "xpr": {
+                                    "type": "falsy",
+                                    "xpr": {
+                                      "type": "prop",
+                                      "prop": "lookup.cols.Type"
+                                    }
+                                  },
+                                  "stmts": [
+                                    {
+                                      "type": "ignoreRow"
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "stmts": [
+                        {
+                          "type": "addRowNote",
+                          "note": {
+                            "type": "formula",
+                            "formula": "=\"Unknown transaction type `\" + col(\"Type\") + \"`\""
+                          },
+                          "urgency": "warn"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "options": {}
+      }
+    }
+  }
+}

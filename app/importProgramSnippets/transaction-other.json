@@ -1,0 +1,84 @@
+{
+  "id": "import-transaction-other",
+  "name": "Add Transaction: Fees & other",
+  "stmts": [
+    {
+      "type": "addTransaction",
+      "stmts": [
+        {
+          "type": "set",
+          "prop": "transaction.account",
+          "xpr": { "type": "value" }
+        },
+        {
+          "type": "set",
+          "prop": "transaction.type",
+          "xpr": { "type": "value", "value": "OTHER" },
+          "map": []
+        },
+        {
+          "type": "set",
+          "prop": "transaction.date",
+          "xpr": {
+            "type": "prop",
+            "prop": "cols.pick a property or enter value"
+          }
+        },
+        {
+          "type": "set",
+          "prop": "transaction.value",
+          "xpr": {
+            "type": "prop",
+            "prop": "cols.pick a property or enter value"
+          }
+        },
+        {
+          "type": "set",
+          "prop": "transaction.valueCurrency",
+          "xpr": {
+            "type": "prop",
+            "prop": "cols.pick a property or enter value"
+          }
+        },
+        {
+          "type": "set",
+          "prop": "transaction.fee",
+          "xpr": {
+            "type": "prop",
+            "prop": "cols.pick a property or enter value"
+          },
+          "trfms": [{ "type": "abs" }]
+        },
+        {
+          "type": "set",
+          "prop": "transaction.feeCurrency",
+          "xpr": {
+            "type": "prop",
+            "prop": "cols.pick a property or enter value"
+          }
+        },
+        {
+          "type": "set",
+          "prop": "transaction.taxPaid",
+          "xpr": {
+            "type": "prop",
+            "prop": "cols.pick a property or enter value"
+          },
+          "trfms": [{ "type": "abs" }]
+        },
+        {
+          "type": "comment",
+          "md": "Fees are typically recorded on the account's cash asset, but it may be a regular asset as well"
+        },
+        {
+          "type": "set",
+          "prop": "transaction.asset",
+          "xpr": {
+            "type": "prop",
+            "prop": "transaction.valueCurrency"
+          }
+        }
+      ]
+    }
+  ]
+}

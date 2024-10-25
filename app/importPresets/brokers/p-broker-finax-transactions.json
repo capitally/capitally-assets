@@ -1,0 +1,380 @@
+{
+  "version": 3,
+  "type": "Capitally Data Export",
+  "exportedAt": "2024-10-21T11:00:42.905Z",
+  "data": {
+    "importPresets": {
+      "u-7tc10iGBe0jipKY": {
+        "id": "u-7tc10iGBe0jipKY",
+        "name": "1 of 2 - Transactions #beta",
+        "updatedAt": "2024-10-21T13:00",
+        "author": "Rafal <CEzOZ77nYhZX6L0qXPKXSs6GBho2>",
+        "info": "To import your transactions from Finax:\n\n1. Login to [Finax](https://finax.eu/en/login)\n2. Choose **Transactions** from the top menu\n3. Choose a time period\n4. Select the whole table and **copy** it (`Ctrl+C` / `Cmd+C`)\n5. Click **paste** below\n\n> 🦉 Use the second preset - **Finax: Operations** - to import fees",
+        "mappingInfo": "",
+        "provider": "Finax",
+        "providerIcon": {
+          "type": "logo",
+          "id": "brokers/finax"
+        },
+        "providerGroup": "Brokers",
+        "parser": {
+          "dateOrder": "dmy",
+          "formats": ["csv"],
+          "allowClipboard": true,
+          "csv": {}
+        },
+        "sections": {
+          "main": {
+            "csv": {
+              "fromRow": "//",
+              "header": true
+            },
+            "replaceHeaders": [
+              ["~Data~^$", "Date"],
+              ["~Dátum~^$", "Date"],
+              ["~Datum~^$", "Date"],
+              ["~Dată~^$", "Date"],
+
+              ["~Typ transakcji~^$", "Trade type"],
+              ["~Typ obchodu~^$", "Trade type"],
+              ["~Ügylet típusa~^$", "Trade type"],
+              ["~Typ obchodu~^$", "Trade type"],
+              ["~Vrsta trgovine~^$", "Trade type"],
+              ["~Tipul tranzacției~^$", "Trade type"],
+
+              ["~Ilość sztuk~^$", "Shares"],
+              ["~Počet kusov~^$", "Shares"],
+              ["~Darabszám~^$", "Shares"],
+              ["~Počet kusů~^$", "Shares"],
+              ["~Komada udjela~^$", "Shares"],
+              ["~Acțiuni~^$", "Shares"],
+
+              ["~Cena za sztukę~^$", "Price per share"],
+
+              ["~Cena za kus~^$", "Price per share"],
+              ["~Darabár~^$", "Price per share"],
+              ["~Cijena po komadu~^$", "Price per share"],
+              ["~Preț pe acțiune~^$", "Price per share"],
+
+              ["~Wartość transakcji~^$", "Value of trade"],
+
+              ["~Objem obchodu~^$", "Value of trade"],
+              ["~Kereskedelmi volumen~^$", "Value of trade"],
+              ["~Objem obchodu~^$", "Value of trade"],
+              ["~Vrijednost trgovine~^$", "Value of trade"],
+              ["~Valoarea tranzacției~^$", "Value of trade"]
+            ],
+            "replaceCells": [],
+            "enabledColumns": [
+              "Date",
+              "Trade type",
+              "Shares",
+              "Price per share",
+              "Value of trade",
+              "Ticker"
+            ],
+            "program": {
+              "stmts": [
+                {
+                  "type": "addAccount",
+                  "optional": true,
+                  "stmts": [
+                    {
+                      "type": "set",
+                      "prop": "account.name",
+                      "xpr": {
+                        "type": "value",
+                        "value": "Finax"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "account.icon",
+                      "xpr": {
+                        "type": "value",
+                        "value": {
+                          "type": "logo",
+                          "id": "brokers/finax"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "addTransaction",
+                  "stmts": [
+                    {
+                      "type": "set",
+                      "prop": "transaction.account",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "addedAccount"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.asset",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Ticker"
+                      },
+                      "trfms": [
+                        {
+                          "type": "replace",
+                          "pattern": "~.GR~$",
+                          "replace": ".EU"
+                        }
+                      ],
+                      "cast": {
+                        "asset": {
+                          "assetTypes": {
+                            "type": "value",
+                            "value": ["ETF"]
+                          },
+                          "remote": {
+                            "type": "value",
+                            "value": true
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.date",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Date"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.type",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Trade type"
+                      },
+                      "map": [
+                        {
+                          "cmp": {
+                            "type": "=",
+                            "v": {
+                              "type": "value",
+                              "value": "Purchase"
+                            }
+                          },
+                          "target": {
+                            "type": "value",
+                            "value": "OPEN"
+                          }
+                        },
+                        {
+                          "cmp": {
+                            "type": "=",
+                            "v": {
+                              "type": "value",
+                              "value": "Zakup"
+                            }
+                          },
+                          "target": {
+                            "type": "value",
+                            "value": "OPEN"
+                          }
+                        },
+
+                        {
+                          "cmp": {
+                            "type": "=",
+                            "v": {
+                              "type": "value",
+                              "value": "Nákup"
+                            }
+                          },
+                          "target": {
+                            "type": "value",
+                            "value": "OPEN"
+                          }
+                        },
+                        {
+                          "cmp": {
+                            "type": "=",
+                            "v": {
+                              "type": "value",
+                              "value": "Vétel"
+                            }
+                          },
+                          "target": {
+                            "type": "value",
+                            "value": "OPEN"
+                          }
+                        },
+                        {
+                          "cmp": {
+                            "type": "=",
+                            "v": {
+                              "type": "value",
+                              "value": "Nákup"
+                            }
+                          },
+                          "target": {
+                            "type": "value",
+                            "value": "OPEN"
+                          }
+                        },
+                        {
+                          "cmp": {
+                            "type": "=",
+                            "v": {
+                              "type": "value",
+                              "value": "Kupnja"
+                            }
+                          },
+                          "target": {
+                            "type": "value",
+                            "value": "OPEN"
+                          }
+                        },
+                        {
+                          "cmp": {
+                            "type": "=",
+                            "v": {
+                              "type": "value",
+                              "value": "Achiziție"
+                            }
+                          },
+                          "target": {
+                            "type": "value",
+                            "value": "OPEN"
+                          }
+                        },
+
+                        {
+                          "cmp": {
+                            "type": "=",
+                            "v": {
+                              "type": "value",
+                              "value": "Sale"
+                            }
+                          },
+                          "target": {
+                            "type": "value",
+                            "value": "CLOSE"
+                          }
+                        },
+                        {
+                          "cmp": {
+                            "type": "=",
+                            "v": {
+                              "type": "value",
+                              "value": "Sprzedaż"
+                            }
+                          },
+                          "target": {
+                            "type": "value",
+                            "value": "CLOSE"
+                          }
+                        },
+
+                        {
+                          "cmp": {
+                            "type": "=",
+                            "v": {
+                              "type": "value",
+                              "value": "Predaj"
+                            }
+                          },
+                          "target": {
+                            "type": "value",
+                            "value": "CLOSE"
+                          }
+                        },
+                        {
+                          "cmp": {
+                            "type": "=",
+                            "v": {
+                              "type": "value",
+                              "value": "Adás"
+                            }
+                          },
+                          "target": {
+                            "type": "value",
+                            "value": "CLOSE"
+                          }
+                        },
+                        {
+                          "cmp": {
+                            "type": "=",
+                            "v": {
+                              "type": "value",
+                              "value": "Prodej"
+                            }
+                          },
+                          "target": {
+                            "type": "value",
+                            "value": "CLOSE"
+                          }
+                        },
+                        {
+                          "cmp": {
+                            "type": "=",
+                            "v": {
+                              "type": "value",
+                              "value": "Prodaja"
+                            }
+                          },
+                          "target": {
+                            "type": "value",
+                            "value": "CLOSE"
+                          }
+                        },
+                        {
+                          "cmp": {
+                            "type": "=",
+                            "v": {
+                              "type": "value",
+                              "value": "Vânzare"
+                            }
+                          },
+                          "target": {
+                            "type": "value",
+                            "value": "CLOSE"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.qty",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Shares"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.price",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Price per share"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.currency",
+                      "xpr": {
+                        "type": "value",
+                        "value": {
+                          "id": "c-EUR"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "options": {}
+      }
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "id": "import-account",
+  "name": "Add Account",
+  "stmts": [
+    {
+      "type": "addAccount",
+      "optional": true,
+      "stmts": [
+        {
+          "type": "set",
+          "prop": "account.name",
+          "xpr": { "type": "value", "value": "" }
+        },
+        {
+          "type": "set",
+          "prop": "account.icon",
+          "xpr": {
+            "type": "value",
+            "value": null
+          }
+        },
+        {
+          "type": "set",
+          "prop": "account.countryISO",
+          "xpr": { "type": "value", "value": null }
+        }
+      ]
+    }
+  ]
+}

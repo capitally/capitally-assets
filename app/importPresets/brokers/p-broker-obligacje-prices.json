@@ -1,0 +1,97 @@
+{
+  "version": 3,
+  "type": "Capitally Data Export",
+  "exportedAt": "2024-10-20T19:12:33.842Z",
+  "data": {
+    "importPresets": {
+      "u-wXTSncAPhB7hAK2": {
+        "id": "u-wXTSncAPhB7hAK2",
+        "name": "2 of 2 - Prices #beta",
+        "updatedAt": "2024-10-20T21:12",
+        "author": "Rafal <CEzOZ77nYhZX6L0qXPKXSs6GBho2>",
+        "info": "☝️ This will update prices and thus value of bonds you've previously imported using **Obligacje Skarbowe: 1 of 2 - Transactions**. You'll need to run it regularly, as Capitally does not automatically update value of bonds.\n\nTo update the bond prices:\n\n1. Go to [Serwis Obligacji Skarbowych](https://www.zakup.obligacjeskarbowe.pl/login.html)\n2. Open **Rachunek Rejestrowy**\n3. Open **Stan Rachunku Rejestrowego**\n4. Click the **[↓]** button to download the XLS file\n5. Open or drop that file here\n\n📋 Alternatively, you can copy the *whole* table, including the headers, and paste it here.",
+        "provider": "Obligacje Skarbowe",
+        "providerIcon": {
+          "type": "logo",
+          "id": "brokers/ministerstwo-finansow"
+        },
+        "providerGroup": "Brokers",
+        "parser": {
+          "allowClipboard": true,
+          "csv": {}
+        },
+        "sections": {
+          "main": {
+            "csv": {
+              "header": true
+            },
+            "replaceHeaders": [
+              ["~Emisja~^$", "EMISJA"],
+              ["~Liczba obligacji~^$", "DOSTĘPNA LICZBA OBLIGACJI"],
+              ["~Wartość obligacji~^$", "ZABLOKOWANA LICZBA OBLIGACJI"],
+              ["~Data Wykupu~^$", "WARTOŚĆ NOMINALNA"],
+              ["~Column 5~^$", "WARTOŚĆ AKTUALNA"],
+              ["~Column 6~^$", "DATA WYKUPU"]
+            ],
+            "enabledColumns": [
+              "EMISJA",
+              "DOSTĘPNA LICZBA OBLIGACJI",
+              "ZABLOKOWANA LICZBA OBLIGACJI",
+              "WARTOŚĆ NOMINALNA",
+              "WARTOŚĆ AKTUALNA",
+              "DATA WYKUPU"
+            ],
+            "program": {
+              "stmts": [
+                {
+                  "type": "if",
+                  "ifs": [
+                    {
+                      "xpr": {
+                        "type": "pattern",
+                        "xpr": {
+                          "type": "prop",
+                          "prop": "cols.EMISJA"
+                        },
+                        "pattern": "/[A-Z]{3,5}[0-9]{4}/^$"
+                      },
+                      "stmts": [
+                        {
+                          "type": "setMarketPrice",
+                          "asset": {
+                            "type": "prop",
+                            "prop": "cols.EMISJA"
+                          },
+                          "date": {
+                            "type": "formula",
+                            "formula": "=D.today()"
+                          },
+                          "price": {
+                            "type": "formula",
+                            "formula": "=100 * (col(\"WARTOŚĆ AKTUALNA\") / col(\"WARTOŚĆ NOMINALNA\"))"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "stmts": [
+                        {
+                          "type": "addRowNote",
+                          "note": {
+                            "type": "value",
+                            "value": "Ignored as a copy&paste artifact"
+                          },
+                          "urgency": "log"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+}

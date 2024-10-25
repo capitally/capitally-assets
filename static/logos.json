@@ -94,5 +94,9 @@
   "brokers/portfolioperformance": {
     "file": "brokers/portfolioperformance.png",
     "name": "Portfolio Performance"
+  },
+  "logos/capitally": {
+    "file": "logo-icon-bg.svg",
+    "name": "Capitally"
   }
 }

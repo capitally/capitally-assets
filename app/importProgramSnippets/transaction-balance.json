@@ -1,0 +1,56 @@
+{
+  "id": "import-transaction-balance",
+  "name": "Add Transaction: Balance & price",
+  "stmts": [
+    {
+      "type": "addTransaction",
+      "stmts": [
+        {
+          "type": "set",
+          "prop": "transaction.account",
+          "xpr": { "type": "value" }
+        },
+        {
+          "type": "set",
+          "prop": "transaction.asset",
+          "xpr": {
+            "type": "prop",
+            "prop": "cols.pick a property or enter value"
+          },
+          "cast": { "asset": { "remote": { "type": "value", "value": true } } }
+        },
+        {
+          "type": "set",
+          "prop": "transaction.type",
+          "xpr": { "type": "value", "value": "BALANCE" },
+          "map": []
+        },
+        {
+          "type": "set",
+          "prop": "transaction.date",
+          "xpr": {
+            "type": "prop",
+            "prop": "cols.pick a property or enter value"
+          }
+        },
+        {
+          "type": "set",
+          "prop": "transaction.value",
+          "xpr": {
+            "type": "prop",
+            "prop": "cols.pick a property or enter value"
+          }
+        },
+        {
+          "type": "setMarketPrice",
+          "asset": { "type": "prop", "prop": "transaction.asset" },
+          "date": { "type": "prop", "prop": "transaction.date" },
+          "price": {
+            "type": "prop",
+            "prop": "cols.pick a property or enter value"
+          }
+        }
+      ]
+    }
+  ]
+}
