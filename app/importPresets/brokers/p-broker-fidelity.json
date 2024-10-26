@@ -1,15 +1,16 @@
 {
   "version": 3,
   "type": "Capitally Data Export",
-  "exportedAt": "2024-10-10T19:05:29.478Z",
+  "exportedAt": "2024-10-26T13:28:15.135Z",
   "data": {
     "importPresets": {
-      "u-7xaHCUFcKrLKZyd": {
-        "id": "u-7xaHCUFcKrLKZyd",
+      "u-wt7SrhnflsLStA8": {
+        "id": "u-wt7SrhnflsLStA8",
         "name": "Transactions & dividends #beta",
-        "updatedAt": "2024-10-10T21:05",
-        "author": "Capitally",
+        "updatedAt": "2024-10-26T12:49",
+        "author": "Rafal <CEzOZ77nYhZX6L0qXPKXSs6GBho2>",
         "info": "To import your transactions from Fidelity:\n\n1. Login to your Fidelity Client Portal\n2. Choose **Account** → **Activity & Orders**\n3. Choose a time period\n4. Download transactions in CSV format with the green ↓ icon\n5. Open or drop that file here",
+        "sourceId": "p-broker-fidelity",
         "provider": "Fidelity",
         "providerIcon": {
           "type": "logo",
@@ -37,11 +38,11 @@
               "Security Description",
               "Security Type",
               "Quantity",
-              "Price ",
-              "Commission ",
-              "Fees ",
-              "Accrued Interest ",
-              "Amount ",
+              "Price",
+              "Commission",
+              "Fees",
+              "Accrued Interest",
+              "Amount",
               "Settlement Date"
             ],
             "program": {
@@ -142,16 +143,6 @@
                           }
                         },
                         {
-                          "cmp": {
-                            "type": "pattern",
-                            "pattern": "~REINVESTED~^"
-                          },
-                          "target": {
-                            "type": "value",
-                            "value": "OPEN"
-                          }
-                        },
-                        {
                           "target": {
                             "type": "value"
                           }
@@ -175,6 +166,10 @@
                           },
                           "stmts": [
                             {
+                              "type": "comment",
+                              "md": "## Buy & Sell transactions"
+                            },
+                            {
                               "type": "set",
                               "prop": "transaction.qty",
                               "xpr": {
@@ -192,7 +187,7 @@
                               "prop": "transaction.price",
                               "xpr": {
                                 "type": "prop",
-                                "prop": "cols.Price "
+                                "prop": "cols.Price"
                               }
                             }
                           ]
@@ -211,11 +206,15 @@
                           },
                           "stmts": [
                             {
+                              "type": "comment",
+                              "md": "## Dividends"
+                            },
+                            {
                               "type": "set",
                               "prop": "transaction.value",
                               "xpr": {
                                 "type": "prop",
-                                "prop": "cols.Amount "
+                                "prop": "cols.Amount"
                               }
                             },
                             {
@@ -225,9 +224,13 @@
                             {
                               "type": "lookupRows",
                               "direction": "after",
+                              "offset": {
+                                "type": "value",
+                                "value": -5
+                              },
                               "limit": {
                                 "type": "value",
-                                "value": 1
+                                "value": 10
                               },
                               "stmts": [
                                 {
@@ -243,7 +246,7 @@
                                               "type": "prop",
                                               "prop": "lookup.cols.Action"
                                             },
-                                            "pattern": "~ REINVESTMENT~^"
+                                            "pattern": "~REINVESTMENT ~"
                                           },
                                           {
                                             "type": "=",
@@ -254,6 +257,17 @@
                                             "v": {
                                               "type": "prop",
                                               "prop": "cols.Symbol"
+                                            }
+                                          },
+                                          {
+                                            "type": "=",
+                                            "xpr": {
+                                              "type": "prop",
+                                              "prop": "lookup.cols.Run Date"
+                                            },
+                                            "v": {
+                                              "type": "prop",
+                                              "prop": "cols.Run Date"
                                             }
                                           }
                                         ]
@@ -275,6 +289,77 @@
                                   ]
                                 }
                               ]
+                            }
+                          ]
+                        },
+                        {
+                          "xpr": {
+                            "type": "pattern",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Action"
+                            },
+                            "pattern": "~INTEREST EARNED~"
+                          },
+                          "stmts": [
+                            {
+                              "type": "comment",
+                              "md": "## Interest"
+                            },
+                            {
+                              "type": "addRowNote",
+                              "note": {
+                                "type": "value",
+                                "value": "🏦 Bonds and deposits are currently not imported"
+                              }
+                            },
+                            {
+                              "type": "return"
+                            }
+                          ]
+                        },
+                        {
+                          "xpr": {
+                            "type": "pattern",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Action"
+                            },
+                            "pattern": "~CASH~"
+                          },
+                          "stmts": [
+                            {
+                              "type": "comment",
+                              "md": "## Money transfers"
+                            },
+                            {
+                              "type": "addRowNote",
+                              "note": {
+                                "type": "value",
+                                "value": "💸 Money transfers are currently not imported"
+                              }
+                            },
+                            {
+                              "type": "return"
+                            }
+                          ]
+                        },
+                        {
+                          "xpr": {
+                            "type": "pattern",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Action"
+                            },
+                            "pattern": "~REINVESTMENT~"
+                          },
+                          "stmts": [
+                            {
+                              "type": "comment",
+                              "md": "Silently ignore, it's handled in the lookups"
+                            },
+                            {
+                              "type": "return"
                             }
                           ]
                         },
@@ -352,7 +437,7 @@
                       "prop": "transaction.fee",
                       "xpr": {
                         "type": "prop",
-                        "prop": "cols.Fees "
+                        "prop": "cols.Fees"
                       }
                     },
                     {

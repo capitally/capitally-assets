@@ -4,8 +4,10 @@ This repository is a central hub for storing and collaborating on various assets
 
 ## Contents
 
-- **app/importTemplates**: [Import Templates](https://www.mycapitally.com/help/import-from-a-broker) for various brokers
+- **app/importPresets**: [Import Presets](https://www.mycapitally.com/help/import-from-a-broker) for various brokers
+- **app/importTemplates**: [legacy Import Templates](https://www.mycapitally.com/help/import-from-a-broker) for various brokers
 - **app/taxPresets**: [Tax presets](https://www.mycapitally.com/help/tax-presets) for countries
+- **app/importProgramSnippets**: reusable snippets to be used in Import Presets
 - **app/taxProgramSnippets**: reusable snippets to be used in Tax Presets
 - **static/brokers**: logos of brokers referenced in Import Templates
 
@@ -15,19 +17,17 @@ We welcome contributions from the community! If you have any assets that you bel
 
 Ensure your contributions follow the repository's structure and naming conventions. For questions or assistance, please open an issue.
 
-### Import Templates
+### Import Presets
 
-To create a new import template, simply create it in the app and export it.
-You can also import any template from this repository into the app, modify it, and then export it back here.
+To create a new import presets, simply create it in the app and export it.
+You can also import any preset from this repository into the app, modify it, and then export it back here.
 
 When submitting, please make sure that:
 
-- the template has the `info`, `author`, `group` and `logoURL` fields filled out - you will need
-  to edit the file manually for templates created within the app
-- in broker templates, the first column should be an `Account` that uses a `$template`,
-  please refer to existing templates for reference
-- the file name starts with `app-` (for imports from apps) or `broker-` (for imports from brokers or crypto exchanges)
-- it's added to one of the `app/importTemplates` subfolders
+- the template has the `info`, `author`, `group` and `icon` fields filled out
+- presets for brokers should create an `Account`
+- the file name starts with `p-app-` (for imports from apps) or `p-broker-` (for imports from brokers or crypto exchanges)
+- it's added to one of the `app/importPresets` subfolders
 
 ### Tax Presets
 

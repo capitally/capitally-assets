@@ -1,15 +1,16 @@
 {
   "version": 3,
   "type": "Capitally Data Export",
-  "exportedAt": "2024-10-07T14:25:15.870Z",
+  "exportedAt": "2024-10-26T10:25:07.075Z",
   "data": {
     "importPresets": {
-      "u-cgKGVzsxtYSNxCf": {
-        "id": "u-cgKGVzsxtYSNxCf",
+      "u-lw7PwQ9f991jACO": {
+        "id": "u-lw7PwQ9f991jACO",
         "name": "Transactions #beta",
-        "updatedAt": "2024-10-07T16:19",
-        "author": "Capitally",
+        "updatedAt": "2024-10-26T12:24",
+        "author": "Rafal <CEzOZ77nYhZX6L0qXPKXSs6GBho2>",
         "info": "To import your transactions from Schwab:\n\n1. Go to [Schwab Client Portal](https://client.schwab.com/)\n2. Open **Accounts** → **History**\n3. Click the **↓ Export** to download the trades files\n4. Open or drop that file here",
+        "sourceId": "p-broker-schwab",
         "provider": "Charles Schwab",
         "providerIcon": {
           "type": "logo",
@@ -167,6 +168,10 @@
                           },
                           "stmts": [
                             {
+                              "type": "comment",
+                              "md": "## Buy/Sell transactions"
+                            },
+                            {
                               "type": "set",
                               "prop": "transaction.asset",
                               "xpr": {
@@ -268,6 +273,283 @@
                                   ]
                                 }
                               ]
+                            }
+                          ]
+                        },
+                        {
+                          "xpr": {
+                            "type": "pattern",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Action"
+                            },
+                            "pattern": "~Credit Interest~"
+                          },
+                          "stmts": [
+                            {
+                              "type": "comment",
+                              "md": "## Interest"
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.asset",
+                              "xpr": {
+                                "type": "value",
+                                "value": {
+                                  "id": "c-USD"
+                                }
+                              },
+                              "cast": {
+                                "asset": {
+                                  "remote": {
+                                    "type": "value",
+                                    "value": true
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.type",
+                              "xpr": {
+                                "type": "value",
+                                "value": "INTEREST"
+                              },
+                              "map": []
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.value",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Amount"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.valueCurrency",
+                              "xpr": {
+                                "type": "value",
+                                "value": {
+                                  "id": "c-USD"
+                                }
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.note",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Description"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "xpr": {
+                            "type": "pattern",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Action"
+                            },
+                            "pattern": "~Service Fee~"
+                          },
+                          "stmts": [
+                            {
+                              "type": "comment",
+                              "md": "## Fees"
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.asset",
+                              "xpr": {
+                                "type": "value",
+                                "value": {
+                                  "id": "c-USD"
+                                }
+                              },
+                              "cast": {
+                                "asset": {
+                                  "remote": {
+                                    "type": "value",
+                                    "value": true
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.type",
+                              "xpr": {
+                                "type": "value",
+                                "value": "OTHER"
+                              },
+                              "map": []
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.value",
+                              "xpr": {
+                                "type": "value",
+                                "value": 0
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.fee",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Amount"
+                              },
+                              "trfms": [
+                                {
+                                  "type": "negate"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.currency",
+                              "xpr": {
+                                "type": "value",
+                                "value": {
+                                  "id": "c-USD"
+                                }
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.note",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Description"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "xpr": {
+                            "type": "or",
+                            "xprs": [
+                              {
+                                "type": "pattern",
+                                "xpr": {
+                                  "type": "prop",
+                                  "prop": "cols.Action"
+                                },
+                                "pattern": "~Misc Cash Entry~"
+                              },
+                              {
+                                "type": "pattern",
+                                "xpr": {
+                                  "type": "prop",
+                                  "prop": "cols.Action"
+                                },
+                                "pattern": "~NRA Tax Adj~"
+                              }
+                            ]
+                          },
+                          "stmts": [
+                            {
+                              "type": "comment",
+                              "md": "## Other expense & income"
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.asset",
+                              "xpr": {
+                                "type": "value",
+                                "value": {
+                                  "id": "c-USD"
+                                }
+                              },
+                              "cast": {
+                                "asset": {
+                                  "remote": {
+                                    "type": "value",
+                                    "value": true
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.type",
+                              "xpr": {
+                                "type": "value",
+                                "value": "OTHER"
+                              },
+                              "map": []
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.value",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Amount"
+                              },
+                              "trfms": []
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.currency",
+                              "xpr": {
+                                "type": "value",
+                                "value": {
+                                  "id": "c-USD"
+                                }
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.note",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Description"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "xpr": {
+                            "type": "or",
+                            "xprs": [
+                              {
+                                "type": "pattern",
+                                "xpr": {
+                                  "type": "prop",
+                                  "prop": "cols.Action"
+                                },
+                                "pattern": "~Wire~"
+                              },
+                              {
+                                "type": "pattern",
+                                "xpr": {
+                                  "type": "prop",
+                                  "prop": "cols.Action"
+                                },
+                                "pattern": "~Deposit~"
+                              },
+                              {
+                                "type": "pattern",
+                                "xpr": {
+                                  "type": "prop",
+                                  "prop": "cols.Action"
+                                },
+                                "pattern": "~Withdraw~"
+                              }
+                            ]
+                          },
+                          "stmts": [
+                            {
+                              "type": "addRowNote",
+                              "note": {
+                                "type": "value",
+                                "value": "💸 Money transfers are currently not imported"
+                              }
+                            },
+                            {
+                              "type": "return"
                             }
                           ]
                         },
