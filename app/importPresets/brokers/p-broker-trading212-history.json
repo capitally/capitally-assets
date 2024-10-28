@@ -1,0 +1,483 @@
+{
+  "version": 3,
+  "type": "Capitally Data Export",
+  "exportedAt": "2024-10-27T09:45:11.501Z",
+  "data": {
+    "importPresets": {
+      "u-E2g9HmBeKWMoVAn": {
+        "id": "u-E2g9HmBeKWMoVAn",
+        "name": "History #beta",
+        "updatedAt": "2024-10-27T10:30",
+        "author": "Rafal <CEzOZ77nYhZX6L0qXPKXSs6GBho2>",
+        "info": "To import your transactions from Trading 212:\n\n1. Open the Trading 212 app\n1. Open the main menu and navigate to **History**\n1. Click the download icon in the top-right\n1. Select the date range and click **Export CSV**\n1. Download the file and open or drop that file here\n",
+        "mappingInfo": "",
+        "provider": "Trading 212",
+        "providerIcon": {
+          "type": "logo",
+          "id": "brokers/trading212"
+        },
+        "providerGroup": "Brokers",
+        "parser": {
+          "decimalSeparator": ".",
+          "formats": ["csv"],
+          "allowClipboard": false,
+          "csv": {}
+        },
+        "sections": {
+          "main": {
+            "csv": {
+              "header": true
+            },
+            "enabledColumns": [
+              "Action",
+              "Time",
+              "ISIN",
+              "Ticker",
+              "Name",
+              "No  of shares",
+              "Price   share",
+              "Currency (Price   share)",
+              "Exchange rate",
+              "Result",
+              "Currency (Result)",
+              "Total",
+              "Currency (Total)",
+              "Withholding tax",
+              "Currency (Withholding tax)",
+              "Charge amount",
+              "Currency (Charge amount)",
+              "Notes",
+              "ID",
+              "Currency conversion fee",
+              "Currency (Currency conversion fee)",
+              "French transaction tax",
+              "Currency (French transaction tax)"
+            ],
+            "program": {
+              "stmts": [
+                {
+                  "type": "addAccount",
+                  "optional": true,
+                  "stmts": [
+                    {
+                      "type": "set",
+                      "prop": "account.name",
+                      "xpr": {
+                        "type": "value",
+                        "value": "Trading 212"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "account.icon",
+                      "xpr": {
+                        "type": "value",
+                        "value": {
+                          "type": "logo",
+                          "id": "brokers/trading212"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "addTransaction",
+                  "stmts": [
+                    {
+                      "type": "set",
+                      "prop": "transaction.account",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "addedAccount"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.asset",
+                      "xpr": {
+                        "type": "formula",
+                        "formula": "=col(\"ISIN\") + \" \" + col(\"Ticker\")"
+                      },
+                      "cast": {
+                        "asset": {
+                          "assetTypes": {
+                            "type": "value",
+                            "value": ["STOCK", "ETF"]
+                          },
+                          "markets": {
+                            "type": "value",
+                            "value": [
+                              {
+                                "id": "mic-XNYS"
+                              },
+                              {
+                                "id": "mic-XASE"
+                              },
+                              {
+                                "id": "mic-ARCX"
+                              },
+                              {
+                                "id": "mic-XNAS"
+                              },
+                              {
+                                "id": "mic-XETR"
+                              },
+                              {
+                                "id": "mic-XAMS"
+                              },
+                              {
+                                "id": "mic-XPAR"
+                              },
+                              {
+                                "id": "mic-BMEX"
+                              },
+                              {
+                                "id": "mic-XBRU"
+                              },
+                              {
+                                "id": "mic-XWBO"
+                              },
+                              {
+                                "id": "mic-XLIS"
+                              },
+                              {
+                                "id": "mic-XSWX"
+                              },
+                              {
+                                "id": "mic-XMIL"
+                              },
+                              {
+                                "id": "mic-XTSE"
+                              },
+                              {
+                                "id": "mic-XTSX"
+                              },
+                              {
+                                "id": "m-OTC"
+                              }
+                            ]
+                          },
+                          "remote": {
+                            "type": "value",
+                            "value": true
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.date",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Time"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.type",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Action"
+                      },
+                      "map": [
+                        {
+                          "cmp": {
+                            "type": "=",
+                            "v": {
+                              "type": "value",
+                              "value": "Market buy"
+                            }
+                          },
+                          "target": {
+                            "type": "value",
+                            "value": "OPEN"
+                          }
+                        },
+                        {
+                          "cmp": {
+                            "type": "=",
+                            "v": {
+                              "type": "value",
+                              "value": "Market sell"
+                            }
+                          },
+                          "target": {
+                            "type": "value",
+                            "value": "CLOSE"
+                          }
+                        },
+                        {
+                          "cmp": {
+                            "type": "=",
+                            "v": {
+                              "type": "value",
+                              "value": "Dividend (Ordinary)"
+                            }
+                          },
+                          "target": {
+                            "type": "value",
+                            "value": "DIVIDEND"
+                          }
+                        },
+                        {
+                          "cmp": {
+                            "type": "=",
+                            "v": {
+                              "type": "value",
+                              "value": "Dividend (Ordinary manufactured payment)"
+                            }
+                          },
+                          "target": {
+                            "type": "value",
+                            "value": "DIVIDEND"
+                          }
+                        },
+                        {
+                          "cmp": {
+                            "type": "=",
+                            "v": {
+                              "type": "value",
+                              "value": "Dividend (Return of capital non us)"
+                            }
+                          },
+                          "target": {
+                            "type": "value",
+                            "value": "DIVIDEND"
+                          }
+                        },
+                        {
+                          "cmp": {
+                            "type": "=",
+                            "v": {
+                              "type": "value",
+                              "value": "Dividend (Bonus)"
+                            }
+                          },
+                          "target": {
+                            "type": "value",
+                            "value": "DIVIDEND"
+                          }
+                        },
+                        {
+                          "target": {
+                            "type": "value",
+                            "value": null
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.taxPaid",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Withholding tax"
+                      },
+                      "trfms": [
+                        {
+                          "type": "abs"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.fee",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Charge amount"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.feeCurrency",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Currency (Charge amount)"
+                      }
+                    },
+                    {
+                      "type": "if",
+                      "ifs": [
+                        {
+                          "xpr": {
+                            "type": "in",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "transaction.type"
+                            },
+                            "v": {
+                              "type": "value",
+                              "value": ["OPEN", "CLOSE"]
+                            }
+                          },
+                          "stmts": [
+                            {
+                              "type": "set",
+                              "prop": "transaction.qty",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.No  of shares"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.price",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Price   share"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.valueCurrency",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Currency (Price   share)"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.reference",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.ID"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "xpr": {
+                            "type": "in",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "transaction.type"
+                            },
+                            "v": {
+                              "type": "value",
+                              "value": ["DIVIDEND"]
+                            }
+                          },
+                          "stmts": [
+                            {
+                              "type": "set",
+                              "prop": "transaction.value",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Total"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.valueCurrency",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Currency (Total)"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.note",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Action"
+                              }
+                            },
+                            {
+                              "type": "if",
+                              "ifs": [
+                                {
+                                  "xpr": {
+                                    "type": "=",
+                                    "xpr": {
+                                      "type": "prop",
+                                      "prop": "cols.Action"
+                                    },
+                                    "v": {
+                                      "type": "value",
+                                      "value": "Dividend (Bonus)"
+                                    }
+                                  },
+                                  "stmts": [
+                                    {
+                                      "type": "set",
+                                      "prop": "transaction.incomeQty",
+                                      "xpr": {
+                                        "type": "prop",
+                                        "prop": "cols.No  of shares"
+                                      }
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "xpr": {
+                            "type": "or",
+                            "xprs": [
+                              {
+                                "type": "=",
+                                "xpr": {
+                                  "type": "prop",
+                                  "prop": "cols.Action"
+                                },
+                                "v": {
+                                  "type": "value",
+                                  "value": "Deposit"
+                                }
+                              },
+                              {
+                                "type": "=",
+                                "xpr": {
+                                  "type": "prop",
+                                  "prop": "cols.Action"
+                                },
+                                "v": {
+                                  "type": "value",
+                                  "value": "Withdrawal"
+                                }
+                              }
+                            ]
+                          },
+                          "stmts": [
+                            {
+                              "type": "addRowNote",
+                              "note": {
+                                "type": "value",
+                                "value": "💸 Money transfers are currently not imported"
+                              }
+                            },
+                            {
+                              "type": "return"
+                            }
+                          ]
+                        },
+                        {
+                          "stmts": [
+                            {
+                              "type": "addRowNote",
+                              "note": {
+                                "type": "formula",
+                                "formula": "=\"Transaction `\" + col(\"Action\") + \"` is currently not supported\""
+                              },
+                              "urgency": "warn"
+                            },
+                            {
+                              "type": "return"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "options": {}
+      }
+    }
+  }
+}

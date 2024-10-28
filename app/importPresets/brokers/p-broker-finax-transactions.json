@@ -9,7 +9,7 @@
         "name": "1 of 2 - Transactions #beta",
         "updatedAt": "2024-10-21T13:00",
         "author": "Rafal <CEzOZ77nYhZX6L0qXPKXSs6GBho2>",
-        "info": "To import your transactions from Finax:\n\n1. Login to [Finax](https://finax.eu/en/login)\n2. Choose **Transactions** from the top menu\n3. Choose a time period\n4. Select the whole table and **copy** it (`Ctrl+C` / `Cmd+C`)\n5. Click **paste** below\n\n> 🦉 Use the second preset - **Finax: Operations** - to import fees",
+        "info": "To import your transactions from Finax:\n\n1. Login to [Finax](https://finax.eu/en/login)\n2. Choose **Transactions** from the top menu\n3. Choose a time period\n4. Select the whole table and **copy** it (`Ctrl+C` / `Cmd+C`)\n5. Click **paste** below\n\n> 🦉 Use the second preset - **Finax: Dividends & Fees** - for a full picture",
         "mappingInfo": "",
         "provider": "Finax",
         "providerIcon": {

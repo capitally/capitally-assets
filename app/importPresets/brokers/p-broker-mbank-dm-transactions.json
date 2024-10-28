@@ -1,0 +1,351 @@
+{
+  "version": 3,
+  "type": "Capitally Data Export",
+  "exportedAt": "2024-10-26T15:40:16.566Z",
+  "data": {
+    "importPresets": {
+      "u-SXCz9OMW1gMcnRt": {
+        "id": "u-SXCz9OMW1gMcnRt",
+        "name": "Transactions",
+        "updatedAt": "2024-10-26T17:39",
+        "author": "Rafal <CEzOZ77nYhZX6L0qXPKXSs6GBho2>",
+        "info": "To import your transactions from MDM:\n\n1. Go to [mInwestor](https://minwestor.mbank.pl/mdm/)\n2. Open **Historia** → **Transakcje** \n3. Select time period in filters\n4. Click the arrow (**↓**) icon to download the trades files\n5. Open or drop that file here\n\n> 🚧 We currently don't import dividends. If you have a sample file with dividends - we'd love to add them!",
+        "mappingInfo": "",
+        "sourceId": "broker-mdm",
+        "provider": "mBank Dom Maklerski",
+        "providerIcon": {
+          "type": "logo",
+          "id": "brokers/mbank"
+        },
+        "providerGroup": "Brokers",
+        "parser": {
+          "dateOrder": "dmy",
+          "decimalSeparator": ",",
+          "formats": [
+            "csv"
+          ],
+          "allowClipboard": false,
+          "csv": {}
+        },
+        "sections": {
+          "main": {
+            "csv": {
+              "header": true
+            },
+            "enabledColumns": [
+              "Walor",
+              "Giełda",
+              "K S",
+              "Liczba",
+              "Kurs",
+              "Waluta",
+              "Wartość",
+              "Prowizja",
+              "Czas transakcji",
+              "Waluta rozliczenia",
+              "Kurs Przewalutowania"
+            ],
+            "program": {
+              "stmts": [
+                {
+                  "type": "addAccount",
+                  "optional": true,
+                  "stmts": [
+                    {
+                      "type": "set",
+                      "prop": "account.name",
+                      "xpr": {
+                        "type": "value",
+                        "value": "mBank Dom Maklerski"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "account.icon",
+                      "xpr": {
+                        "type": "value",
+                        "value": {
+                          "type": "logo",
+                          "id": "brokers/mbank"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "addTransaction",
+                  "stmts": [
+                    {
+                      "type": "set",
+                      "prop": "transaction.account",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "addedAccount"
+                      }
+                    },
+                    {
+                      "type": "var",
+                      "varId": "markets",
+                      "varType": "market",
+                      "multiple": true,
+                      "xpr": {
+                        "type": "value"
+                      }
+                    },
+                    {
+                      "type": "if",
+                      "ifs": [
+                        {
+                          "xpr": {
+                            "type": "pattern",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Giełda"
+                            },
+                            "pattern": "~WWA~"
+                          },
+                          "stmts": [
+                            {
+                              "type": "set",
+                              "prop": "$markets",
+                              "xpr": {
+                                "type": "value",
+                                "value": [
+                                  {
+                                    "id": "mic-XWAR"
+                                  }
+                                ]
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "xpr": {
+                            "type": "pattern",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Giełda"
+                            },
+                            "pattern": "~GBR~"
+                          },
+                          "stmts": [
+                            {
+                              "type": "set",
+                              "prop": "$markets",
+                              "xpr": {
+                                "type": "value",
+                                "value": [
+                                  {
+                                    "id": "mic-XLON"
+                                  }
+                                ]
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "xpr": {
+                            "type": "pattern",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Giełda"
+                            },
+                            "pattern": "~DEU~"
+                          },
+                          "stmts": [
+                            {
+                              "type": "set",
+                              "prop": "$markets",
+                              "xpr": {
+                                "type": "value",
+                                "value": [
+                                  {
+                                    "id": "mic-XETR"
+                                  },
+                                  {
+                                    "id": "mic-XFRA"
+                                  }
+                                ]
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "xpr": {
+                            "type": "pattern",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Giełda"
+                            },
+                            "pattern": "~USA~^"
+                          },
+                          "stmts": [
+                            {
+                              "type": "set",
+                              "prop": "$markets",
+                              "xpr": {
+                                "type": "value",
+                                "value": [
+                                  {
+                                    "id": "mic-ARCX"
+                                  },
+                                  {
+                                    "id": "mic-XASE"
+                                  },
+                                  {
+                                    "id": "mic-XNAS"
+                                  },
+                                  {
+                                    "id": "mic-XNYS"
+                                  }
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.asset",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Walor"
+                      },
+                      "trfms": [
+                        {
+                          "type": "extract",
+                          "pattern": "/([^ ]+)/^"
+                        },
+                        {
+                          "type": "lower"
+                        }
+                      ],
+                      "cast": {
+                        "asset": {
+                          "assetTypes": {
+                            "type": "value",
+                            "value": [
+                              "STOCK",
+                              "ETF"
+                            ]
+                          },
+                          "markets": {
+                            "type": "prop",
+                            "prop": "$markets"
+                          },
+                          "remote": {
+                            "type": "value",
+                            "value": true
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.date",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Czas transakcji"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.type",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.K S"
+                      },
+                      "map": [
+                        {
+                          "cmp": {
+                            "type": "=",
+                            "v": {
+                              "type": "value",
+                              "value": "S"
+                            }
+                          },
+                          "target": {
+                            "type": "value",
+                            "value": "CLOSE"
+                          }
+                        },
+                        {
+                          "cmp": {
+                            "type": "=",
+                            "v": {
+                              "type": "value",
+                              "value": "K"
+                            }
+                          },
+                          "target": {
+                            "type": "value",
+                            "value": "OPEN"
+                          }
+                        },
+                        {
+                          "cmp": {
+                            "type": "=",
+                            "v": {
+                              "type": "value",
+                              "value": "PRICE"
+                            }
+                          },
+                          "target": {
+                            "type": "value",
+                            "value": null
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.qty",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Liczba"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.price",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Kurs"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.valueCurrency",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Waluta"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.fee",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Prowizja"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.feeCurrency",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Waluta rozliczenia"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "options": {}
+      }
+    }
+  }
+}

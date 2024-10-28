@@ -29,14 +29,18 @@
               "header": true
             },
             "replaceHeaders": [
+              ["~Change~^$", "Change currency"],
+              ["~Column 9~^$", "Change"],
+              ["~Balance~^$", "Balance currency"],
+              ["~Column 11~^$", "Balance"],
+
               ["~Datum~^$", "Date"],
               ["~Tijd~^$", "Time"],
               ["~Valutadatum~^$", "Value date"],
               ["~Omschrijving~^$", "Description"],
               ["~Mutatie~^$", "Change currency"],
-              ["~Column 9~", "Change"],
               ["~Saldo~^$", "Balance currency"],
-              ["~Column 11~", "Balance"],
+
               ["~Data~^$", "Date"],
               ["~Czas~^$", "Time"],
               ["~Date (1)~^$", "Value date"],
