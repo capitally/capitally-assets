@@ -1059,6 +1059,14 @@
                               "type": "prop",
                               "prop": "cols.Description"
                             },
+                            "pattern": "~DEGIRO Corporate Action Kosten~i"
+                          },
+                          {
+                            "type": "pattern",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Description"
+                            },
                             "pattern": "~Connection fee~i"
                           }
                         ]
@@ -1173,7 +1181,7 @@
                       "stmts": [
                         {
                           "type": "comment",
-                          "md": "## Account fees"
+                          "md": "## Other income"
                         },
                         {
                           "type": "addTransaction",

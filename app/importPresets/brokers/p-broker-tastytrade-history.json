@@ -1,0 +1,665 @@
+{
+  "version": 3,
+  "type": "Capitally Data Export",
+  "exportedAt": "2024-10-28T11:19:43.519Z",
+  "data": {
+    "importPresets": {
+      "u-s5NwhBEOsdjtjVA": {
+        "id": "u-s5NwhBEOsdjtjVA",
+        "name": "History #beta",
+        "updatedAt": "2024-10-28T12:19",
+        "author": "Rafal <CEzOZ77nYhZX6L0qXPKXSs6GBho2>",
+        "info": "To import your transactions from TastyTrade:\n\n1. Go to [TastyTrade Trading](https://trade.tastytrade.com/)\n2. Open **History** from the left menu\n3. Make sure **Transactions** tab is opened\n4. Set desired time period with the **Date Filter**\n5. Ensure that **Any** is selected in the **Type Filter**\n6. Click the **↑** icon above the Date Filter to download the trades file\n7. Open or drop that file here\n",
+        "sourceId": "",
+        "provider": "TastyTrade",
+        "providerIcon": {
+          "type": "logo",
+          "id": "brokers/tastyworks"
+        },
+        "providerGroup": "Brokers",
+        "parser": {
+          "dateOrder": "ymd",
+          "decimalSeparator": ".",
+          "allowClipboard": true
+        },
+        "sections": {
+          "main": {
+            "csv": {
+              "header": true
+            },
+            "enabledColumns": [
+              "Date",
+              "Type",
+              "Sub Type",
+              "Action",
+              "Symbol",
+              "Instrument Type",
+              "Description",
+              "Value",
+              "Quantity",
+              "Average Price",
+              "Commissions",
+              "Fees",
+              "Multiplier",
+              "Root Symbol",
+              "Underlying Symbol",
+              "Expiration Date",
+              "Strike Price",
+              "Call or Put",
+              "Order #",
+              "Currency"
+            ],
+            "program": {
+              "stmts": [
+                {
+                  "type": "addAccount",
+                  "optional": true,
+                  "stmts": [
+                    {
+                      "type": "set",
+                      "prop": "account.name",
+                      "xpr": {
+                        "type": "value",
+                        "value": "TastyTrade"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "account.icon",
+                      "xpr": {
+                        "type": "value",
+                        "value": {
+                          "type": "logo",
+                          "id": "brokers/tastyworks"
+                        }
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "account.countryISO",
+                      "xpr": {
+                        "type": "value",
+                        "value": "US"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "if",
+                  "ifs": [
+                    {
+                      "xpr": {
+                        "type": "=",
+                        "xpr": {
+                          "type": "prop",
+                          "prop": "cols.Instrument Type"
+                        },
+                        "v": {
+                          "type": "value",
+                          "value": "Equity"
+                        }
+                      },
+                      "stmts": [
+                        {
+                          "type": "comment",
+                          "md": "## Equity transactions"
+                        },
+                        {
+                          "type": "addTransaction",
+                          "stmts": [
+                            {
+                              "type": "set",
+                              "prop": "transaction.account",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "addedAccount"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.asset",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Symbol"
+                              },
+                              "cast": {
+                                "asset": {
+                                  "assetTypes": {
+                                    "type": "value",
+                                    "value": [
+                                      "STOCK",
+                                      "ETF"
+                                    ]
+                                  },
+                                  "markets": {
+                                    "type": "value",
+                                    "value": [
+                                      {
+                                        "id": "mic-XNYS"
+                                      },
+                                      {
+                                        "id": "mic-ARCX"
+                                      },
+                                      {
+                                        "id": "mic-XNAS"
+                                      },
+                                      {
+                                        "id": "mic-XASE"
+                                      },
+                                      {
+                                        "id": "mic-BATS"
+                                      },
+                                      {
+                                        "id": "m-OTC"
+                                      },
+                                      {
+                                        "id": "m-USFUND"
+                                      }
+                                    ]
+                                  },
+                                  "remote": {
+                                    "type": "value",
+                                    "value": true
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.type",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Sub Type"
+                              },
+                              "map": [
+                                {
+                                  "cmp": {
+                                    "type": "=",
+                                    "v": {
+                                      "type": "value",
+                                      "value": "Buy to Open"
+                                    }
+                                  },
+                                  "target": {
+                                    "type": "value",
+                                    "value": "OPEN"
+                                  }
+                                },
+                                {
+                                  "cmp": {
+                                    "type": "=",
+                                    "v": {
+                                      "type": "value",
+                                      "value": "Sell to Close"
+                                    }
+                                  },
+                                  "target": {
+                                    "type": "value",
+                                    "value": "CLOSE"
+                                  }
+                                },
+                                {
+                                  "cmp": {
+                                    "type": "=",
+                                    "v": {
+                                      "type": "value",
+                                      "value": "Dividend"
+                                    }
+                                  },
+                                  "target": {
+                                    "type": "value",
+                                    "value": "DIVIDEND"
+                                  }
+                                },
+                                {
+                                  "target": {
+                                    "type": "value"
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.date",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Date"
+                              }
+                            },
+                            {
+                              "type": "if",
+                              "ifs": [
+                                {
+                                  "xpr": {
+                                    "type": "in",
+                                    "xpr": {
+                                      "type": "prop",
+                                      "prop": "transaction.type"
+                                    },
+                                    "v": {
+                                      "type": "value",
+                                      "value": [
+                                        "OPEN",
+                                        "CLOSE"
+                                      ]
+                                    }
+                                  },
+                                  "stmts": [
+                                    {
+                                      "type": "set",
+                                      "prop": "transaction.qty",
+                                      "xpr": {
+                                        "type": "prop",
+                                        "prop": "cols.Quantity"
+                                      }
+                                    },
+                                    {
+                                      "type": "set",
+                                      "prop": "transaction.price",
+                                      "xpr": {
+                                        "type": "prop",
+                                        "prop": "cols.Average Price"
+                                      }
+                                    },
+                                    {
+                                      "type": "set",
+                                      "prop": "transaction.reference",
+                                      "xpr": {
+                                        "type": "prop",
+                                        "prop": "cols.Order #"
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "xpr": {
+                                    "type": "in",
+                                    "xpr": {
+                                      "type": "prop",
+                                      "prop": "transaction.type"
+                                    },
+                                    "v": {
+                                      "type": "value",
+                                      "value": [
+                                        "DIVIDEND"
+                                      ]
+                                    }
+                                  },
+                                  "stmts": [
+                                    {
+                                      "type": "if",
+                                      "ifs": [
+                                        {
+                                          "xpr": {
+                                            "type": ">=",
+                                            "xpr": {
+                                              "type": "prop",
+                                              "prop": "cols.Value"
+                                            },
+                                            "v": {
+                                              "type": "value",
+                                              "value": "0"
+                                            }
+                                          },
+                                          "stmts": [
+                                            {
+                                              "type": "set",
+                                              "prop": "transaction.value",
+                                              "xpr": {
+                                                "type": "prop",
+                                                "prop": "cols.Value"
+                                              }
+                                            },
+                                            {
+                                              "type": "comment",
+                                              "md": "Collect tax withheld from row with negative value"
+                                            },
+                                            {
+                                              "type": "lookupRows",
+                                              "direction": "start",
+                                              "offset": {
+                                                "type": "value"
+                                              },
+                                              "limit": {
+                                                "type": "value"
+                                              },
+                                              "stmts": [
+                                                {
+                                                  "type": "if",
+                                                  "ifs": [
+                                                    {
+                                                      "xpr": {
+                                                        "type": "and",
+                                                        "xprs": [
+                                                          {
+                                                            "type": "=",
+                                                            "xpr": {
+                                                              "type": "prop",
+                                                              "prop": "lookup.cols.Sub Type"
+                                                            },
+                                                            "v": {
+                                                              "type": "value",
+                                                              "value": "Dividend"
+                                                            }
+                                                          },
+                                                          {
+                                                            "type": "=",
+                                                            "xpr": {
+                                                              "type": "prop",
+                                                              "prop": "lookup.cols.Symbol"
+                                                            },
+                                                            "v": {
+                                                              "type": "prop",
+                                                              "prop": "cols.Symbol"
+                                                            }
+                                                          },
+                                                          {
+                                                            "type": "=",
+                                                            "xpr": {
+                                                              "type": "prop",
+                                                              "prop": "lookup.cols.Date"
+                                                            },
+                                                            "v": {
+                                                              "type": "prop",
+                                                              "prop": "cols.Date"
+                                                            }
+                                                          }
+                                                        ]
+                                                      },
+                                                      "stmts": [
+                                                        {
+                                                          "type": "set",
+                                                          "prop": "transaction.taxPaid",
+                                                          "xpr": {
+                                                            "type": "prop",
+                                                            "prop": "lookup.cols.Value"
+                                                          },
+                                                          "trfms": [
+                                                            {
+                                                              "type": "abs"
+                                                            }
+                                                          ]
+                                                        },
+                                                        {
+                                                          "type": "ignoreRow"
+                                                        },
+                                                        {
+                                                          "type": "return",
+                                                          "levels": 1
+                                                        }
+                                                      ]
+                                                    }
+                                                  ]
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "stmts": [
+                                            {
+                                              "type": "comment",
+                                              "md": "Silently ignore - it will be picked up by a lookup"
+                                            },
+                                            {
+                                              "type": "return"
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "stmts": [
+                                    {
+                                      "type": "addRowNote",
+                                      "note": {
+                                        "type": "formula",
+                                        "formula": "=\"Transaction `\" + col(\"Sub Type\") + \"` is currently not supported\""
+                                      },
+                                      "urgency": "warn"
+                                    },
+                                    {
+                                      "type": "return"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.currency",
+                              "xpr": {
+                                "type": "value",
+                                "value": {
+                                  "id": "c-USD"
+                                }
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.fee",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Fees"
+                              },
+                              "trfms": [
+                                {
+                                  "type": "abs"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.fee",
+                              "op": "+=",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Commissions"
+                              },
+                              "trfms": [
+                                {
+                                  "type": "replace",
+                                  "pattern": "~--~^$",
+                                  "replace": "0"
+                                },
+                                {
+                                  "type": "abs"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.note",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Description"
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "xpr": {
+                        "type": "truthy",
+                        "xpr": {
+                          "type": "prop",
+                          "prop": "cols.Instrument Type"
+                        }
+                      },
+                      "stmts": [
+                        {
+                          "type": "addRowNote",
+                          "note": {
+                            "type": "formula",
+                            "formula": "=\"`\" + col(\"Instrument Type\") + \"` is currently not supported\""
+                          },
+                          "urgency": "warn"
+                        }
+                      ]
+                    },
+                    {
+                      "xpr": {
+                        "type": "or",
+                        "xprs": [
+                          {
+                            "type": "=",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Sub Type"
+                            },
+                            "v": {
+                              "type": "value",
+                              "value": "Balance Adjustment"
+                            }
+                          },
+                          {
+                            "type": "=",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Sub Type"
+                            },
+                            "v": {
+                              "type": "value",
+                              "value": "Credit Interest"
+                            }
+                          }
+                        ]
+                      },
+                      "stmts": [
+                        {
+                          "type": "addTransaction",
+                          "stmts": [
+                            {
+                              "type": "set",
+                              "prop": "transaction.account",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "addedAccount"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.type",
+                              "xpr": {
+                                "type": "value",
+                                "value": "OTHER"
+                              },
+                              "map": []
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.date",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Date"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.value",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Value"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.currency",
+                              "xpr": {
+                                "type": "value",
+                                "value": {
+                                  "id": "c-USD"
+                                }
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.fee",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Fees"
+                              },
+                              "trfms": [
+                                {
+                                  "type": "abs"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "comment",
+                              "md": "Fees are typically recorded on the account's cash asset, but it may be a regular asset as well"
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.asset",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "transaction.valueCurrency"
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "xpr": {
+                        "type": "or",
+                        "xprs": [
+                          {
+                            "type": "=",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Sub Type"
+                            },
+                            "v": {
+                              "type": "value",
+                              "value": "Deposit"
+                            }
+                          },
+                          {
+                            "type": "=",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Sub Type"
+                            },
+                            "v": {
+                              "type": "value",
+                              "value": "Withdrawal"
+                            }
+                          }
+                        ]
+                      },
+                      "stmts": [
+                        {
+                          "type": "addRowNote",
+                          "note": {
+                            "type": "value",
+                            "value": "💸 Money transfers are currently not imported"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "stmts": [
+                        {
+                          "type": "addRowNote",
+                          "note": {
+                            "type": "formula",
+                            "formula": "=\"`\" + col(\"Sub Type\") + \"` is currently not supported\""
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+}
