@@ -1,0 +1,100 @@
+{
+  "id": "import-balances",
+  "name": "Position balances",
+  "stmts": [
+    {
+      "type": "addTransaction",
+      "stmts": [
+        {
+          "type": "comment",
+          "md": "🌱 Map all properties to columns, or enter values manually."
+        },
+        {
+          "type": "set",
+          "prop": "transaction.account",
+          "xpr": {
+            "type": "placeholder",
+            "placeholder": "Set the Account in the preset",
+            "valueLink": true,
+            "valueType": "scalar"
+          }
+        },
+        {
+          "type": "set",
+          "prop": "transaction.asset",
+          "xpr": {
+            "type": "placeholder",
+            "placeholder": "Set the Asset in the preset",
+            "propType": "asset",
+            "propsLink": { "label": "Choose column", "matchProp": "~cols.~^" },
+            "valueLink": true,
+            "valueType": "scalar"
+          },
+          "cast": { "asset": { "remote": { "type": "value", "value": true } } }
+        },
+        {
+          "type": "set",
+          "prop": "transaction.qty",
+          "xpr": {
+            "type": "placeholder",
+            "placeholder": "Set the Balance Quantity in the preset",
+            "propType": "transaction.qty",
+            "propsLink": {
+              "label": "Choose balance column",
+              "matchProp": "~cols.~^"
+            },
+            "valueType": "scalar"
+          },
+          "trfms": [{ "type": "abs" }]
+        },
+        {
+          "type": "comment",
+          "md": "🗓️ You can set the date to a column to import balances history."
+        },
+        {
+          "type": "set",
+          "prop": "transaction.date",
+          "xpr": {
+            "type": "formula",
+            "formula": "=Date.today()"
+          }
+        },
+        {
+          "type": "set",
+          "prop": "transaction.type",
+          "xpr": { "type": "value", "value": "BALANCE" },
+          "map": []
+        },
+        {
+          "type": "if",
+          "ifs": [
+            {
+              "stmts": [
+                {
+                  "type": "comment",
+                  "md": "🧨 If you don't need to update the market price - just remove it."
+                },
+                {
+                  "type": "setMarketPrice",
+                  "asset": { "type": "prop", "prop": "transaction.asset" },
+                  "date": { "type": "prop", "prop": "transaction.date" },
+                  "price": {
+                    "type": "placeholder",
+                    "placeholder": "Set or remove the Market Price in the preset",
+                    "propsLink": {
+                      "label": "Choose market price column",
+                      "matchProp": "~cols.~^"
+                    },
+                    "removeLink": { "levels": 3 },
+                    "propType": "transaction.marketPrice",
+                    "recommend": { "type": "prop", "prop": "cols.Market Price" }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

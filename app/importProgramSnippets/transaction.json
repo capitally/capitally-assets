@@ -1,0 +1,212 @@
+{
+  "id": "import-transaction",
+  "name": "Transaction",
+  "stmts": [
+    {
+      "type": "addTransaction",
+      "stmts": [
+        {
+          "type": "comment",
+          "md": "🌱 Map all properties to columns, or enter values manually.\nSome properties are optional and can be removed."
+        },
+        {
+          "type": "set",
+          "prop": "transaction.account",
+          "xpr": {
+            "type": "placeholder",
+            "placeholder": "Set the Account in the preset",
+            "valueLink": true,
+            "valueType": "scalar"
+          }
+        },
+        {
+          "type": "set",
+          "prop": "transaction.asset",
+          "xpr": {
+            "type": "placeholder",
+            "placeholder": "Set the Asset in the preset",
+            "propType": "asset",
+            "propsLink": { "label": "Choose column", "matchProp": "~cols.~^" },
+            "valueLink": true,
+            "valueType": "scalar"
+          },
+          "cast": { "asset": { "remote": { "type": "value", "value": true } } }
+        },
+        {
+          "type": "set",
+          "prop": "transaction.type",
+          "xpr": {
+            "type": "placeholder",
+            "placeholder": "Set the Transaction type in the preset",
+            "propType": "transaction.type",
+            "propsLink": { "label": "Choose column", "matchProp": "~cols.~^" },
+            "valueLink": true,
+            "valueType": "scalar"
+          }
+        },
+        {
+          "type": "set",
+          "prop": "transaction.date",
+          "xpr": {
+            "type": "placeholder",
+            "placeholder": "Set the Transaction Date in the preset",
+            "propType": "transaction.date",
+            "propsLink": { "label": "Choose column", "matchProp": "~cols.~^" },
+            "valueLink": true,
+            "valueType": "scalar"
+          }
+        },
+        {
+          "type": "set",
+          "prop": "transaction.fee",
+          "xpr": {
+            "type": "placeholder",
+            "placeholder": "Fill or remove the Transaction Fee in the preset",
+            "propType": "transaction.fee",
+            "value": 0,
+            "propsLink": { "label": "Choose column", "matchProp": "~cols.~^" },
+            "valueLink": true,
+            "valueType": "scalar",
+            "removeLink": {
+              "levels": 1
+            }
+          },
+          "trfms": [{ "type": "abs" }]
+        },
+        {
+          "type": "set",
+          "prop": "transaction.valueCurrency",
+          "xpr": {
+            "type": "placeholder",
+            "placeholder": "Fill or remove the Transaction Value Currency in the preset",
+            "propType": "transaction.valueCurrency",
+            "value": null,
+            "propsLink": { "label": "Choose column", "matchProp": "~cols.~^" },
+            "valueLink": true,
+            "valueType": "scalar",
+            "removeLink": {
+              "levels": 1
+            }
+          }
+        },
+        {
+          "type": "set",
+          "prop": "transaction.feeCurrency",
+          "xpr": {
+            "type": "placeholder",
+            "placeholder": "Fill or remove the Transaction Fee Currency in the preset",
+            "propType": "transaction.feeCurrency",
+            "value": null,
+            "propsLink": { "label": "Choose column", "matchProp": "~cols.~^" },
+            "valueLink": true,
+            "valueType": "scalar",
+            "removeLink": {
+              "levels": 1
+            }
+          }
+        },
+        {
+          "type": "set",
+          "prop": "transaction.taxPaid",
+          "xpr": {
+            "type": "placeholder",
+            "placeholder": "Fill or remove the Transaction Tax Paid in the preset",
+            "propType": "transaction.taxPaid",
+            "value": null,
+            "propsLink": { "label": "Choose column", "matchProp": "~cols.~^" },
+            "valueLink": true,
+            "valueType": "scalar",
+            "removeLink": {
+              "levels": 1
+            }
+          },
+          "trfms": [{ "type": "abs" }]
+        },
+        {
+          "type": "if",
+          "ifs": [
+            {
+              "xpr": {
+                "type": "in",
+                "xpr": { "type": "prop", "prop": "transaction.type" },
+                "v": { "type": "value", "value": ["OPEN", "CLOSE"] }
+              },
+              "stmts": [
+                {
+                  "type": "comment",
+                  "md": "🦉 Buy & Sell transactions require quantity and price."
+                },
+                {
+                  "type": "set",
+                  "prop": "transaction.qty",
+                  "xpr": {
+                    "type": "placeholder",
+                    "placeholder": "Set the Transaction Quantity in the preset",
+                    "propType": "transaction.qty",
+                    "propsLink": {
+                      "label": "Choose column",
+                      "matchProp": "~cols.~^"
+                    },
+                    "valueLink": true,
+                    "valueType": "scalar"
+                  },
+                  "trfms": [{ "type": "abs" }]
+                },
+                {
+                  "type": "set",
+                  "prop": "transaction.price",
+                  "xpr": {
+                    "type": "placeholder",
+                    "placeholder": "Set the Transaction Price in the preset",
+                    "propType": "transaction.price",
+                    "propsLink": {
+                      "label": "Choose column",
+                      "matchProp": "~cols.~^"
+                    },
+                    "valueLink": true,
+                    "valueType": "scalar"
+                  }
+                }
+              ]
+            },
+            {
+              "xpr": {
+                "type": "in",
+                "xpr": { "type": "prop", "prop": "transaction.type" },
+                "v": {
+                  "type": "value",
+                  "value": ["DIVIDEND", "INTEREST", "RENT", "OTHER"]
+                }
+              },
+              "stmts": [
+                {
+                  "type": "comment",
+                  "md": "💰 Dividend, Interest, Rent & Other transactions require value.\n💰 You can set other properties as well by adding more `Set` statements.\n🧨 Remove if you don't need it."
+                },
+                {
+                  "type": "set",
+                  "prop": "transaction.value",
+                  "xpr": {
+                    "type": "placeholder",
+                    "placeholder": "Fill or remove the Income Value in the preset",
+                    "value": null,
+                    "propType": "transaction.value",
+                    "propsLink": {
+                      "label": "Choose column",
+                      "matchProp": "~cols.~^"
+                    },
+                    "valueLink": true,
+                    "valueType": "scalar",
+                    "removeLink": {
+                      "levels": 2
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

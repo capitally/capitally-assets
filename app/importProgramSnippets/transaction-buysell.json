@@ -1,6 +1,6 @@
 {
   "id": "import-transaction-buysell",
-  "name": "Add Transaction: Buy/Sell",
+  "name": "Transaction: Buy/Sell",
   "stmts": [
     {
       "type": "addTransaction",
@@ -8,14 +8,23 @@
         {
           "type": "set",
           "prop": "transaction.account",
-          "xpr": { "type": "value" }
+          "xpr": {
+            "type": "placeholder",
+            "placeholder": "Set the Account in the preset",
+            "valueLink": true,
+            "valueType": "scalar"
+          }
         },
         {
           "type": "set",
           "prop": "transaction.asset",
           "xpr": {
-            "type": "prop",
-            "prop": "cols.pick a property or enter value"
+            "type": "placeholder",
+            "placeholder": "Set the Asset in the preset",
+            "propType": "asset",
+            "propsLink": { "label": "Choose column", "matchProp": "~cols.~^" },
+            "valueLink": true,
+            "valueType": "scalar"
           },
           "cast": { "asset": { "remote": { "type": "value", "value": true } } }
         },
@@ -23,58 +32,80 @@
           "type": "set",
           "prop": "transaction.type",
           "xpr": {
-            "type": "prop",
-            "prop": "cols.pick a property or enter value"
-          },
-          "map": [
-            {
-              "cmp": { "type": "=", "v": { "type": "value" } },
-              "target": { "type": "value", "value": "OPEN" }
-            },
-            {
-              "cmp": { "type": "=", "v": { "type": "value" } },
-              "target": { "type": "value", "value": "CLOSE" }
-            }
-          ]
+            "type": "placeholder",
+            "placeholder": "Set the Transaction type in the preset",
+            "propType": "transaction.type",
+            "propsLink": { "label": "Choose column", "matchProp": "~cols.~^" },
+            "valueLink": true,
+            "valueType": "scalar"
+          }
         },
         {
           "type": "set",
           "prop": "transaction.date",
           "xpr": {
-            "type": "prop",
-            "prop": "cols.pick a property or enter value"
+            "type": "placeholder",
+            "placeholder": "Set the Transaction Date in the preset",
+            "propType": "transaction.date",
+            "propsLink": { "label": "Choose column", "matchProp": "~cols.~^" },
+            "valueLink": true,
+            "valueType": "scalar"
           }
         },
         {
           "type": "set",
           "prop": "transaction.qty",
           "xpr": {
-            "type": "prop",
-            "prop": "cols.pick a property or enter value"
+            "type": "placeholder",
+            "placeholder": "Set the Transaction Quantity in the preset",
+            "propType": "transaction.qty",
+            "propsLink": { "label": "Choose column", "matchProp": "~cols.~^" },
+            "valueLink": true,
+            "valueType": "scalar"
           }
         },
         {
           "type": "set",
           "prop": "transaction.price",
           "xpr": {
-            "type": "prop",
-            "prop": "cols.pick a property or enter value"
+            "type": "placeholder",
+            "placeholder": "Set the Transaction Price in the preset",
+            "propType": "transaction.price",
+            "propsLink": { "label": "Choose column", "matchProp": "~cols.~^" },
+            "valueLink": true,
+            "valueType": "scalar"
           }
         },
         {
           "type": "set",
           "prop": "transaction.valueCurrency",
           "xpr": {
-            "type": "prop",
-            "prop": "cols.pick a property or enter value"
+            "type": "placeholder",
+            "placeholder": "Fill or remove the Transaction Value Currency in the preset",
+            "propType": "transaction.valueCurrency",
+            "value": null,
+            "propsLink": { "label": "Choose column", "matchProp": "~cols.~^" },
+            "valueLink": true,
+            "valueType": "scalar",
+            "removeLink": {
+              "levels": 1
+            }
           }
         },
         {
           "type": "set",
           "prop": "transaction.fee",
           "xpr": {
-            "type": "prop",
-            "prop": "cols.pick a property or enter value"
+            "type": "placeholder",
+            "placeholder": "Fill or remove the Transaction Fee in the preset",
+            "propType": "transaction.fee",
+            "value": 0,
+            "propsLink": { "label": "Choose column", "matchProp": "~cols.~^" },
+            "valueLink": true,
+            "valueType": "scalar",
+            "removeLink": {
+              "levels": 1
+            }
           },
           "trfms": [{ "type": "abs" }]
         },
@@ -82,16 +113,32 @@
           "type": "set",
           "prop": "transaction.feeCurrency",
           "xpr": {
-            "type": "prop",
-            "prop": "cols.pick a property or enter value"
+            "type": "placeholder",
+            "placeholder": "Fill or remove the Transaction Fee Currency in the preset",
+            "propType": "transaction.feeCurrency",
+            "value": null,
+            "propsLink": { "label": "Choose column", "matchProp": "~cols.~^" },
+            "valueLink": true,
+            "valueType": "scalar",
+            "removeLink": {
+              "levels": 1
+            }
           }
         },
         {
           "type": "set",
           "prop": "transaction.taxPaid",
           "xpr": {
-            "type": "prop",
-            "prop": "cols.pick a property or enter value"
+            "type": "placeholder",
+            "placeholder": "Fill or remove the Transaction Tax Paid in the preset",
+            "propType": "transaction.taxPaid",
+            "value": null,
+            "propsLink": { "label": "Choose column", "matchProp": "~cols.~^" },
+            "valueLink": true,
+            "valueType": "scalar",
+            "removeLink": {
+              "levels": 1
+            }
           },
           "trfms": [{ "type": "abs" }]
         }

@@ -1,0 +1,46 @@
+{
+  "id": "import-price-history",
+  "name": "Balance & price history",
+  "stmts": [
+    {
+      "type": "comment",
+      "md": "🌱 Map all properties to columns, or enter values manually.\n\n🦉 Note that you may only set market prices for assets that are already in the project."
+    },
+    {
+      "type": "setMarketPrice",
+      "asset": {
+        "type": "placeholder",
+        "placeholder": "Set the Asset in the preset",
+        "propType": "asset",
+        "propsLink": {
+          "label": "Choose asset column",
+          "matchProp": "~cols.~^"
+        },
+        "valueLink": true,
+        "valueType": "scalar"
+      },
+      "date": {
+        "type": "placeholder",
+        "placeholder": "Set the Date in the preset",
+        "propType": "transaction.date",
+        "propsLink": {
+          "label": "Choose date column",
+          "matchProp": "~cols.~^"
+        },
+        "valueLink": true,
+        "valueType": "scalar"
+      },
+      "price": {
+        "type": "placeholder",
+        "placeholder": "Set the Market Price in the preset",
+        "propType": "transaction.price",
+        "propsLink": {
+          "label": "Choose column",
+          "matchProp": "~cols.~^"
+        },
+        "valueLink": true,
+        "valueType": "scalar"
+      }
+    }
+  ]
+}

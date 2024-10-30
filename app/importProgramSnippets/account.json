@@ -1,6 +1,6 @@
 {
   "id": "import-account",
-  "name": "Add Account",
+  "name": "Account",
   "stmts": [
     {
       "type": "addAccount",
