@@ -109,9 +109,6 @@
                                 },
                                 {
                                   "type": "trim"
-                                },
-                                {
-                                  "type": "lower"
                                 }
                               ],
                               "cast": {
@@ -346,9 +343,6 @@
                                   "type": "replace",
                                   "pattern": "/ (PLN|EUR|USD|GBP|CHF)/$",
                                   "replace": ""
-                                },
-                                {
-                                  "type": "lower"
                                 }
                               ],
                               "cast": {
@@ -571,20 +565,7 @@
             }
           }
         },
-        "options": {
-          "valueMap": {
-            "asset": {
-              "cdprojekt": {
-                "id": "isin-PLOPTTC00011",
-                "dataSourceSymbol": "ms-XWAR-CDR-aea"
-              },
-              "rainbowt": {
-                "id": "isin-PLRNBWT00031",
-                "dataSourceSymbol": "ms-XWAR-RBW-ltb"
-              }
-            }
-          }
-        }
+        "options": {}
       }
     }
   }

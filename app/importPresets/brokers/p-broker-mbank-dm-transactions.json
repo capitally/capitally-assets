@@ -21,9 +21,7 @@
         "parser": {
           "dateOrder": "dmy",
           "decimalSeparator": ",",
-          "formats": [
-            "csv"
-          ],
+          "formats": ["csv"],
           "allowClipboard": false,
           "csv": {}
         },
@@ -216,19 +214,13 @@
                         {
                           "type": "extract",
                           "pattern": "/([^ ]+)/^"
-                        },
-                        {
-                          "type": "lower"
                         }
                       ],
                       "cast": {
                         "asset": {
                           "assetTypes": {
                             "type": "value",
-                            "value": [
-                              "STOCK",
-                              "ETF"
-                            ]
+                            "value": ["STOCK", "ETF"]
                           },
                           "markets": {
                             "type": "prop",

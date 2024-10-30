@@ -240,9 +240,6 @@
                         {
                           "type": "extract",
                           "pattern": "/([^ ]+)/^"
-                        },
-                        {
-                          "type": "lower"
                         }
                       ],
                       "cast": {
