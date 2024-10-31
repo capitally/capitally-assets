@@ -34,9 +34,9 @@
               "ISIN",
               "Ticker",
               "Name",
-              "No  of shares",
-              "Price   share",
-              "Currency (Price   share)",
+              "No of shares",
+              "Price share",
+              "Currency (Price share)",
               "Exchange rate",
               "Result",
               "Currency (Result)",
@@ -316,7 +316,7 @@
                               "prop": "transaction.qty",
                               "xpr": {
                                 "type": "prop",
-                                "prop": "cols.No  of shares"
+                                "prop": "cols.No of shares"
                               }
                             },
                             {
@@ -324,7 +324,7 @@
                               "prop": "transaction.price",
                               "xpr": {
                                 "type": "prop",
-                                "prop": "cols.Price   share"
+                                "prop": "cols.Price share"
                               }
                             },
                             {
@@ -332,7 +332,7 @@
                               "prop": "transaction.valueCurrency",
                               "xpr": {
                                 "type": "prop",
-                                "prop": "cols.Currency (Price   share)"
+                                "prop": "cols.Currency (Price share)"
                               }
                             },
                             {
@@ -403,7 +403,7 @@
                                       "prop": "transaction.incomeQty",
                                       "xpr": {
                                         "type": "prop",
-                                        "prop": "cols.No  of shares"
+                                        "prop": "cols.No of shares"
                                       }
                                     }
                                   ]
