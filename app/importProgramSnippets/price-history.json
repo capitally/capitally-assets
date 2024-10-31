@@ -33,7 +33,7 @@
       "price": {
         "type": "placeholder",
         "placeholder": "Set the Market Price in the preset",
-        "propType": "transaction.price",
+        "propType": "transaction.marketPrice",
         "propsLink": {
           "label": "Choose column",
           "matchProp": "~cols.~^"
