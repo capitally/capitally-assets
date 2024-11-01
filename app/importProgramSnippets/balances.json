@@ -14,8 +14,8 @@
           "prop": "transaction.account",
           "xpr": {
             "type": "placeholder",
-            "placeholder": "Set the Account in the preset",
-            "valueLink": true,
+            "placeholder": "Set Account in the preset",
+            "valueLink": "Choose account",
             "valueType": "scalar"
           }
         },
@@ -24,7 +24,7 @@
           "prop": "transaction.asset",
           "xpr": {
             "type": "placeholder",
-            "placeholder": "Set the Asset in the preset",
+            "placeholder": "Set Asset in the preset",
             "propType": "asset",
             "propsLink": { "label": "Choose column", "matchProp": "~cols.~^" },
             "valueLink": true,
@@ -37,7 +37,7 @@
           "prop": "transaction.qty",
           "xpr": {
             "type": "placeholder",
-            "placeholder": "Set the Balance Quantity in the preset",
+            "placeholder": "Set Balance Quantity in the preset",
             "propType": "transaction.qty",
             "propsLink": {
               "label": "Choose balance column",
@@ -49,7 +49,7 @@
         },
         {
           "type": "comment",
-          "md": "🗓️ You can set the date to a column to import balances history."
+          "md": "🗓️ You can set date to a column to import balances history."
         },
         {
           "type": "set",

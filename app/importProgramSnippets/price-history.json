@@ -10,7 +10,7 @@
       "type": "setMarketPrice",
       "asset": {
         "type": "placeholder",
-        "placeholder": "Set the Asset in the preset",
+        "placeholder": "Set Asset in the preset",
         "propType": "asset",
         "propsLink": {
           "label": "Choose asset column",
@@ -21,7 +21,7 @@
       },
       "date": {
         "type": "placeholder",
-        "placeholder": "Set the Date in the preset",
+        "placeholder": "Set Date in the preset",
         "propType": "transaction.date",
         "propsLink": {
           "label": "Choose date column",
@@ -32,7 +32,7 @@
       },
       "price": {
         "type": "placeholder",
-        "placeholder": "Set the Market Price in the preset",
+        "placeholder": "Set Market Price in the preset",
         "propType": "transaction.marketPrice",
         "propsLink": {
           "label": "Choose column",
