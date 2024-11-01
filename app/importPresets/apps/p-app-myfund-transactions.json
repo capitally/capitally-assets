@@ -1,0 +1,716 @@
+{
+  "version": 3,
+  "type": "Capitally Data Export",
+  "exportedAt": "2024-11-01T12:56:24.328Z",
+  "data": {
+    "importPresets": {
+      "u-oNch7bQVOFGBhJt": {
+        "id": "u-oNch7bQVOFGBhJt",
+        "name": "Transactions #beta",
+        "updatedAt": "2024-11-01T13:56",
+        "author": "Rafal <CEzOZ77nYhZX6L0qXPKXSs6GBho2>",
+        "info": "To import your transactions from MyFund:\n\n1. Go to **Portfel** → **Historia operacji**\n2. Click **Eksport do xls** or **Eksport do csv**\n3. Open or drop that file here",
+        "mappingInfo": "🦉 As the export may contain different accounts, you will need to map them to your existing accounts, or create new ones in the dropdown below.",
+        "sourceId": "p-app-myfund-transactions",
+        "provider": "MyFund",
+        "providerIcon": {
+          "type": "logo",
+          "id": "brokers/myfund"
+        },
+        "providerGroup": "Apps",
+        "parser": {
+          "allowClipboard": false,
+          "codepage": "windows-1250",
+          "csv": {}
+        },
+        "sections": {
+          "main": {
+            "csv": {
+              "header": true
+            },
+            "enabledColumns": [
+              "Data",
+              "Operacja",
+              "Konto",
+              "Walor",
+              "Waluta",
+              "Liczba jednostek",
+              "Cena",
+              "Prowizja",
+              "Podatek",
+              "Wartość",
+              "Stan konta po operacji",
+              "Liczba jednostek po operacji",
+              "Konto inwestycyjne",
+              "Automatycznie dodana",
+              "Komentarz"
+            ],
+            "program": {
+              "stmts": [
+                {
+                  "type": "if",
+                  "ifs": [
+                    {
+                      "xpr": {
+                        "type": "=",
+                        "xpr": {
+                          "type": "prop",
+                          "prop": "cols.Operacja"
+                        },
+                        "v": {
+                          "type": "value",
+                          "value": "Dywidenda"
+                        }
+                      },
+                      "stmts": [
+                        {
+                          "type": "addRowNote",
+                          "note": {
+                            "type": "value",
+                            "value": "😞 MyFund does not provide the dividend's asset, so I can't import them"
+                          }
+                        },
+                        {
+                          "type": "return"
+                        }
+                      ]
+                    },
+                    {
+                      "xpr": {
+                        "type": "pattern",
+                        "xpr": {
+                          "type": "prop",
+                          "prop": "cols.Operacja"
+                        },
+                        "pattern": "~zobowiązania~"
+                      },
+                      "stmts": [
+                        {
+                          "type": "addRowNote",
+                          "note": {
+                            "type": "value",
+                            "value": "🏦 Loans are currently not imported"
+                          }
+                        },
+                        {
+                          "type": "return"
+                        }
+                      ]
+                    },
+                    {
+                      "xpr": {
+                        "type": "pattern",
+                        "xpr": {
+                          "type": "prop",
+                          "prop": "cols.Operacja"
+                        },
+                        "pattern": "/wypłata|wpłata/ib"
+                      },
+                      "stmts": [
+                        {
+                          "type": "addRowNote",
+                          "note": {
+                            "type": "value",
+                            "value": "💸 Money transfers are currently not imported"
+                          }
+                        },
+                        {
+                          "type": "return"
+                        }
+                      ]
+                    },
+                    {
+                      "xpr": {
+                        "type": "pattern",
+                        "xpr": {
+                          "type": "prop",
+                          "prop": "cols.Walor"
+                        },
+                        "pattern": "/(EDO|TOZ|DOR|COI|ROS|ROD|DOS|TOS)[0-9]{4}/^$"
+                      },
+                      "stmts": [
+                        {
+                          "type": "addRowNote",
+                          "note": {
+                            "type": "value",
+                            "value": "💶 Polish bonds are currently not imported from MyFund. Import them directly from Obligacje Skarbowe"
+                          }
+                        },
+                        {
+                          "type": "return"
+                        }
+                      ]
+                    },
+                    {
+                      "xpr": {
+                        "type": "or",
+                        "xprs": [
+                          {
+                            "type": "pattern",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Walor"
+                            },
+                            "pattern": "/INT[SL][A-Z0-9]{3}[0-9]{5}/^$"
+                          },
+                          {
+                            "type": "pattern",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Walor"
+                            },
+                            "pattern": "/F[A-Z0-9]{3}[HMZ][0-9]{2}\t/^$"
+                          },
+                          {
+                            "type": "pattern",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Walor"
+                            },
+                            "pattern": "/RCF[LS][0-9][A-Z0-9]{3,6}/^$"
+                          }
+                        ]
+                      },
+                      "stmts": [
+                        {
+                          "type": "addRowNote",
+                          "note": {
+                            "type": "value",
+                            "value": "🔮 Futures and other contracts are currently not imported from MyFund"
+                          }
+                        },
+                        {
+                          "type": "return"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "addTransaction",
+                  "stmts": [
+                    {
+                      "type": "comment",
+                      "md": "🌱 Map all properties to columns, or enter values manually.\nSome properties are optional and can be removed."
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.account",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Konto"
+                      }
+                    },
+                    {
+                      "type": "if",
+                      "ifs": [
+                        {
+                          "xpr": {
+                            "type": "=",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Walor"
+                            },
+                            "v": {
+                              "type": "value",
+                              "value": "Gotówka"
+                            }
+                          },
+                          "stmts": [
+                            {
+                              "type": "set",
+                              "prop": "transaction.asset",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Waluta"
+                              },
+                              "cast": {
+                                "asset": {
+                                  "assetTypes": {
+                                    "type": "value",
+                                    "value": ["CASH"]
+                                  },
+                                  "markets": {
+                                    "type": "value",
+                                    "value": []
+                                  },
+                                  "remote": {
+                                    "type": "value",
+                                    "value": true
+                                  }
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "stmts": [
+                            {
+                              "type": "set",
+                              "prop": "transaction.asset",
+                              "xpr": {
+                                "type": "placeholder",
+                                "placeholder": "Set the Asset in the preset",
+                                "propsLink": {
+                                  "label": "Choose column",
+                                  "matchProp": "~cols.~^"
+                                },
+                                "valueLink": true,
+                                "propType": "asset",
+                                "recommend": {
+                                  "type": "prop",
+                                  "prop": "cols.Walor"
+                                },
+                                "valueType": "scalar"
+                              },
+                              "trfms": [
+                                {
+                                  "type": "replace",
+                                  "pattern": "~Automatyczny import;~",
+                                  "replace": ""
+                                }
+                              ],
+                              "map": [],
+                              "cast": {
+                                "asset": {
+                                  "assetTypes": {
+                                    "type": "value",
+                                    "value": ["STOCK", "ETF"]
+                                  },
+                                  "markets": {
+                                    "type": "value",
+                                    "value": [
+                                      {
+                                        "id": "mic-XWAR"
+                                      },
+                                      {
+                                        "id": "mic-XETR"
+                                      },
+                                      {
+                                        "id": "m-USFUND"
+                                      },
+                                      {
+                                        "id": "mic-XASE"
+                                      },
+                                      {
+                                        "id": "mic-ARCX"
+                                      },
+                                      {
+                                        "id": "mic-XNAS"
+                                      },
+                                      {
+                                        "id": "mic-XNYS"
+                                      },
+                                      {
+                                        "id": "m-OTC"
+                                      },
+                                      {
+                                        "id": "mic-BATS"
+                                      },
+                                      {
+                                        "id": "m-EUFUND"
+                                      },
+                                      {
+                                        "id": "mic-XMIL"
+                                      },
+                                      {
+                                        "id": "mic-XLON"
+                                      },
+                                      {
+                                        "id": "mic-XSWX"
+                                      },
+                                      {
+                                        "id": "mic-XBRU"
+                                      },
+                                      {
+                                        "id": "mic-XPAR"
+                                      },
+                                      {
+                                        "id": "mic-XAMS"
+                                      },
+                                      {
+                                        "id": "mic-BMEX"
+                                      },
+                                      {
+                                        "id": "mic-XPRA"
+                                      },
+                                      {
+                                        "id": "mic-XOSL"
+                                      },
+                                      {
+                                        "id": "mic-XHEL"
+                                      },
+                                      {
+                                        "id": "mic-XCSE"
+                                      },
+                                      {
+                                        "id": "mic-XBUD"
+                                      },
+                                      {
+                                        "id": "mic-XSTO"
+                                      },
+                                      {
+                                        "id": "mic-XWBO"
+                                      },
+                                      {
+                                        "id": "mic-XLIS"
+                                      },
+                                      {
+                                        "id": "mic-XTSE"
+                                      },
+                                      {
+                                        "id": "mic-XTSX"
+                                      },
+                                      {
+                                        "id": "mic-NEOE"
+                                      },
+                                      {
+                                        "id": "mic-XMEX"
+                                      },
+                                      {
+                                        "id": "mic-XSES"
+                                      },
+                                      {
+                                        "id": "mic-XHKG"
+                                      },
+                                      {
+                                        "id": "mic-XTAI"
+                                      }
+                                    ]
+                                  },
+                                  "remote": {
+                                    "type": "value",
+                                    "value": true
+                                  }
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.type",
+                      "xpr": {
+                        "type": "placeholder",
+                        "placeholder": "Set the Transaction type in the preset",
+                        "propsLink": {
+                          "label": "Choose column",
+                          "matchProp": "~cols.~^"
+                        },
+                        "valueLink": true,
+                        "propType": "transaction.type",
+                        "recommend": {
+                          "type": "prop",
+                          "prop": "cols.Operacja"
+                        },
+                        "valueType": "scalar"
+                      },
+                      "map": [
+                        {
+                          "cmp": {
+                            "type": "=",
+                            "v": {
+                              "type": "value",
+                              "value": "Przychód nadzwyczajny"
+                            }
+                          },
+                          "target": {
+                            "type": "value",
+                            "value": "OTHER"
+                          }
+                        },
+                        {
+                          "cmp": {
+                            "type": "=",
+                            "v": {
+                              "type": "value",
+                              "value": "Konwersja TFI nabycie"
+                            }
+                          },
+                          "target": {
+                            "type": "value",
+                            "value": "OPEN"
+                          }
+                        },
+                        {
+                          "cmp": {
+                            "type": "=",
+                            "v": {
+                              "type": "value",
+                              "value": "Konwersja TFI umorzenie"
+                            }
+                          },
+                          "target": {
+                            "type": "value",
+                            "value": "CLOSE"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.date",
+                      "xpr": {
+                        "type": "placeholder",
+                        "placeholder": "Set the Transaction Date in the preset",
+                        "propsLink": {
+                          "label": "Choose column",
+                          "matchProp": "~cols.~^"
+                        },
+                        "valueLink": true,
+                        "propType": "transaction.date",
+                        "recommend": {
+                          "type": "prop",
+                          "prop": "cols.Data"
+                        },
+                        "valueType": "scalar"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.fee",
+                      "xpr": {
+                        "type": "placeholder",
+                        "placeholder": "Fill or remove the Transaction Fee in the preset",
+                        "value": 0,
+                        "propsLink": {
+                          "label": "Choose column",
+                          "matchProp": "~cols.~^"
+                        },
+                        "valueLink": true,
+                        "removeLink": {
+                          "levels": 1
+                        },
+                        "propType": "transaction.fee",
+                        "recommend": {
+                          "type": "prop",
+                          "prop": "cols.Prowizja"
+                        },
+                        "valueType": "scalar"
+                      },
+                      "trfms": [
+                        {
+                          "type": "abs"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.valueCurrency",
+                      "xpr": {
+                        "type": "placeholder",
+                        "placeholder": "Fill or remove the Transaction Value Currency in the preset",
+                        "value": null,
+                        "propsLink": {
+                          "label": "Choose column",
+                          "matchProp": "~cols.~^"
+                        },
+                        "valueLink": true,
+                        "removeLink": {
+                          "levels": 1
+                        },
+                        "propType": "transaction.valueCurrency",
+                        "recommend": {
+                          "type": "prop",
+                          "prop": "cols.Waluta"
+                        },
+                        "valueType": "scalar"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.feeCurrency",
+                      "xpr": {
+                        "type": "placeholder",
+                        "placeholder": "Fill or remove the Transaction Fee Currency in the preset",
+                        "value": null,
+                        "propsLink": {
+                          "label": "Choose column",
+                          "matchProp": "~cols.~^"
+                        },
+                        "valueLink": true,
+                        "removeLink": {
+                          "levels": 1
+                        },
+                        "propType": "transaction.feeCurrency",
+                        "recommend": {
+                          "type": "prop",
+                          "prop": "cols.Waluta"
+                        },
+                        "valueType": "scalar"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.taxPaid",
+                      "xpr": {
+                        "type": "placeholder",
+                        "placeholder": "Fill or remove the Transaction Tax Paid in the preset",
+                        "value": null,
+                        "propsLink": {
+                          "label": "Choose column",
+                          "matchProp": "~cols.~^"
+                        },
+                        "valueLink": true,
+                        "removeLink": {
+                          "levels": 1
+                        },
+                        "propType": "transaction.taxPaid",
+                        "recommend": {
+                          "type": "prop",
+                          "prop": "cols.Podatek"
+                        },
+                        "valueType": "scalar"
+                      },
+                      "trfms": [
+                        {
+                          "type": "abs"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.note",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Komentarz"
+                      }
+                    },
+                    {
+                      "type": "if",
+                      "ifs": [
+                        {
+                          "xpr": {
+                            "type": "in",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "transaction.type"
+                            },
+                            "v": {
+                              "type": "value",
+                              "value": ["OPEN", "CLOSE"]
+                            }
+                          },
+                          "stmts": [
+                            {
+                              "type": "set",
+                              "prop": "transaction.qty",
+                              "xpr": {
+                                "type": "placeholder",
+                                "placeholder": "Set the Transaction Quantity in the preset",
+                                "propsLink": {
+                                  "label": "Choose column",
+                                  "matchProp": "~cols.~^"
+                                },
+                                "valueLink": true,
+                                "propType": "transaction.qty",
+                                "recommend": {
+                                  "type": "prop",
+                                  "prop": "cols.Liczba jednostek"
+                                },
+                                "valueType": "scalar"
+                              },
+                              "trfms": [
+                                {
+                                  "type": "abs"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.price",
+                              "xpr": {
+                                "type": "placeholder",
+                                "placeholder": "Set the Transaction Price in the preset",
+                                "propsLink": {
+                                  "label": "Choose column",
+                                  "matchProp": "~cols.~^"
+                                },
+                                "valueLink": true,
+                                "propType": "transaction.price",
+                                "recommend": {
+                                  "type": "prop",
+                                  "prop": "cols.Cena"
+                                },
+                                "valueType": "scalar"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "xpr": {
+                            "type": "in",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "transaction.type"
+                            },
+                            "v": {
+                              "type": "value",
+                              "value": ["DIVIDEND", "INTEREST", "RENT", "OTHER"]
+                            }
+                          },
+                          "stmts": [
+                            {
+                              "type": "set",
+                              "prop": "transaction.value",
+                              "xpr": {
+                                "type": "placeholder",
+                                "placeholder": "Fill or remove the Income Value in the preset",
+                                "value": null,
+                                "propsLink": {
+                                  "label": "Choose column",
+                                  "matchProp": "~cols.~^"
+                                },
+                                "valueLink": true,
+                                "removeLink": {
+                                  "levels": 2
+                                },
+                                "propType": "transaction.value",
+                                "recommend": {
+                                  "type": "prop",
+                                  "prop": "cols.Wartość"
+                                },
+                                "valueType": "scalar"
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "options": {
+          "valueMap": {
+            "account": {
+              "gotowka": null,
+              "ike": null
+            },
+            "asset": {
+              "intlbco29116": {
+                "id": "isin-US0378331005"
+              },
+              "intlbco35691": {
+                "id": "isin-US0378331005"
+              },
+              "intlspx24372": {
+                "id": "isin-US0378331005"
+              },
+              "intlw2017020": {
+                "id": "isin-US0378331005"
+              },
+              "intlbco31641": {
+                "id": "isin-US0378331005"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
