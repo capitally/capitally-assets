@@ -1,0 +1,301 @@
+{
+  "version": 3,
+  "type": "Capitally Data Export",
+  "exportedAt": "2024-11-02T22:00:28.472Z",
+  "data": {
+    "importPresets": {
+      "u-1ygyeEQa22ITXG6": {
+        "id": "u-1ygyeEQa22ITXG6",
+        "name": "Transactions #beta",
+        "updatedAt": "2024-11-02T23:00",
+        "author": "Rafal <CEzOZ77nYhZX6L0qXPKXSs6GBho2>",
+        "info": "To import your transactions from ING Direct:\n\n1. Go to ING Direct\n1. Open **Broker** → **Consultar** → **Últimos movimientos**\n 1. Select **ejecutadas** to export transactions \n1. Choose date period\n1. Download the file and open or drop it here",
+        "mappingInfo": "",
+        "sourceId": "broker-ingdirect-es",
+        "provider": "ING Direct España",
+        "providerIcon": {
+          "type": "logo",
+          "id": "brokers/ing"
+        },
+        "providerGroup": "Brokers",
+        "parser": {
+          "dateOrder": "dmy",
+          "formats": [
+            "csv"
+          ],
+          "allowClipboard": false
+        },
+        "sections": {
+          "main": {
+            "csv": {
+              "header": true
+            },
+            "enabledColumns": [
+              "VALOR",
+              "FECHA",
+              "OPERACIÓN",
+              "TÍTULOS",
+              "PRECIO EN DIVISA ORIGEN"
+            ],
+            "program": {
+              "stmts": [
+                {
+                  "type": "addAccount",
+                  "optional": true,
+                  "stmts": [
+                    {
+                      "type": "set",
+                      "prop": "account.name",
+                      "xpr": {
+                        "type": "value",
+                        "value": "ING Direct España"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "account.icon",
+                      "xpr": {
+                        "type": "value",
+                        "value": {
+                          "type": "logo",
+                          "id": "brokers/ing"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "if",
+                  "ifs": [
+                    {
+                      "xpr": {
+                        "type": "pattern",
+                        "xpr": {
+                          "type": "prop",
+                          "prop": "cols.VALOR"
+                        },
+                        "pattern": "/[ .]D[-. ][-. 0-9]+/$"
+                      },
+                      "stmts": [
+                        {
+                          "type": "addRowNote",
+                          "note": {
+                            "type": "value",
+                            "value": "💶 Non-stock assets like contracts and rights are currently not imported"
+                          }
+                        },
+                        {
+                          "type": "return"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "addTransaction",
+                  "stmts": [
+                    {
+                      "type": "set",
+                      "prop": "transaction.account",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "addedAccount"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.asset",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.VALOR"
+                      },
+                      "trfms": [
+                        {
+                          "type": "lower"
+                        }
+                      ],
+                      "cast": {
+                        "asset": {
+                          "assetTypes": {
+                            "type": "value",
+                            "value": [
+                              "STOCK",
+                              "ETF"
+                            ]
+                          },
+                          "markets": {
+                            "type": "value",
+                            "value": [
+                              {
+                                "id": "mic-BMEX"
+                              },
+                              {
+                                "id": "mic-XETR"
+                              },
+                              {
+                                "id": "mic-XPAR"
+                              },
+                              {
+                                "id": "mic-XLIS"
+                              },
+                              {
+                                "id": "mic-XSWX"
+                              },
+                              {
+                                "id": "mic-XBER"
+                              },
+                              {
+                                "id": "mic-XLON"
+                              },
+                              {
+                                "id": "mic-XMIL"
+                              },
+                              {
+                                "id": "mic-XNYS"
+                              },
+                              {
+                                "id": "mic-ARCX"
+                              },
+                              {
+                                "id": "mic-XNAS"
+                              }
+                            ]
+                          },
+                          "remote": {
+                            "type": "value",
+                            "value": true
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.date",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.FECHA"
+                      },
+                      "trfms": []
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.type",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.OPERACIÓN"
+                      },
+                      "map": [
+                        {
+                          "cmp": {
+                            "type": "=",
+                            "v": {
+                              "type": "value",
+                              "value": "VENTA"
+                            }
+                          },
+                          "target": {
+                            "type": "value",
+                            "value": "CLOSE"
+                          }
+                        },
+                        {
+                          "cmp": {
+                            "type": "=",
+                            "v": {
+                              "type": "value",
+                              "value": "COMPRA"
+                            }
+                          },
+                          "target": {
+                            "type": "value",
+                            "value": "OPEN"
+                          }
+                        },
+                        {
+                          "cmp": {
+                            "type": "=",
+                            "v": {
+                              "type": "value",
+                              "value": "O.P.A. VENTA"
+                            }
+                          },
+                          "target": {
+                            "type": "value",
+                            "value": "CLOSE"
+                          }
+                        },
+                        {
+                          "target": {
+                            "type": "value"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.qty",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.TÍTULOS"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.price",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.PRECIO EN DIVISA ORIGEN"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.currency",
+                      "xpr": {
+                        "type": "value",
+                        "value": {
+                          "id": "c-EUR"
+                        }
+                      }
+                    },
+                    {
+                      "type": "if",
+                      "ifs": [
+                        {
+                          "xpr": {
+                            "type": "falsy",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "transaction.type"
+                            }
+                          },
+                          "stmts": [
+                            {
+                              "type": "addRowNote",
+                              "note": {
+                                "type": "formula",
+                                "formula": "=\"Transaction type `\" + col(\"OPERACIÓN\") + \"` is currently not supported\""
+                              },
+                              "urgency": "warn"
+                            },
+                            {
+                              "type": "return"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "options": {
+          "valueMap": {
+            "asset": {}
+          }
+        }
+      }
+    }
+  }
+}

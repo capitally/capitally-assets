@@ -1,0 +1,515 @@
+{
+  "version": 3,
+  "type": "Capitally Data Export",
+  "exportedAt": "2024-11-02T20:35:12.418Z",
+  "data": {
+    "importPresets": {
+      "u-ihfol0wJJZPdP79": {
+        "id": "u-ihfol0wJJZPdP79",
+        "name": "Transactions #beta",
+        "updatedAt": "2024-11-02T21:29",
+        "author": "Rafal <CEzOZ77nYhZX6L0qXPKXSs6GBho2>",
+        "info": "To import your transactions from StockMarketEye:\n\n1. Go to your portfolio\n2. Choose **Reports** → **Transactions**\n3. Select timeframe\n4. Click **More** -> **Export to CSV**\n5. Make sure that **Export columns necessary for re-import into StockMarketEye** is checked\n6. Click **Export** and save the file\n7. Open or drop that file here",
+        "sourceId": "",
+        "provider": "Stock Market Eye",
+        "providerIcon": {
+          "type": "logo",
+          "id": "brokers/stockmarketeye"
+        },
+        "providerGroup": "Apps",
+        "parser": {
+          "allowClipboard": false
+        },
+        "sections": {
+          "main": {
+            "csv": {
+              "header": true
+            },
+            "enabledColumns": [
+              "date",
+              "type",
+              "symbol",
+              "shares",
+              "share price",
+              "costs",
+              "fees",
+              "total amount",
+              "div amount",
+              "shares affected",
+              "currency",
+              "rate",
+              "cash affected",
+              "name",
+              "comment",
+              "brokerage id",
+              "taxes",
+              "credits",
+              "rate currency",
+              "acb per share",
+              "uuid",
+              "linked uuid",
+              "use rate ccy",
+              "provider"
+            ],
+            "program": {
+              "stmts": [
+                {
+                  "type": "if",
+                  "ifs": [
+                    {
+                      "xpr": {
+                        "type": "pattern",
+                        "xpr": {
+                          "type": "prop",
+                          "prop": "cols.type"
+                        },
+                        "pattern": "~CASH~"
+                      },
+                      "stmts": [
+                        {
+                          "type": "addRowNote",
+                          "note": {
+                            "type": "value",
+                            "value": "💸 Cash transfers are currently not imported"
+                          }
+                        },
+                        {
+                          "type": "return"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "addAccount",
+                  "optional": true,
+                  "stmts": [
+                    {
+                      "type": "set",
+                      "prop": "account.name",
+                      "xpr": {
+                        "type": "value",
+                        "value": "Imported from SME"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "account.icon",
+                      "xpr": {
+                        "type": "value",
+                        "value": {
+                          "type": "logo",
+                          "id": "brokers/stockmarketeye"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "addTransaction",
+                  "stmts": [
+                    {
+                      "type": "set",
+                      "prop": "transaction.account",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "addedAccount"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.type",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.type"
+                      },
+                      "map": [
+                        {
+                          "cmp": {
+                            "type": "pattern",
+                            "pattern": "~BUY~"
+                          },
+                          "target": {
+                            "type": "value",
+                            "value": "OPEN"
+                          }
+                        },
+                        {
+                          "cmp": {
+                            "type": "pattern",
+                            "pattern": "~SELL~"
+                          },
+                          "target": {
+                            "type": "value",
+                            "value": "CLOSE"
+                          }
+                        },
+                        {
+                          "cmp": {
+                            "type": "pattern",
+                            "pattern": "~CAPGAIN~"
+                          },
+                          "target": {
+                            "type": "value",
+                            "value": "DIVIDEND"
+                          }
+                        },
+                        {
+                          "cmp": {
+                            "type": "pattern",
+                            "pattern": "~DIVIDEND~"
+                          },
+                          "target": {
+                            "type": "value",
+                            "value": "DIVIDEND"
+                          }
+                        },
+                        {
+                          "cmp": {
+                            "type": "pattern",
+                            "pattern": "~INTEREST~"
+                          },
+                          "target": {
+                            "type": "value",
+                            "value": "INTEREST"
+                          }
+                        },
+                        {
+                          "cmp": {
+                            "type": "pattern",
+                            "pattern": "~FEE~"
+                          },
+                          "target": {
+                            "type": "value",
+                            "value": "OTHER"
+                          }
+                        },
+                        {
+                          "target": {
+                            "type": "value"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "if",
+                      "ifs": [
+                        {
+                          "xpr": {
+                            "type": "truthy",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.symbol"
+                            }
+                          },
+                          "stmts": [
+                            {
+                              "type": "set",
+                              "prop": "transaction.asset",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.symbol"
+                              },
+                              "cast": {
+                                "asset": {
+                                  "remote": {
+                                    "type": "value",
+                                    "value": true
+                                  }
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "stmts": [
+                            {
+                              "type": "set",
+                              "prop": "transaction.asset",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.currency"
+                              },
+                              "cast": {
+                                "asset": {
+                                  "assetTypes": {
+                                    "type": "value",
+                                    "value": [
+                                      "CASH"
+                                    ]
+                                  },
+                                  "remote": {
+                                    "type": "value",
+                                    "value": true
+                                  }
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.date",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.date"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.fee",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.fees"
+                      },
+                      "trfms": [
+                        {
+                          "type": "abs"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.fee",
+                      "op": "+=",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.costs"
+                      },
+                      "trfms": [
+                        {
+                          "type": "abs"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.valueCurrency",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.rate currency"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.feeCurrency",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.currency"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.taxPaid",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.taxes"
+                      },
+                      "trfms": [
+                        {
+                          "type": "abs"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "if",
+                      "ifs": [
+                        {
+                          "xpr": {
+                            "type": "in",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "transaction.type"
+                            },
+                            "v": {
+                              "type": "value",
+                              "value": [
+                                "OPEN",
+                                "CLOSE"
+                              ]
+                            }
+                          },
+                          "stmts": [
+                            {
+                              "type": "comment",
+                              "md": "## Buy & Sell"
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.qty",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.shares"
+                              },
+                              "trfms": [
+                                {
+                                  "type": "abs"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.price",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.share price"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "xpr": {
+                            "type": "pattern",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.type"
+                            },
+                            "pattern": "~FEES~"
+                          },
+                          "stmts": [
+                            {
+                              "type": "comment",
+                              "md": "## Fees"
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.type",
+                              "xpr": {
+                                "type": "value",
+                                "value": "OTHER"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.value",
+                              "xpr": {
+                                "type": "value",
+                                "value": 0
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.fee",
+                              "op": "=",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.total amount"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "xpr": {
+                            "type": "in",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "transaction.type"
+                            },
+                            "v": {
+                              "type": "value",
+                              "value": [
+                                "DIVIDEND"
+                              ]
+                            }
+                          },
+                          "stmts": [
+                            {
+                              "type": "comment",
+                              "md": "## Dividends\n\nIt's value is based on total value, so we need to remove the fees"
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.value",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.total amount"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.value",
+                              "op": "-=",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "transaction.fee"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.incomeQty",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.div amount"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "xpr": {
+                            "type": "in",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "transaction.type"
+                            },
+                            "v": {
+                              "type": "value",
+                              "value": [
+                                "INTEREST",
+                                "RENT",
+                                "OTHER"
+                              ]
+                            }
+                          },
+                          "stmts": [
+                            {
+                              "type": "comment",
+                              "md": "## Interest & Other\n\nIt's value is based on total value, so we need to remove the fees"
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.value",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.total amount"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.value",
+                              "op": "-=",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "transaction.fee"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "stmts": [
+                            {
+                              "type": "addRowNote",
+                              "note": {
+                                "type": "formula",
+                                "formula": "=\"🥺 Transaction type `\" + col(\"type\") + \"` is currently not supported\""
+                              },
+                              "urgency": "warn"
+                            },
+                            {
+                              "type": "return"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+}
