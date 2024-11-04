@@ -1,13 +1,13 @@
 {
   "version": 3,
   "type": "Capitally Data Export",
-  "exportedAt": "2024-10-26T10:25:07.075Z",
+  "exportedAt": "2024-11-04T20:34:38.128Z",
   "data": {
     "importPresets": {
-      "u-lw7PwQ9f991jACO": {
-        "id": "u-lw7PwQ9f991jACO",
+      "u-Nt0BAKc579Hs0y7": {
+        "id": "u-Nt0BAKc579Hs0y7",
         "name": "Transactions #beta",
-        "updatedAt": "2024-10-26T12:24",
+        "updatedAt": "2024-11-04T21:34",
         "author": "Rafal <CEzOZ77nYhZX6L0qXPKXSs6GBho2>",
         "info": "To import your transactions from Schwab:\n\n1. Go to [Schwab Client Portal](https://client.schwab.com/)\n2. Open **Accounts** → **History**\n3. Click the **↓ Export** to download the trades files\n4. Open or drop that file here",
         "sourceId": "p-broker-schwab",
@@ -26,7 +26,7 @@
         "sections": {
           "main": {
             "csv": {
-              "fromRow": 2,
+              "fromRow": "~Date;~^",
               "untilRow": "~Transactions Total~",
               "header": true
             },
@@ -577,7 +577,17 @@
         },
         "options": {
           "valueMap": {
-            "asset": {}
+            "asset": {
+              "zen": {
+                "id": "isin-US98936J1016",
+                "dataSourceSymbol": "ms-XNYS-ZEN-7xs"
+              }
+            },
+            "account": {
+              "schwab": {
+                "id": "u-uGUBEjvc-2aeeca"
+              }
+            }
           }
         }
       }
