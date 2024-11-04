@@ -575,21 +575,7 @@
             }
           }
         },
-        "options": {
-          "valueMap": {
-            "asset": {
-              "zen": {
-                "id": "isin-US98936J1016",
-                "dataSourceSymbol": "ms-XNYS-ZEN-7xs"
-              }
-            },
-            "account": {
-              "schwab": {
-                "id": "u-uGUBEjvc-2aeeca"
-              }
-            }
-          }
-        }
+        "options": {}
       }
     }
   }

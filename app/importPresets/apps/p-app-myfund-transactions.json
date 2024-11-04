@@ -685,31 +685,7 @@
             }
           }
         },
-        "options": {
-          "valueMap": {
-            "account": {
-              "gotowka": null,
-              "ike": null
-            },
-            "asset": {
-              "intlbco29116": {
-                "id": "isin-US0378331005"
-              },
-              "intlbco35691": {
-                "id": "isin-US0378331005"
-              },
-              "intlspx24372": {
-                "id": "isin-US0378331005"
-              },
-              "intlw2017020": {
-                "id": "isin-US0378331005"
-              },
-              "intlbco31641": {
-                "id": "isin-US0378331005"
-              }
-            }
-          }
-        }
+        "options": {}
       }
     }
   }

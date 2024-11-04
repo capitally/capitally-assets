@@ -1,0 +1,451 @@
+{
+  "version": 3,
+  "type": "Capitally Data Export",
+  "exportedAt": "2024-11-04T21:27:55.480Z",
+  "data": {
+    "importPresets": {
+      "u-wClA0bX1RC3ZkkW": {
+        "id": "u-wClA0bX1RC3ZkkW",
+        "name": "Trader Go Transactions #beta",
+        "updatedAt": "2024-11-04T22:27",
+        "author": "Rafal <CEzOZ77nYhZX6L0qXPKXSs6GBho2>",
+        "info": "To import your transactions from Saxo Trader Go:\n\n1. Open the Saxo Trader app\n2. Click on the person icon in the top right corner and select **Transactions report**\n3. Select desired time period and click **Export**\n4. Make sure the **Include details** option is disabled\n5. Click on **Excel** button\n6. Download the file and open or drop that file here",
+        "sourceId": "",
+        "provider": "Saxo",
+        "providerIcon": {
+          "type": "logo",
+          "id": "brokers/saxo"
+        },
+        "providerGroup": "Brokers",
+        "parser": {
+          "allowClipboard": false
+        },
+        "sections": {
+          "main": {
+            "csv": {
+              "header": true
+            },
+            "enabledColumns": [
+              "Client ID",
+              "Trade Date",
+              "Value Date",
+              "Type",
+              "Instrument",
+              "Instrument ISIN",
+              "Instrument currency",
+              "Exchange Description",
+              "Instrument Symbol",
+              "Event",
+              "Booked Amount",
+              "Order ID",
+              "Conversion Rate"
+            ],
+            "program": {
+              "stmts": [
+                {
+                  "type": "addAccount",
+                  "optional": true,
+                  "stmts": [
+                    {
+                      "type": "set",
+                      "prop": "account.name",
+                      "xpr": {
+                        "type": "value",
+                        "value": "Saxo Trader Go"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "account.icon",
+                      "xpr": {
+                        "type": "value",
+                        "value": {
+                          "type": "logo",
+                          "id": "brokers/saxo"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "addTransaction",
+                  "stmts": [
+                    {
+                      "type": "set",
+                      "prop": "transaction.account",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "addedAccount"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.type",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Event"
+                      },
+                      "map": [
+                        {
+                          "cmp": {
+                            "type": "pattern",
+                            "pattern": "~Buy ~^"
+                          },
+                          "target": {
+                            "type": "value",
+                            "value": "OPEN"
+                          }
+                        },
+                        {
+                          "cmp": {
+                            "type": "pattern",
+                            "pattern": "~Sell ~^"
+                          },
+                          "target": {
+                            "type": "value",
+                            "value": "CLOSE"
+                          }
+                        },
+                        {
+                          "target": {
+                            "type": "value"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.date",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Trade Date"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.fee",
+                      "xpr": {
+                        "type": "placeholder",
+                        "placeholder": "Fill or remove the Transaction Fee in the preset",
+                        "value": 0,
+                        "propsLink": {
+                          "label": "Choose column",
+                          "matchProp": "~cols.~^"
+                        },
+                        "valueLink": true,
+                        "removeLink": {
+                          "levels": 1
+                        },
+                        "propType": "transaction.fee",
+                        "valueType": "scalar"
+                      },
+                      "trfms": [
+                        {
+                          "type": "abs"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.currency",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Instrument currency"
+                      }
+                    },
+                    {
+                      "type": "if",
+                      "ifs": [
+                        {
+                          "xpr": {
+                            "type": "in",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "transaction.type"
+                            },
+                            "v": {
+                              "type": "value",
+                              "value": [
+                                "OPEN",
+                                "CLOSE"
+                              ]
+                            }
+                          },
+                          "stmts": [
+                            {
+                              "type": "set",
+                              "prop": "transaction.reference",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Order ID"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.qty",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Event"
+                              },
+                              "trfms": [
+                                {
+                                  "type": "extract",
+                                  "pattern": "/([0-9,.]+) @/"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.price",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Event"
+                              },
+                              "trfms": [
+                                {
+                                  "type": "extract",
+                                  "pattern": "/@ ([0-9,.]+)/"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.fee",
+                              "xpr": {
+                                "type": "formula",
+                                "formula": "=abs(N(col(\"Booked Amount\"))) - transaction.qty * transaction.price"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "xpr": {
+                            "type": "or",
+                            "xprs": [
+                              {
+                                "type": "pattern",
+                                "xpr": {
+                                  "type": "prop",
+                                  "prop": "cols.Event"
+                                },
+                                "pattern": "~Deposit~b"
+                              },
+                              {
+                                "type": "pattern",
+                                "xpr": {
+                                  "type": "prop",
+                                  "prop": "cols.Event"
+                                },
+                                "pattern": "~Withdrawal~b"
+                              }
+                            ]
+                          },
+                          "stmts": [
+                            {
+                              "type": "addRowNote",
+                              "note": {
+                                "type": "value",
+                                "value": "💸 Cash transaction are currently not imported"
+                              }
+                            },
+                            {
+                              "type": "return"
+                            }
+                          ]
+                        },
+                        {
+                          "stmts": [
+                            {
+                              "type": "addRowNote",
+                              "note": {
+                                "type": "formula",
+                                "formula": "=\"🥺 Transaction `\" + col(\"Event\") + \"` is not recognized - let us know about it please\""
+                              },
+                              "urgency": "warn"
+                            },
+                            {
+                              "type": "return"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "if",
+                      "ifs": [
+                        {
+                          "xpr": {
+                            "type": "truthy",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Instrument"
+                            }
+                          },
+                          "stmts": [
+                            {
+                              "type": "var",
+                              "varId": "markets",
+                              "varType": "market",
+                              "multiple": true,
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Exchange Description"
+                              }
+                            },
+                            {
+                              "type": "comment",
+                              "md": "Add other exchanges just in case"
+                            },
+                            {
+                              "type": "set",
+                              "prop": "$markets",
+                              "op": "include",
+                              "xpr": {
+                                "type": "value",
+                                "value": [
+                                  {
+                                    "id": "mic-XNAS"
+                                  },
+                                  {
+                                    "id": "mic-XNYS"
+                                  },
+                                  {
+                                    "id": "mic-ARCX"
+                                  },
+                                  {
+                                    "id": "mic-XASE"
+                                  },
+                                  {
+                                    "id": "mic-XTSE"
+                                  },
+                                  {
+                                    "id": "mic-XTSX"
+                                  },
+                                  {
+                                    "id": "mic-NEOE"
+                                  },
+                                  {
+                                    "id": "mic-XPAR"
+                                  },
+                                  {
+                                    "id": "mic-XIST"
+                                  },
+                                  {
+                                    "id": "mic-XLUX"
+                                  },
+                                  {
+                                    "id": "mic-XWBO"
+                                  },
+                                  {
+                                    "id": "mic-XAMS"
+                                  },
+                                  {
+                                    "id": "mic-XSWX"
+                                  },
+                                  {
+                                    "id": "mic-XLIS"
+                                  },
+                                  {
+                                    "id": "mic-XPRA"
+                                  },
+                                  {
+                                    "id": "mic-XHEL"
+                                  },
+                                  {
+                                    "id": "mic-XETR"
+                                  },
+                                  {
+                                    "id": "mic-BMEX"
+                                  },
+                                  {
+                                    "id": "mic-XBRU"
+                                  },
+                                  {
+                                    "id": "mic-XMIL"
+                                  },
+                                  {
+                                    "id": "mic-ASEX"
+                                  },
+                                  {
+                                    "id": "mic-XOSL"
+                                  },
+                                  {
+                                    "id": "mic-XWAR"
+                                  },
+                                  {
+                                    "id": "mic-XSTO"
+                                  },
+                                  {
+                                    "id": "mic-XCSE"
+                                  },
+                                  {
+                                    "id": "mic-XLON"
+                                  },
+                                  {
+                                    "id": "mic-XSHE"
+                                  },
+                                  {
+                                    "id": "mic-XSES"
+                                  },
+                                  {
+                                    "id": "mic-XHKG"
+                                  },
+                                  {
+                                    "id": "mic-XJPX"
+                                  },
+                                  {
+                                    "id": "mic-XKLS"
+                                  },
+                                  {
+                                    "id": "mic-XASX"
+                                  },
+                                  {
+                                    "id": "m-OTC"
+                                  },
+                                  {
+                                    "id": "mic-BATS"
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.asset",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Instrument ISIN"
+                              },
+                              "cast": {
+                                "asset": {
+                                  "assetTypes": {
+                                    "type": "value",
+                                    "value": [
+                                      "STOCK",
+                                      "ETF"
+                                    ]
+                                  },
+                                  "markets": {
+                                    "type": "prop",
+                                    "prop": "$markets"
+                                  },
+                                  "remote": {
+                                    "type": "value",
+                                    "value": true
+                                  }
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+}
