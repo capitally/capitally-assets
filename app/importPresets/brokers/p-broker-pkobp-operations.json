@@ -1,0 +1,437 @@
+{
+  "version": 3,
+  "type": "Capitally Data Export",
+  "exportedAt": "2024-11-04T15:08:52.790Z",
+  "data": {
+    "importPresets": {
+      "u-OQJs8qLKWhk0XXU": {
+        "id": "u-OQJs8qLKWhk0XXU",
+        "name": "2 of 2 - Dividends #beta",
+        "updatedAt": "2024-11-04T16:08",
+        "author": "Rafal <CEzOZ77nYhZX6L0qXPKXSs6GBho2>",
+        "info": "To import transactions from PKO:\n\n1. Open [pkosupermakler.pl](https://pkosupermakler.pl)\n2. Open **Historia** → **Zestawienie operacji finansowych**\n3. Choose at least `Dywidendy i odsetki`\n4. Choose time frame\n5. Click **Eksportuj do CSV**\n6. Open or drop that file here\n",
+        "sourceId": "",
+        "provider": "PKO BP",
+        "providerIcon": {
+          "type": "logo",
+          "id": "brokers/pko"
+        },
+        "providerGroup": "Brokers",
+        "parser": {
+          "allowClipboard": false,
+          "csv": {}
+        },
+        "sections": {
+          "main": {
+            "csv": {
+              "header": true
+            },
+            "reverseRows": true,
+            "enabledColumns": [
+              "Data operacji",
+              "Id operacji",
+              "Opis",
+              "Kwota",
+              "Waluta Kwota"
+            ],
+            "program": {
+              "stmts": [
+                {
+                  "type": "addAccount",
+                  "optional": true,
+                  "stmts": [
+                    {
+                      "type": "set",
+                      "prop": "account.name",
+                      "xpr": {
+                        "type": "value",
+                        "value": "PKO"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "account.icon",
+                      "xpr": {
+                        "type": "value",
+                        "value": {
+                          "type": "logo",
+                          "id": "brokers/pko"
+                        }
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "account.countryISO",
+                      "xpr": {
+                        "type": "value",
+                        "value": "PL"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "addTransaction",
+                  "stmts": [
+                    {
+                      "type": "set",
+                      "prop": "transaction.account",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "addedAccount"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.date",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Data operacji"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.currency",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Waluta Kwota"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.reference",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Id operacji"
+                      }
+                    },
+                    {
+                      "type": "if",
+                      "ifs": [
+                        {
+                          "xpr": {
+                            "type": "pattern",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Opis"
+                            },
+                            "pattern": "~Dywidenda:~^"
+                          },
+                          "stmts": [
+                            {
+                              "type": "set",
+                              "prop": "transaction.asset",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Opis"
+                              },
+                              "trfms": [
+                                {
+                                  "type": "extract",
+                                  "pattern": "/\\((.+)\\)/"
+                                },
+                                {
+                                  "type": "replace",
+                                  "pattern": "~-NC~$",
+                                  "replace": ""
+                                }
+                              ],
+                              "cast": {
+                                "asset": {
+                                  "assetTypes": {
+                                    "type": "value",
+                                    "value": [
+                                      "STOCK",
+                                      "ETF"
+                                    ]
+                                  },
+                                  "remote": {
+                                    "type": "value",
+                                    "value": true
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.paymentDate",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "transaction.date"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.date",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Opis"
+                              },
+                              "trfms": [
+                                {
+                                  "type": "extract",
+                                  "pattern": "/DP: ([0-9]{4}-[0-9]{2}-[0-9]{2})/"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "var",
+                              "varId": "taxDescription",
+                              "varType": "string",
+                              "multiple": false,
+                              "xpr": {
+                                "type": "value",
+                                "value": "Podatek od dywidendy: "
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "$taxDescription",
+                              "op": "append",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Opis"
+                              },
+                              "trfms": [
+                                {
+                                  "type": "extract",
+                                  "pattern": "/DP:.+/"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "lookupRows",
+                              "direction": "after",
+                              "offset": {
+                                "type": "value",
+                                "value": 1
+                              },
+                              "limit": {
+                                "type": "value",
+                                "value": 5
+                              },
+                              "stmts": [
+                                {
+                                  "type": "if",
+                                  "ifs": [
+                                    {
+                                      "xpr": {
+                                        "type": "=",
+                                        "xpr": {
+                                          "type": "prop",
+                                          "prop": "lookup.cols.Opis"
+                                        },
+                                        "v": {
+                                          "type": "prop",
+                                          "prop": "$taxDescription"
+                                        }
+                                      },
+                                      "stmts": [
+                                        {
+                                          "type": "set",
+                                          "prop": "transaction.taxPaid",
+                                          "xpr": {
+                                            "type": "prop",
+                                            "prop": "lookup.cols.Kwota"
+                                          },
+                                          "trfms": [
+                                            {
+                                              "type": "abs"
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "type": "ignoreRow"
+                                        },
+                                        {
+                                          "type": "return",
+                                          "levels": 1
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "xpr": {
+                            "type": "pattern",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Opis"
+                            },
+                            "pattern": "~Księgowanie operacji~^"
+                          },
+                          "stmts": [
+                            {
+                              "type": "comment",
+                              "md": "Silently ignore"
+                            },
+                            {
+                              "type": "addRowNote",
+                              "note": {
+                                "type": "value",
+                                "value": "💸 Money transfers are currently not imported"
+                              }
+                            },
+                            {
+                              "type": "return"
+                            }
+                          ]
+                        },
+                        {
+                          "stmts": [
+                            {
+                              "type": "addRowNote",
+                              "note": {
+                                "type": "formula",
+                                "formula": "=\"🥺 Operation `\" + col(\"Opis\") + \"` is currently not supported\""
+                              },
+                              "urgency": "warn"
+                            },
+                            {
+                              "type": "return"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.type",
+                      "xpr": {
+                        "type": "placeholder",
+                        "placeholder": "Set Transaction type in the preset",
+                        "propsLink": {
+                          "label": "Choose column",
+                          "matchProp": "~cols.~^"
+                        },
+                        "valueLink": true,
+                        "propType": "transaction.type",
+                        "recommend": {
+                          "type": "prop",
+                          "prop": "cols.Opis"
+                        },
+                        "valueType": "scalar"
+                      }
+                    },
+                    {
+                      "type": "if",
+                      "ifs": [
+                        {
+                          "xpr": {
+                            "type": "in",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "transaction.type"
+                            },
+                            "v": {
+                              "type": "value",
+                              "value": [
+                                "OPEN",
+                                "CLOSE"
+                              ]
+                            }
+                          },
+                          "stmts": [
+                            {
+                              "type": "comment",
+                              "md": "🦉 Buy & Sell transactions require quantity and price."
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.qty",
+                              "xpr": {
+                                "type": "placeholder",
+                                "placeholder": "Set Transaction Quantity in the preset",
+                                "propsLink": {
+                                  "label": "Choose column",
+                                  "matchProp": "~cols.~^"
+                                },
+                                "valueLink": true,
+                                "propType": "transaction.qty",
+                                "valueType": "scalar"
+                              },
+                              "trfms": [
+                                {
+                                  "type": "abs"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.price",
+                              "xpr": {
+                                "type": "placeholder",
+                                "placeholder": "Set Transaction Price in the preset",
+                                "propsLink": {
+                                  "label": "Choose column",
+                                  "matchProp": "~cols.~^"
+                                },
+                                "valueLink": true,
+                                "propType": "transaction.price",
+                                "valueType": "scalar"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "xpr": {
+                            "type": "in",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "transaction.type"
+                            },
+                            "v": {
+                              "type": "value",
+                              "value": [
+                                "DIVIDEND",
+                                "INTEREST",
+                                "RENT",
+                                "OTHER"
+                              ]
+                            }
+                          },
+                          "stmts": [
+                            {
+                              "type": "comment",
+                              "md": "💰 Dividend, Interest, Rent & Other transactions require value.\n💰 You can set other properties as well by adding more `Set` statements.\n🧨 Remove if you don't need it."
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.value",
+                              "xpr": {
+                                "type": "placeholder",
+                                "placeholder": "Fill or remove the Income Value in the preset",
+                                "value": null,
+                                "propsLink": {
+                                  "label": "Choose column",
+                                  "matchProp": "~cols.~^"
+                                },
+                                "valueLink": true,
+                                "removeLink": {
+                                  "levels": 2
+                                },
+                                "propType": "transaction.value",
+                                "recommend": {
+                                  "type": "prop",
+                                  "prop": "cols.Kwota"
+                                },
+                                "valueType": "scalar"
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+}
