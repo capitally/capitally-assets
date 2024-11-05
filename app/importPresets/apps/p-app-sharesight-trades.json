@@ -1,0 +1,312 @@
+{
+  "version": 3,
+  "type": "Capitally Data Export",
+  "exportedAt": "2024-11-05T17:34:21.316Z",
+  "data": {
+    "importPresets": {
+      "u-Bji70iAiwQj2oAZ": {
+        "id": "u-Bji70iAiwQj2oAZ",
+        "name": "Transactions #beta",
+        "updatedAt": "2024-11-05T18:34",
+        "author": "Rafal <CEzOZ77nYhZX6L0qXPKXSs6GBho2>",
+        "info": "To import your transactions from ShareSight:\n\n1. Go to [ShareSight Portfolio](https://portfolio.sharesight.com/)\n1. Open **Reports** → **All Trades**\n1. Select timeframe\n1. Click **Download as XLSX** (green spreadsheet icon in top-right corner)\n1. Open or drop that file here",
+        "mappingInfo": "",
+        "sourceId": "app-sharesight",
+        "provider": "ShareSight",
+        "providerIcon": {
+          "type": "logo",
+          "id": "brokers/sharesight"
+        },
+        "providerGroup": "Apps",
+        "parser": {
+          "formats": ["csv"],
+          "allowClipboard": false
+        },
+        "sections": {
+          "main": {
+            "csv": {
+              "fromRow": "/Code;/",
+              "untilRow": "~Total~^$",
+              "header": true
+            },
+            "enabledColumns": [
+              "Code",
+              "Market Code",
+              "Name",
+              "Date",
+              "Type",
+              "Qty",
+              "Price",
+              "Instrument Currency",
+              "Cost Base Per Share (usd)",
+              "Brokerage",
+              "Brokerage Currency",
+              "Exch Rate",
+              "Value",
+              "Column 14"
+            ],
+            "program": {
+              "stmts": [
+                {
+                  "type": "addAccount",
+                  "optional": true,
+                  "stmts": [
+                    {
+                      "type": "set",
+                      "prop": "account.name",
+                      "xpr": {
+                        "type": "value",
+                        "value": "Sharesight"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "account.icon",
+                      "xpr": {
+                        "type": "value",
+                        "value": {
+                          "type": "logo",
+                          "id": "brokers/sharesight"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "if",
+                  "ifs": [
+                    {
+                      "xpr": {
+                        "type": "=",
+                        "xpr": {
+                          "type": "prop",
+                          "prop": "cols.Type"
+                        },
+                        "v": {
+                          "type": "value",
+                          "value": "Split"
+                        }
+                      },
+                      "stmts": [
+                        {
+                          "type": "comment",
+                          "md": "Silently ignore"
+                        },
+                        {
+                          "type": "return"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "var",
+                  "varId": "asset",
+                  "varType": "asset",
+                  "multiple": false,
+                  "xpr": {
+                    "type": "value"
+                  }
+                },
+                {
+                  "type": "comment",
+                  "md": "Create custom assets first"
+                },
+                {
+                  "type": "if",
+                  "ifs": [
+                    {
+                      "xpr": {
+                        "type": "=",
+                        "xpr": {
+                          "type": "prop",
+                          "prop": "cols.Market Code"
+                        },
+                        "v": {
+                          "type": "value",
+                          "value": "OTHER"
+                        }
+                      },
+                      "stmts": [
+                        {
+                          "type": "addAsset",
+                          "optional": true,
+                          "stmts": [
+                            {
+                              "type": "set",
+                              "prop": "asset.name",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Name"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "asset.symbol",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Code"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "asset.type",
+                              "xpr": {
+                                "type": "value",
+                                "value": "OTHER"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "asset.currency",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Instrument Currency"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "set",
+                          "prop": "$asset",
+                          "xpr": {
+                            "type": "prop",
+                            "prop": "addedAsset"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "stmts": [
+                        {
+                          "type": "set",
+                          "prop": "$asset",
+                          "xpr": {
+                            "type": "prop",
+                            "prop": "cols.Code"
+                          },
+                          "trfms": [
+                            {
+                              "type": "formula",
+                              "formula": "=x + \" (\" + col(\"Market Code\") + \")\""
+                            }
+                          ],
+                          "cast": {
+                            "asset": {
+                              "remote": {
+                                "type": "value",
+                                "value": true
+                              }
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "addTransaction",
+                  "stmts": [
+                    {
+                      "type": "set",
+                      "prop": "transaction.account",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "addedAccount"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.asset",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "$asset"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.date",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Date"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.type",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Type"
+                      },
+                      "map": [
+                        {
+                          "cmp": {
+                            "type": "=",
+                            "v": {
+                              "type": "value",
+                              "value": "Reinvestment"
+                            }
+                          },
+                          "target": {
+                            "type": "value",
+                            "value": "OPEN"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.qty",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Qty"
+                      },
+                      "trfms": [
+                        {
+                          "type": "abs"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.price",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Price"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.valueCurrency",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Instrument Currency"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.fee",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Brokerage"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.feeCurrency",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Brokerage Currency"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "options": {}
+      }
+    }
+  }
+}

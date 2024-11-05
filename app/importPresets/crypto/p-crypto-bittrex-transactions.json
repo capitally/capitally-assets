@@ -1,0 +1,246 @@
+{
+  "version": 3,
+  "type": "Capitally Data Export",
+  "exportedAt": "2024-11-05T15:02:44.384Z",
+  "data": {
+    "importPresets": {
+      "u-WXYwSLZ2PDY48qo": {
+        "id": "u-WXYwSLZ2PDY48qo",
+        "name": "Transactions #beta",
+        "updatedAt": "2024-11-05T16:01",
+        "author": "Rafal <CEzOZ77nYhZX6L0qXPKXSs6GBho2>",
+        "info": "To import your transactions from Bittrex:\n\n1. Go to [Bittrex](https://bittrex.com/)\n1. Open **Orders** \n1. Click **Download History**\n1. Download history for each year you traded\n1. Open or drop those files here",
+        "mappingInfo": "",
+        "sourceId": "broker-bittrex",
+        "provider": "Bittrex",
+        "providerIcon": {
+          "type": "logo",
+          "id": "brokers/bittrex"
+        },
+        "providerGroup": "Crypto",
+        "parser": {
+          "formats": [
+            "csv"
+          ],
+          "allowClipboard": false,
+          "csv": {}
+        },
+        "sections": {
+          "main": {
+            "csv": {
+              "fromRow": null,
+              "header": true
+            },
+            "enabledColumns": [
+              "Uuid",
+              "Exchange",
+              "TimeStamp",
+              "OrderType",
+              "Limit",
+              "Quantity",
+              "QuantityRemaining",
+              "Commission",
+              "Price",
+              "PricePerUnit",
+              "IsConditional",
+              "Condition",
+              "ConditionTarget",
+              "ImmediateOrCancel",
+              "Closed",
+              "TimeInForceTypeId",
+              "TimeInForce"
+            ],
+            "program": {
+              "stmts": [
+                {
+                  "type": "addAccount",
+                  "optional": true,
+                  "stmts": [
+                    {
+                      "type": "set",
+                      "prop": "account.name",
+                      "xpr": {
+                        "type": "value",
+                        "value": "Bittrex"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "account.icon",
+                      "xpr": {
+                        "type": "value",
+                        "value": {
+                          "type": "logo",
+                          "id": "brokers/bittrex"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "addTransaction",
+                  "stmts": [
+                    {
+                      "type": "set",
+                      "prop": "transaction.account",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "addedAccount"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.asset",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Exchange"
+                      },
+                      "trfms": [
+                        {
+                          "type": "extract",
+                          "pattern": "/-(.+)/$"
+                        }
+                      ],
+                      "cast": {
+                        "asset": {
+                          "assetTypes": {
+                            "type": "value",
+                            "value": [
+                              "CRYPTO"
+                            ]
+                          },
+                          "remote": {
+                            "type": "value",
+                            "value": true
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.type",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.OrderType"
+                      },
+                      "trfms": [],
+                      "map": [
+                        {
+                          "cmp": {
+                            "type": "pattern",
+                            "pattern": "~BUY~$"
+                          },
+                          "target": {
+                            "type": "value",
+                            "value": "OPEN"
+                          }
+                        },
+                        {
+                          "cmp": {
+                            "type": "pattern",
+                            "pattern": "~SELL~$"
+                          },
+                          "target": {
+                            "type": "value",
+                            "value": "CLOSE"
+                          }
+                        },
+                        {
+                          "target": {
+                            "type": "value"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "if",
+                      "ifs": [
+                        {
+                          "xpr": {
+                            "type": "falsy",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "transaction.type"
+                            }
+                          },
+                          "stmts": [
+                            {
+                              "type": "addRowNote",
+                              "note": {
+                                "type": "formula",
+                                "formula": "=\"🥺 Transaction `\" + col(\"OrderType\") + \"` is not recognized. Let us know about it\""
+                              },
+                              "urgency": "warn"
+                            },
+                            {
+                              "type": "return"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.date",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Closed"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.qty",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Quantity"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.price",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.PricePerUnit"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.fee",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Commission"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.reference",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Uuid"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.currency",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Exchange"
+                      },
+                      "trfms": [
+                        {
+                          "type": "extract",
+                          "pattern": "/(.+)-/^"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "options": {}
+      }
+    }
+  }
+}
