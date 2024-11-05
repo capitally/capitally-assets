@@ -1,0 +1,406 @@
+{
+  "version": 3,
+  "type": "Capitally Data Export",
+  "exportedAt": "2024-11-05T09:21:25.062Z",
+  "data": {
+    "importPresets": {
+      "u-zoGqJ8VpKVP0neM": {
+        "id": "u-zoGqJ8VpKVP0neM",
+        "name": "Transactions #beta",
+        "updatedAt": "2024-11-05T10:21",
+        "author": "Rafal <CEzOZ77nYhZX6L0qXPKXSs6GBho2>",
+        "info": "To import your transactions from Self Bank:\n\n1. Go to Self Bank\n2. Open **Bolsa** → **Movimientos** \n3. Choose date period\n4. Click **xls: exportar movimientos a excel** \n5. Open or drop that file here\n\n> 🦉 This preset does not import dividends - they'll be created automatically from market data",
+        "sourceId": "",
+        "provider": "Self Bank",
+        "providerIcon": {
+          "type": "logo",
+          "id": "brokers/selfbank"
+        },
+        "providerGroup": "Brokers",
+        "parser": {
+          "allowClipboard": false
+        },
+        "sections": {
+          "main": {
+            "csv": {
+              "header": true
+            },
+            "enabledColumns": [
+              "ClientAccountID",
+              "AccountAlias",
+              "Model",
+              "CurrencyPrimary",
+              "AssetClass",
+              "SubCategory",
+              "Symbol",
+              "Description",
+              "Conid",
+              "SecurityID",
+              "SecurityIDType",
+              "CUSIP",
+              "ISIN",
+              "FIGI",
+              "ListingExchange",
+              "UnderlyingConid",
+              "UnderlyingSymbol",
+              "UnderlyingSecurityID",
+              "UnderlyingListingExchange",
+              "Issuer",
+              "IssuerCountryCode",
+              "Multiplier",
+              "Strike",
+              "Expiry",
+              "Put Call",
+              "PrincipalAdjustFactor",
+              "TransactionType",
+              "TradeID",
+              "OrderID",
+              "ExecID",
+              "BrokerageOrderID",
+              "OrderReference",
+              "VolatilityOrderLink",
+              "ClearingFirmID",
+              "OrigTradePrice",
+              "OrigTradeDate",
+              "OrigTradeID",
+              "ExtExecID",
+              "BlockID",
+              "OrderTime",
+              "Date Time",
+              "ReportDate",
+              "SettleDate",
+              "TradeDate",
+              "Exchange",
+              "Buy Sell",
+              "Quantity",
+              "Price",
+              "Amount",
+              "Proceeds",
+              "NetCash",
+              "NetCashWithBillable",
+              "Commission",
+              "BrokerExecutionCommission",
+              "BrokerClearingCommission",
+              "ThirdPartyExecutionCommission",
+              "ThirdPartyClearingCommission",
+              "ThirdPartyRegulatoryCommission",
+              "OtherCommission",
+              "CommissionCurrency",
+              "Tax",
+              "Code",
+              "OrderType",
+              "LevelOfDetail",
+              "TraderID",
+              "IsAPIOrder",
+              "AllocatedTo",
+              "AccruedInterest",
+              "RFQID",
+              "SerialNumber",
+              "DeliveryType",
+              "CommodityType",
+              "Fineness",
+              "Weight"
+            ],
+            "program": {
+              "stmts": [
+                {
+                  "type": "addAccount",
+                  "optional": true,
+                  "stmts": [
+                    {
+                      "type": "set",
+                      "prop": "account.name",
+                      "xpr": {
+                        "type": "value",
+                        "value": "Self Bank"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "account.icon",
+                      "xpr": {
+                        "type": "value",
+                        "value": {
+                          "type": "logo",
+                          "id": "brokers/selfbank"
+                        }
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "account.countryISO",
+                      "xpr": {
+                        "type": "value",
+                        "value": "ES"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "if",
+                  "ifs": [
+                    {
+                      "xpr": {
+                        "type": "=",
+                        "xpr": {
+                          "type": "prop",
+                          "prop": "cols.AssetClass"
+                        },
+                        "v": {
+                          "type": "value",
+                          "value": "OPT"
+                        }
+                      },
+                      "stmts": [
+                        {
+                          "type": "addRowNote",
+                          "note": {
+                            "type": "value",
+                            "value": "💶 Options are currently not imported"
+                          }
+                        },
+                        {
+                          "type": "return"
+                        }
+                      ]
+                    },
+                    {
+                      "xpr": {
+                        "type": "=",
+                        "xpr": {
+                          "type": "prop",
+                          "prop": "cols.AssetClass"
+                        },
+                        "v": {
+                          "type": "value",
+                          "value": "CASH"
+                        }
+                      },
+                      "stmts": [
+                        {
+                          "type": "addRowNote",
+                          "note": {
+                            "type": "value",
+                            "value": "💸 Cash transactions are currently not imported"
+                          }
+                        },
+                        {
+                          "type": "return"
+                        }
+                      ]
+                    },
+                    {
+                      "xpr": {
+                        "type": "!=",
+                        "xpr": {
+                          "type": "prop",
+                          "prop": "cols.AssetClass"
+                        },
+                        "v": {
+                          "type": "value",
+                          "value": "STK"
+                        }
+                      },
+                      "stmts": [
+                        {
+                          "type": "addRowNote",
+                          "note": {
+                            "type": "formula",
+                            "formula": "=\"🥺 Assets of type `\" + col(\"AssetClass\") + \"` are not recognized - let us know about it\""
+                          },
+                          "urgency": "warn"
+                        },
+                        {
+                          "type": "return"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "addTransaction",
+                  "stmts": [
+                    {
+                      "type": "set",
+                      "prop": "transaction.account",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "addedAccount"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.type",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Buy Sell"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.date",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Date Time"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.fee",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Commission"
+                      },
+                      "trfms": [
+                        {
+                          "type": "abs"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.valueCurrency",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.CurrencyPrimary"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.feeCurrency",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.CommissionCurrency"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.taxPaid",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Tax"
+                      },
+                      "trfms": [
+                        {
+                          "type": "abs"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "if",
+                      "ifs": [
+                        {
+                          "xpr": {
+                            "type": "in",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "transaction.type"
+                            },
+                            "v": {
+                              "type": "value",
+                              "value": [
+                                "OPEN",
+                                "CLOSE"
+                              ]
+                            }
+                          },
+                          "stmts": [
+                            {
+                              "type": "comment",
+                              "md": "🦉 Buy & Sell transactions require quantity and price."
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.qty",
+                              "xpr": {
+                                "type": "placeholder",
+                                "placeholder": "Set Transaction Quantity in the preset",
+                                "propsLink": {
+                                  "label": "Choose column",
+                                  "matchProp": "~cols.~^"
+                                },
+                                "valueLink": true,
+                                "propType": "transaction.qty",
+                                "recommend": {
+                                  "type": "prop",
+                                  "prop": "cols.Quantity"
+                                },
+                                "valueType": "scalar"
+                              },
+                              "trfms": [
+                                {
+                                  "type": "abs"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.price",
+                              "xpr": {
+                                "type": "placeholder",
+                                "placeholder": "Set Transaction Price in the preset",
+                                "propsLink": {
+                                  "label": "Choose column",
+                                  "matchProp": "~cols.~^"
+                                },
+                                "valueLink": true,
+                                "propType": "transaction.price",
+                                "recommend": {
+                                  "type": "prop",
+                                  "prop": "cols.OrigTradePrice"
+                                },
+                                "valueType": "scalar"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "stmts": [
+                            {
+                              "type": "addRowNote",
+                              "note": {
+                                "type": "value",
+                                "value": "\"🥺 Transaction type `\" + col(\"Buy Sell\") + \"` is not recognized - let us know about it\""
+                              },
+                              "urgency": "warn"
+                            },
+                            {
+                              "type": "return"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.asset",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.ISIN"
+                      },
+                      "cast": {
+                        "asset": {
+                          "assetTypes": {
+                            "type": "value",
+                            "value": [
+                              "STOCK",
+                              "ETF"
+                            ]
+                          },
+                          "remote": {
+                            "type": "value",
+                            "value": true
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+}

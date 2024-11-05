@@ -1,0 +1,431 @@
+{
+  "version": 3,
+  "type": "Capitally Data Export",
+  "exportedAt": "2024-11-05T11:21:28.960Z",
+  "data": {
+    "importPresets": {
+      "u-zOC0Bdmd8h75bcu": {
+        "id": "u-zOC0Bdmd8h75bcu",
+        "name": "Ledger #beta",
+        "updatedAt": "2024-11-05T12:21",
+        "author": "Rafal <CEzOZ77nYhZX6L0qXPKXSs6GBho2>",
+        "info": "#### To import your transactions from **Kraken**:\n\n1. Go to **[Transactions → History](https://www.kraken.com/c/transactions/history)**\n    1. Choose timeframe\n    2. Click **Export** and select **CSV**\n\n#### To import your transactions from **Kraken Pro**:\n\n1. Go to **[History → Export](https://pro.kraken.com/app/history/export)**\n    1. Set **Format** to **CSV**\n    2. Set **Export type** to **Ledger** \n    3. Enable all **Fields**\n    4. Choose timeframe\n    5. Click **Submit**\n\nOpen or drop the generated file here",
+        "sourceId": "",
+        "provider": "Kraken",
+        "providerIcon": {
+          "type": "logo",
+          "id": "brokers/kraken"
+        },
+        "providerGroup": "Crypto",
+        "parser": {
+          "allowClipboard": false
+        },
+        "sections": {
+          "main": {
+            "csv": {
+              "header": true
+            },
+            "enabledColumns": [
+              "txid",
+              "refid",
+              "time",
+              "type",
+              "subtype",
+              "aclass",
+              "asset",
+              "wallet",
+              "amount",
+              "fee",
+              "balance"
+            ],
+            "program": {
+              "stmts": [
+                {
+                  "type": "addAccount",
+                  "optional": true,
+                  "stmts": [
+                    {
+                      "type": "set",
+                      "prop": "account.name",
+                      "xpr": {
+                        "type": "value",
+                        "value": "Kraken"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "account.icon",
+                      "xpr": {
+                        "type": "value",
+                        "value": {
+                          "type": "logo",
+                          "id": "brokers/kraken"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "addTransaction",
+                  "stmts": [
+                    {
+                      "type": "set",
+                      "prop": "transaction.account",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "addedAccount"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.date",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.time"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.reference",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.txid"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.fee",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.fee"
+                      }
+                    },
+                    {
+                      "type": "if",
+                      "ifs": [
+                        {
+                          "xpr": {
+                            "type": "!=",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.aclass"
+                            },
+                            "v": {
+                              "type": "value",
+                              "value": "currency"
+                            }
+                          },
+                          "stmts": [
+                            {
+                              "type": "addRowNote",
+                              "note": {
+                                "type": "formula",
+                                "formula": "=\"🥺 Asset class `\" + cols.aclass + \"` is not recognized. Let us know about it\""
+                              },
+                              "urgency": "warn"
+                            },
+                            {
+                              "type": "return"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "if",
+                      "ifs": [
+                        {
+                          "xpr": {
+                            "type": "=",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.type"
+                            },
+                            "v": {
+                              "type": "value",
+                              "value": "trade"
+                            }
+                          },
+                          "stmts": [
+                            {
+                              "type": "set",
+                              "prop": "transaction.type",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.amount"
+                              },
+                              "map": [
+                                {
+                                  "cmp": {
+                                    "type": ">",
+                                    "v": {
+                                      "type": "value",
+                                      "value": "0"
+                                    }
+                                  },
+                                  "target": {
+                                    "type": "value",
+                                    "value": "OPEN"
+                                  }
+                                },
+                                {
+                                  "cmp": {
+                                    "type": "<",
+                                    "v": {
+                                      "type": "value",
+                                      "value": "0"
+                                    }
+                                  },
+                                  "target": {
+                                    "type": "value",
+                                    "value": "CLOSE"
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.asset",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.asset"
+                              },
+                              "cast": {
+                                "asset": {
+                                  "assetTypes": {
+                                    "type": "value",
+                                    "value": [
+                                      "CRYPTO"
+                                    ]
+                                  },
+                                  "remote": {
+                                    "type": "value",
+                                    "value": true
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.qty",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.amount"
+                              },
+                              "trfms": [
+                                {
+                                  "type": "abs"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "comment",
+                              "md": "Lookup the other side"
+                            },
+                            {
+                              "type": "lookupRows",
+                              "direction": "after",
+                              "offset": {
+                                "type": "value",
+                                "value": 1
+                              },
+                              "limit": {
+                                "type": "value",
+                                "value": 1
+                              },
+                              "stmts": [
+                                {
+                                  "type": "if",
+                                  "ifs": [
+                                    {
+                                      "xpr": {
+                                        "type": "=",
+                                        "xpr": {
+                                          "type": "prop",
+                                          "prop": "lookup.cols.refid"
+                                        },
+                                        "v": {
+                                          "type": "prop",
+                                          "prop": "cols.refid"
+                                        }
+                                      },
+                                      "stmts": [
+                                        {
+                                          "type": "set",
+                                          "prop": "transaction.value",
+                                          "xpr": {
+                                            "type": "prop",
+                                            "prop": "lookup.cols.amount"
+                                          },
+                                          "trfms": [
+                                            {
+                                              "type": "abs"
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "type": "set",
+                                          "prop": "transaction.valueCurrency",
+                                          "xpr": {
+                                            "type": "prop",
+                                            "prop": "lookup.cols.asset"
+                                          }
+                                        },
+                                        {
+                                          "type": "set",
+                                          "prop": "transaction.fee",
+                                          "xpr": {
+                                            "type": "prop",
+                                            "prop": "lookup.cols.fee"
+                                          }
+                                        },
+                                        {
+                                          "type": "set",
+                                          "prop": "transaction.feeCurrency",
+                                          "xpr": {
+                                            "type": "prop",
+                                            "prop": "lookup.cols.asset"
+                                          }
+                                        },
+                                        {
+                                          "type": "ignoreRow"
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "xpr": {
+                            "type": "or",
+                            "xprs": [
+                              {
+                                "type": "=",
+                                "xpr": {
+                                  "type": "prop",
+                                  "prop": "cols.type"
+                                },
+                                "v": {
+                                  "type": "value",
+                                  "value": "deposit"
+                                }
+                              },
+                              {
+                                "type": "=",
+                                "xpr": {
+                                  "type": "prop",
+                                  "prop": "cols.type"
+                                },
+                                "v": {
+                                  "type": "value",
+                                  "value": "withdrawal"
+                                }
+                              }
+                            ]
+                          },
+                          "stmts": [
+                            {
+                              "type": "set",
+                              "prop": "transaction.type",
+                              "xpr": {
+                                "type": "value",
+                                "value": "TRANSFER"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.currency",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.asset"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.asset",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.asset"
+                              },
+                              "cast": {
+                                "asset": {
+                                  "assetTypes": {
+                                    "type": "value",
+                                    "value": [
+                                      "CASH",
+                                      "CRYPTO"
+                                    ]
+                                  },
+                                  "remote": {
+                                    "type": "value",
+                                    "value": true
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.qty",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.amount"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "xpr": {
+                            "type": "or",
+                            "xprs": [
+                              {
+                                "type": "=",
+                                "xpr": {
+                                  "type": "prop",
+                                  "prop": "cols.type"
+                                },
+                                "v": {
+                                  "type": "value",
+                                  "value": "margin"
+                                }
+                              },
+                              {
+                                "type": "=",
+                                "xpr": {
+                                  "type": "prop",
+                                  "prop": "cols.type"
+                                },
+                                "v": {
+                                  "type": "value",
+                                  "value": "rollover"
+                                }
+                              }
+                            ]
+                          },
+                          "stmts": [
+                            {
+                              "type": "addRowNote",
+                              "note": {
+                                "type": "value",
+                                "value": "💶 Margin and rollover transaction are currently not imported"
+                              }
+                            },
+                            {
+                              "type": "return"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+}
