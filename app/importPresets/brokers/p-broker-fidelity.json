@@ -26,7 +26,7 @@
         "sections": {
           "main": {
             "csv": {
-              "fromRow": 6,
+              "fromRow": "~Run Date~^",
               "untilRow": -16,
               "header": true
             },

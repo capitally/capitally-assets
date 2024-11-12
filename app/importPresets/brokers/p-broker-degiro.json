@@ -7,7 +7,7 @@
       "u-YCpup8N4qrhF73B": {
         "id": "u-YCpup8N4qrhF73B",
         "name": "Transactions & dividends #beta",
-        "updatedAt": "2024-10-24T10:50",
+        "updatedAt": "2024-11-12T10:50",
         "author": "Rafal <CEzOZ77nYhZX6L0qXPKXSs6GBho2>",
         "info": "To import your transactions from Degiro:\n\n1. Go to [Degiro](https://degiro.com/)\n2. Open **Inbox** → **Account statements** \n3. Pick a date range\n4. Click the **↓ Export** button, choose **CSV** format and save the file somewhere\n5. Open or drop that file here",
         "mappingInfo": "🦉 If you previously imported transactions using the `Transactions` table format, importing overlapping dates may create duplicate entries.",
@@ -465,7 +465,7 @@
                                                   "type": "prop",
                                                   "prop": "$lookupDescription"
                                                 },
-                                                "pattern": "/@\\d/i"
+                                                "pattern": "/@\\s*\\d/i"
                                               },
                                               "stmts": [
                                                 {
@@ -1400,6 +1400,34 @@
                           "note": {
                             "type": "value",
                             "value": "💸 Cash transactions are currently not imported"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "xpr": {
+                        "type": "or",
+                        "xprs": [
+                          {
+                            "type": "pattern",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Product"
+                            },
+                            "pattern": "~(RIGHT)~$"
+                          }
+                        ]
+                      },
+                      "stmts": [
+                        {
+                          "type": "comment",
+                          "md": "## Rights"
+                        },
+                        {
+                          "type": "addRowNote",
+                          "note": {
+                            "type": "value",
+                            "value": "📃 Rights are currently not imported"
                           }
                         }
                       ]
