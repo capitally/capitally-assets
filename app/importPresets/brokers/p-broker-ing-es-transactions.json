@@ -20,9 +20,7 @@
         "providerGroup": "Brokers",
         "parser": {
           "dateOrder": "dmy",
-          "formats": [
-            "csv"
-          ],
+          "formats": ["xls"],
           "allowClipboard": false
         },
         "sections": {
@@ -118,10 +116,7 @@
                         "asset": {
                           "assetTypes": {
                             "type": "value",
-                            "value": [
-                              "STOCK",
-                              "ETF"
-                            ]
+                            "value": ["STOCK", "ETF"]
                           },
                           "markets": {
                             "type": "value",

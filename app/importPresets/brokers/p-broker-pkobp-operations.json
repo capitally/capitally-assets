@@ -1,16 +1,16 @@
 {
   "version": 3,
   "type": "Capitally Data Export",
-  "exportedAt": "2024-11-04T15:08:52.790Z",
+  "exportedAt": "2024-11-14T19:55:54.550Z",
   "data": {
     "importPresets": {
-      "u-OQJs8qLKWhk0XXU": {
-        "id": "u-OQJs8qLKWhk0XXU",
+      "u-V5RgCRWIUZyfGFK": {
+        "id": "u-V5RgCRWIUZyfGFK",
         "name": "2 of 2 - Dividends #beta",
-        "updatedAt": "2024-11-04T16:08",
+        "updatedAt": "2024-11-14T20:41",
         "author": "Rafal <CEzOZ77nYhZX6L0qXPKXSs6GBho2>",
         "info": "To import transactions from PKO:\n\n1. Open [pkosupermakler.pl](https://pkosupermakler.pl)\n2. Open **Historia** → **Zestawienie operacji finansowych**\n3. Choose at least `Dywidendy i odsetki`\n4. Choose time frame\n5. Click **Eksportuj do CSV**\n6. Open or drop that file here\n",
-        "sourceId": "",
+        "sourceId": "p-broker-pkobp-operations",
         "provider": "PKO BP",
         "providerIcon": {
           "type": "logo",
@@ -119,6 +119,14 @@
                           "stmts": [
                             {
                               "type": "set",
+                              "prop": "transaction.type",
+                              "xpr": {
+                                "type": "value",
+                                "value": "DIVIDEND"
+                              }
+                            },
+                            {
+                              "type": "set",
                               "prop": "transaction.asset",
                               "xpr": {
                                 "type": "prop",
@@ -146,6 +154,22 @@
                                     "value": true
                                   }
                                 }
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.value",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Kwota"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.valueCurrency",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Waluta Kwota"
                               }
                             },
                             {
@@ -289,115 +313,6 @@
                             },
                             {
                               "type": "return"
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "set",
-                      "prop": "transaction.type",
-                      "xpr": {
-                        "type": "prop",
-                        "prop": "cols.Opis"
-                      }
-                    },
-                    {
-                      "type": "if",
-                      "ifs": [
-                        {
-                          "xpr": {
-                            "type": "in",
-                            "xpr": {
-                              "type": "prop",
-                              "prop": "transaction.type"
-                            },
-                            "v": {
-                              "type": "value",
-                              "value": ["OPEN", "CLOSE"]
-                            }
-                          },
-                          "stmts": [
-                            {
-                              "type": "comment",
-                              "md": "🦉 Buy & Sell transactions require quantity and price."
-                            },
-                            {
-                              "type": "set",
-                              "prop": "transaction.qty",
-                              "xpr": {
-                                "type": "placeholder",
-                                "placeholder": "Set Transaction Quantity",
-                                "propsLink": {
-                                  "label": "Select column",
-                                  "matchProp": "~cols.~^"
-                                },
-                                "valueLink": true,
-                                "propType": "transaction.qty",
-                                "valueType": "scalar"
-                              },
-                              "trfms": [
-                                {
-                                  "type": "abs"
-                                }
-                              ]
-                            },
-                            {
-                              "type": "set",
-                              "prop": "transaction.price",
-                              "xpr": {
-                                "type": "placeholder",
-                                "placeholder": "Set Transaction Price",
-                                "propsLink": {
-                                  "label": "Select column",
-                                  "matchProp": "~cols.~^"
-                                },
-                                "valueLink": true,
-                                "propType": "transaction.price",
-                                "valueType": "scalar"
-                              }
-                            }
-                          ]
-                        },
-                        {
-                          "xpr": {
-                            "type": "in",
-                            "xpr": {
-                              "type": "prop",
-                              "prop": "transaction.type"
-                            },
-                            "v": {
-                              "type": "value",
-                              "value": ["DIVIDEND", "INTEREST", "RENT", "OTHER"]
-                            }
-                          },
-                          "stmts": [
-                            {
-                              "type": "comment",
-                              "md": "💰 Dividend, Interest, Rent & Other transactions require value.\n💰 You can set other properties as well by adding more `Set` statements.\n🧨 Remove if you don't need it."
-                            },
-                            {
-                              "type": "set",
-                              "prop": "transaction.value",
-                              "xpr": {
-                                "type": "placeholder",
-                                "placeholder": "Income Value",
-                                "value": null,
-                                "propsLink": {
-                                  "label": "Select column",
-                                  "matchProp": "~cols.~^"
-                                },
-                                "valueLink": true,
-                                "removeLink": {
-                                  "levels": 2
-                                },
-                                "propType": "transaction.value",
-                                "recommend": {
-                                  "type": "prop",
-                                  "prop": "cols.Kwota"
-                                },
-                                "valueType": "scalar"
-                              }
                             }
                           ]
                         }

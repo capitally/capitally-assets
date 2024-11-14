@@ -1,16 +1,16 @@
 {
   "version": 3,
   "type": "Capitally Data Export",
-  "exportedAt": "2024-11-04T21:27:55.480Z",
+  "exportedAt": "2024-11-14T19:56:10.624Z",
   "data": {
     "importPresets": {
-      "u-wClA0bX1RC3ZkkW": {
-        "id": "u-wClA0bX1RC3ZkkW",
+      "u-fNihlCxsjB5LsKQ": {
+        "id": "u-fNihlCxsjB5LsKQ",
         "name": "Trader Go Transactions #beta",
-        "updatedAt": "2024-11-04T22:27",
+        "updatedAt": "2024-11-14T20:44",
         "author": "Rafal <CEzOZ77nYhZX6L0qXPKXSs6GBho2>",
         "info": "To import your transactions from Saxo Trader Go:\n\n1. Open the Saxo Trader app\n2. Click on the person icon in the top right corner and select **Transactions report**\n3. Select desired time period and click **Export**\n4. Make sure the **Include details** option is disabled\n5. Click on **Excel** button\n6. Download the file and open or drop that file here",
-        "sourceId": "",
+        "sourceId": "p-broker-saxo-transactions",
         "provider": "Saxo",
         "providerIcon": {
           "type": "logo",
@@ -18,6 +18,7 @@
         },
         "providerGroup": "Brokers",
         "parser": {
+          "formats": ["csv", "xls"],
           "allowClipboard": false
         },
         "sections": {
@@ -120,30 +121,6 @@
                         "type": "prop",
                         "prop": "cols.Trade Date"
                       }
-                    },
-                    {
-                      "type": "set",
-                      "prop": "transaction.fee",
-                      "xpr": {
-                        "type": "placeholder",
-                        "placeholder": "Transaction Fee",
-                        "value": 0,
-                        "propsLink": {
-                          "label": "Select column",
-                          "matchProp": "~cols.~^"
-                        },
-                        "valueLink": true,
-                        "removeLink": {
-                          "levels": 1
-                        },
-                        "propType": "transaction.fee",
-                        "valueType": "scalar"
-                      },
-                      "trfms": [
-                        {
-                          "type": "abs"
-                        }
-                      ]
                     },
                     {
                       "type": "set",

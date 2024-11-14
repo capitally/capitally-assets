@@ -19,7 +19,7 @@
         },
         "providerGroup": "Apps",
         "parser": {
-          "formats": ["csv"],
+          "formats": ["xls"],
           "allowClipboard": false
         },
         "sections": {

@@ -17,6 +17,7 @@
         },
         "providerGroup": "Brokers",
         "parser": {
+          "formats": ["xls"],
           "dateOrder": "ymd",
           "allowClipboard": false
         },

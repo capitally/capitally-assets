@@ -1,12 +1,12 @@
 {
   "version": 3,
   "type": "Capitally Data Export",
-  "exportedAt": "2024-11-14T15:24:42.265Z",
+  "exportedAt": "2024-11-14T19:56:33.135Z",
   "data": {
     "importPresets": {
       "u-eHphWXL3TAXNOfz": {
         "id": "u-eHphWXL3TAXNOfz",
-        "name": "Transactions #beta (1)",
+        "name": "Transactions #beta",
         "updatedAt": "2024-11-14T16:24",
         "author": "Rafal <CEzOZ77nYhZX6L0qXPKXSs6GBho2>",
         "info": "To import your transactions from MyFund:\n\n1. Go to **Portfel** → **Historia operacji**\n2. Click **Eksport do xls** or **Eksport do csv**\n3. Open or drop that file here",
@@ -228,9 +228,7 @@
                                 "asset": {
                                   "assetTypes": {
                                     "type": "value",
-                                    "value": [
-                                      "CASH"
-                                    ]
+                                    "value": ["CASH"]
                                   },
                                   "markets": {
                                     "type": "value",
@@ -266,10 +264,7 @@
                                 "asset": {
                                   "assetTypes": {
                                     "type": "value",
-                                    "value": [
-                                      "STOCK",
-                                      "ETF"
-                                    ]
+                                    "value": ["STOCK", "ETF"]
                                   },
                                   "markets": {
                                     "type": "value",
@@ -502,10 +497,7 @@
                             },
                             "v": {
                               "type": "value",
-                              "value": [
-                                "OPEN",
-                                "CLOSE"
-                              ]
+                              "value": ["OPEN", "CLOSE"]
                             }
                           },
                           "stmts": [
@@ -541,12 +533,7 @@
                             },
                             "v": {
                               "type": "value",
-                              "value": [
-                                "DIVIDEND",
-                                "INTEREST",
-                                "RENT",
-                                "OTHER"
-                              ]
+                              "value": ["DIVIDEND", "INTEREST", "RENT", "OTHER"]
                             }
                           },
                           "stmts": [
