@@ -6,17 +6,14 @@
       "type": "addTransaction",
       "stmts": [
         {
-          "type": "comment",
-          "md": "🌱 Map all properties to columns, or enter values manually."
-        },
-        {
           "type": "set",
           "prop": "transaction.account",
           "xpr": {
             "type": "placeholder",
-            "placeholder": "Set Account in the preset",
-            "valueLink": "Choose account",
-            "valueType": "scalar"
+            "value": null,
+            "placeholder": "Account",
+            "valueLink": "Select account",
+            "valueType": "account"
           }
         },
         {
@@ -24,26 +21,39 @@
           "prop": "transaction.asset",
           "xpr": {
             "type": "placeholder",
-            "placeholder": "Set Asset in the preset",
+            "placeholder": "Asset",
             "propType": "asset",
-            "propsLink": { "label": "Choose column", "matchProp": "~cols.~^" },
-            "valueLink": true,
-            "valueType": "scalar"
+            "propsLink": { "label": "Select column", "matchProp": "~cols.~^" },
+            "valueLink": "Select asset",
+            "valueType": "asset"
           },
-          "cast": { "asset": { "remote": { "type": "value", "value": true } } }
+          "cast": {
+            "asset": {
+              "markets": {
+                "type": "placeholder",
+                "value": null,
+                "placeholder": "Search for assets only on these markets",
+                "valueLink": "Select markets to search assets in",
+                "removeLink": { "levels": 0 },
+                "valueType": "market",
+                "multiple": true
+              },
+              "remote": { "type": "value", "value": true }
+            }
+          }
         },
         {
           "type": "set",
           "prop": "transaction.qty",
           "xpr": {
             "type": "placeholder",
-            "placeholder": "Set Balance Quantity in the preset",
+            "placeholder": "Account Balance (Quantity)",
             "propType": "transaction.qty",
             "propsLink": {
               "label": "Choose balance column",
               "matchProp": "~cols.~^"
             },
-            "valueType": "scalar"
+            "valueType": "positiveNumber"
           },
           "trfms": [{ "type": "abs" }]
         },
@@ -55,8 +65,29 @@
           "type": "set",
           "prop": "transaction.date",
           "xpr": {
-            "type": "formula",
-            "formula": "=Date.now()"
+            "type": "placeholder",
+            "placeholder": "Balance Date",
+            "propType": "transaction.date",
+            "recommend": { "type": "formula", "formula": "=Date.now()" },
+            "propsLink": {
+              "label": "Choose balance column",
+              "matchProp": "~cols.~^"
+            },
+            "valueLink": "Enter date",
+            "presetLinks": [
+              {
+                "label": "Today",
+                "xpr": { "type": "formula", "formula": "=Date.now()" }
+              },
+              {
+                "label": "Yesterday",
+                "xpr": {
+                  "type": "formula",
+                  "formula": "=Date.addDays(Date.today(), -1)"
+                }
+              }
+            ],
+            "valueType": "date"
           }
         },
         {
@@ -80,7 +111,7 @@
                   "date": { "type": "prop", "prop": "transaction.date" },
                   "price": {
                     "type": "placeholder",
-                    "placeholder": "Set or remove the Market Price in the preset",
+                    "placeholder": "Market Price",
                     "value": null,
                     "propsLink": {
                       "label": "Choose market price column",

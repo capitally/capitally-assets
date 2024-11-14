@@ -10,9 +10,10 @@
           "prop": "transaction.account",
           "xpr": {
             "type": "placeholder",
-            "placeholder": "Set Account in the preset",
-            "valueLink": "Choose account",
-            "valueType": "scalar"
+            "value": null,
+            "placeholder": "Account",
+            "valueLink": "Select account",
+            "valueType": "account"
           }
         },
         {
@@ -20,24 +21,37 @@
           "prop": "transaction.asset",
           "xpr": {
             "type": "placeholder",
-            "placeholder": "Set Asset in the preset",
+            "placeholder": "Asset",
             "propType": "asset",
-            "propsLink": { "label": "Choose column", "matchProp": "~cols.~^" },
-            "valueLink": true,
-            "valueType": "scalar"
+            "propsLink": { "label": "Select column", "matchProp": "~cols.~^" },
+            "valueLink": "Select asset",
+            "valueType": "asset"
           },
-          "cast": { "asset": { "remote": { "type": "value", "value": true } } }
+          "cast": {
+            "asset": {
+              "markets": {
+                "type": "placeholder",
+                "value": null,
+                "placeholder": "Search for assets only on these markets",
+                "valueLink": "Select markets to search assets in",
+                "valueType": "market",
+                "removeLink": { "levels": 0 },
+                "multiple": true
+              },
+              "remote": { "type": "value", "value": true }
+            }
+          }
         },
         {
           "type": "set",
           "prop": "transaction.type",
           "xpr": {
             "type": "placeholder",
-            "placeholder": "Set Transaction type in the preset",
+            "placeholder": "Transaction Type",
             "propType": "transaction.type",
-            "propsLink": { "label": "Choose column", "matchProp": "~cols.~^" },
-            "valueLink": true,
-            "valueType": "scalar"
+            "propsLink": { "label": "Select column", "matchProp": "~cols.~^" },
+            "valueLink": "Select type",
+            "valueType": "transactionType"
           }
         },
         {
@@ -45,11 +59,11 @@
           "prop": "transaction.date",
           "xpr": {
             "type": "placeholder",
-            "placeholder": "Set Transaction Date in the preset",
+            "placeholder": "Transaction Date",
             "propType": "transaction.date",
-            "propsLink": { "label": "Choose column", "matchProp": "~cols.~^" },
-            "valueLink": true,
-            "valueType": "scalar"
+            "propsLink": { "label": "Select column", "matchProp": "~cols.~^" },
+            "valueLink": "Enter date",
+            "valueType": "dateTime"
           }
         },
         {
@@ -57,11 +71,13 @@
           "prop": "transaction.qty",
           "xpr": {
             "type": "placeholder",
-            "placeholder": "Set Transaction Quantity in the preset",
+            "placeholder": "Transaction Quantity",
             "propType": "transaction.qty",
-            "propsLink": { "label": "Choose column", "matchProp": "~cols.~^" },
-            "valueLink": true,
-            "valueType": "scalar"
+            "propsLink": {
+              "label": "Select column",
+              "matchProp": "~cols.~^"
+            },
+            "valueType": "number"
           }
         },
         {
@@ -69,11 +85,11 @@
           "prop": "transaction.price",
           "xpr": {
             "type": "placeholder",
-            "placeholder": "Set Transaction Price in the preset",
+            "placeholder": "Transaction Price",
             "propType": "transaction.price",
-            "propsLink": { "label": "Choose column", "matchProp": "~cols.~^" },
-            "valueLink": true,
-            "valueType": "scalar"
+            "propsLink": { "label": "Select column", "matchProp": "~cols.~^" },
+            "valueLink": "Enter price",
+            "valueType": "number"
           }
         },
         {
@@ -81,12 +97,12 @@
           "prop": "transaction.valueCurrency",
           "xpr": {
             "type": "placeholder",
-            "placeholder": "Fill or remove the Transaction Value Currency in the preset",
+            "placeholder": "Value Currency",
             "propType": "transaction.valueCurrency",
             "value": null,
-            "propsLink": { "label": "Choose column", "matchProp": "~cols.~^" },
-            "valueLink": true,
-            "valueType": "scalar",
+            "propsLink": { "label": "Select column", "matchProp": "~cols.~^" },
+            "valueLink": "Select currency",
+            "valueType": "currency",
             "removeLink": {
               "levels": 1
             }
@@ -97,12 +113,12 @@
           "prop": "transaction.fee",
           "xpr": {
             "type": "placeholder",
-            "placeholder": "Fill or remove the Transaction Fee in the preset",
+            "placeholder": "Transaction Fee",
             "propType": "transaction.fee",
             "value": 0,
-            "propsLink": { "label": "Choose column", "matchProp": "~cols.~^" },
-            "valueLink": true,
-            "valueType": "scalar",
+            "propsLink": { "label": "Select column", "matchProp": "~cols.~^" },
+            "valueLink": "Enter fee",
+            "valueType": "number",
             "removeLink": {
               "levels": 1
             }
@@ -114,12 +130,12 @@
           "prop": "transaction.feeCurrency",
           "xpr": {
             "type": "placeholder",
-            "placeholder": "Fill or remove the Transaction Fee Currency in the preset",
+            "placeholder": "Fee Currency",
             "propType": "transaction.feeCurrency",
             "value": null,
-            "propsLink": { "label": "Choose column", "matchProp": "~cols.~^" },
-            "valueLink": true,
-            "valueType": "scalar",
+            "propsLink": { "label": "Select column", "matchProp": "~cols.~^" },
+            "valueLink": "Select currency",
+            "valueType": "currency",
             "removeLink": {
               "levels": 1
             }
@@ -130,12 +146,12 @@
           "prop": "transaction.taxPaid",
           "xpr": {
             "type": "placeholder",
-            "placeholder": "Fill or remove the Transaction Tax Paid in the preset",
+            "placeholder": "Tax Paid",
             "propType": "transaction.taxPaid",
             "value": null,
-            "propsLink": { "label": "Choose column", "matchProp": "~cols.~^" },
-            "valueLink": true,
-            "valueType": "scalar",
+            "propsLink": { "label": "Select column", "matchProp": "~cols.~^" },
+            "valueLink": "Enter tax",
+            "valueType": "number",
             "removeLink": {
               "levels": 1
             }

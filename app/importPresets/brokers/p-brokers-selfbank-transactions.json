@@ -298,10 +298,7 @@
                             },
                             "v": {
                               "type": "value",
-                              "value": [
-                                "OPEN",
-                                "CLOSE"
-                              ]
+                              "value": ["OPEN", "CLOSE"]
                             }
                           },
                           "stmts": [
@@ -313,19 +310,8 @@
                               "type": "set",
                               "prop": "transaction.qty",
                               "xpr": {
-                                "type": "placeholder",
-                                "placeholder": "Set Transaction Quantity in the preset",
-                                "propsLink": {
-                                  "label": "Choose column",
-                                  "matchProp": "~cols.~^"
-                                },
-                                "valueLink": true,
-                                "propType": "transaction.qty",
-                                "recommend": {
-                                  "type": "prop",
-                                  "prop": "cols.Quantity"
-                                },
-                                "valueType": "scalar"
+                                "type": "prop",
+                                "prop": "cols.Quantity"
                               },
                               "trfms": [
                                 {
@@ -337,19 +323,8 @@
                               "type": "set",
                               "prop": "transaction.price",
                               "xpr": {
-                                "type": "placeholder",
-                                "placeholder": "Set Transaction Price in the preset",
-                                "propsLink": {
-                                  "label": "Choose column",
-                                  "matchProp": "~cols.~^"
-                                },
-                                "valueLink": true,
-                                "propType": "transaction.price",
-                                "recommend": {
-                                  "type": "prop",
-                                  "prop": "cols.OrigTradePrice"
-                                },
-                                "valueType": "scalar"
+                                "type": "prop",
+                                "prop": "cols.OrigTradePrice"
                               }
                             }
                           ]
@@ -382,10 +357,7 @@
                         "asset": {
                           "assetTypes": {
                             "type": "value",
-                            "value": [
-                              "STOCK",
-                              "ETF"
-                            ]
+                            "value": ["STOCK", "ETF"]
                           },
                           "remote": {
                             "type": "value",

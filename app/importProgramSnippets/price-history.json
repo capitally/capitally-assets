@@ -4,42 +4,55 @@
   "stmts": [
     {
       "type": "comment",
-      "md": "🌱 Map all properties to columns, or enter values manually.\n\n🦉 Note that you may only set market prices for assets that are already in the project."
+      "md": "🦉 Note that you may only set market prices for assets that are **already in the project**."
     },
     {
       "type": "setMarketPrice",
       "asset": {
         "type": "placeholder",
-        "placeholder": "Set Asset in the preset",
+        "placeholder": "Asset",
         "propType": "asset",
         "propsLink": {
-          "label": "Choose asset column",
+          "label": "Select asset column",
           "matchProp": "~cols.~^"
         },
-        "valueLink": true,
-        "valueType": "scalar"
+        "valueLink": "Select asset",
+        "valueType": "asset"
       },
       "date": {
         "type": "placeholder",
-        "placeholder": "Set Date in the preset",
+        "placeholder": "Date",
         "propType": "transaction.date",
         "propsLink": {
-          "label": "Choose date column",
+          "label": "Select date column",
           "matchProp": "~cols.~^"
         },
-        "valueLink": true,
-        "valueType": "scalar"
+        "valueLink": "Enter date",
+        "presetLinks": [
+          {
+            "label": "Today",
+            "xpr": { "type": "formula", "formula": "=Date.now()" }
+          },
+          {
+            "label": "Yesterday",
+            "xpr": {
+              "type": "formula",
+              "formula": "=Date.addDays(Date.today(), -1)"
+            }
+          }
+        ],
+        "valueType": "date"
       },
       "price": {
         "type": "placeholder",
-        "placeholder": "Set Market Price in the preset",
+        "placeholder": "Market Price",
         "propType": "transaction.marketPrice",
         "propsLink": {
-          "label": "Choose column",
+          "label": "Select price column",
           "matchProp": "~cols.~^"
         },
-        "valueLink": true,
-        "valueType": "scalar"
+        "valueLink": "Enter price",
+        "valueType": "number"
       }
     }
   ]

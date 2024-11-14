@@ -126,10 +126,10 @@
                       "prop": "transaction.fee",
                       "xpr": {
                         "type": "placeholder",
-                        "placeholder": "Fill or remove the Transaction Fee in the preset",
+                        "placeholder": "Transaction Fee",
                         "value": 0,
                         "propsLink": {
-                          "label": "Choose column",
+                          "label": "Select column",
                           "matchProp": "~cols.~^"
                         },
                         "valueLink": true,
@@ -165,10 +165,7 @@
                             },
                             "v": {
                               "type": "value",
-                              "value": [
-                                "OPEN",
-                                "CLOSE"
-                              ]
+                              "value": ["OPEN", "CLOSE"]
                             }
                           },
                           "stmts": [
@@ -419,10 +416,7 @@
                                 "asset": {
                                   "assetTypes": {
                                     "type": "value",
-                                    "value": [
-                                      "STOCK",
-                                      "ETF"
-                                    ]
+                                    "value": ["STOCK", "ETF"]
                                   },
                                   "markets": {
                                     "type": "prop",

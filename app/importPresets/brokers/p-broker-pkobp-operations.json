@@ -139,10 +139,7 @@
                                 "asset": {
                                   "assetTypes": {
                                     "type": "value",
-                                    "value": [
-                                      "STOCK",
-                                      "ETF"
-                                    ]
+                                    "value": ["STOCK", "ETF"]
                                   },
                                   "remote": {
                                     "type": "value",
@@ -301,19 +298,8 @@
                       "type": "set",
                       "prop": "transaction.type",
                       "xpr": {
-                        "type": "placeholder",
-                        "placeholder": "Set Transaction type in the preset",
-                        "propsLink": {
-                          "label": "Choose column",
-                          "matchProp": "~cols.~^"
-                        },
-                        "valueLink": true,
-                        "propType": "transaction.type",
-                        "recommend": {
-                          "type": "prop",
-                          "prop": "cols.Opis"
-                        },
-                        "valueType": "scalar"
+                        "type": "prop",
+                        "prop": "cols.Opis"
                       }
                     },
                     {
@@ -328,10 +314,7 @@
                             },
                             "v": {
                               "type": "value",
-                              "value": [
-                                "OPEN",
-                                "CLOSE"
-                              ]
+                              "value": ["OPEN", "CLOSE"]
                             }
                           },
                           "stmts": [
@@ -344,9 +327,9 @@
                               "prop": "transaction.qty",
                               "xpr": {
                                 "type": "placeholder",
-                                "placeholder": "Set Transaction Quantity in the preset",
+                                "placeholder": "Set Transaction Quantity",
                                 "propsLink": {
-                                  "label": "Choose column",
+                                  "label": "Select column",
                                   "matchProp": "~cols.~^"
                                 },
                                 "valueLink": true,
@@ -364,9 +347,9 @@
                               "prop": "transaction.price",
                               "xpr": {
                                 "type": "placeholder",
-                                "placeholder": "Set Transaction Price in the preset",
+                                "placeholder": "Set Transaction Price",
                                 "propsLink": {
-                                  "label": "Choose column",
+                                  "label": "Select column",
                                   "matchProp": "~cols.~^"
                                 },
                                 "valueLink": true,
@@ -385,12 +368,7 @@
                             },
                             "v": {
                               "type": "value",
-                              "value": [
-                                "DIVIDEND",
-                                "INTEREST",
-                                "RENT",
-                                "OTHER"
-                              ]
+                              "value": ["DIVIDEND", "INTEREST", "RENT", "OTHER"]
                             }
                           },
                           "stmts": [
@@ -403,10 +381,10 @@
                               "prop": "transaction.value",
                               "xpr": {
                                 "type": "placeholder",
-                                "placeholder": "Fill or remove the Income Value in the preset",
+                                "placeholder": "Income Value",
                                 "value": null,
                                 "propsLink": {
-                                  "label": "Choose column",
+                                  "label": "Select column",
                                   "matchProp": "~cols.~^"
                                 },
                                 "valueLink": true,
