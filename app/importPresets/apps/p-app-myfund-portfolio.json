@@ -1,0 +1,962 @@
+{
+  "version": 3,
+  "type": "Capitally Data Export",
+  "exportedAt": "2024-11-15T12:27:31.359Z",
+  "data": {
+    "importPresets": {
+      "u-1WMUAXSOF4UwK4c": {
+        "id": "u-1WMUAXSOF4UwK4c",
+        "name": "Portfolio export #beta",
+        "updatedAt": "2024-11-15T13:22",
+        "author": "Rafal <CEzOZ77nYhZX6L0qXPKXSs6GBho2>",
+        "info": "To import your accounts, transactions & dividends from MyFund:\n\n1. Go to **Zarządanie Portfelami** → **Twoje portfele**\n2. Export to XML\n3. Open or drop that file here\n",
+        "sourceId": "",
+        "provider": "MyFund",
+        "providerIcon": {
+          "type": "logo",
+          "id": "brokers/myfund"
+        },
+        "providerGroup": "Apps",
+        "parser": {
+          "formats": [
+            "xml"
+          ],
+          "allowClipboard": false
+        },
+        "sections": {
+          "main": {
+            "json": {
+              "path": "konta"
+            },
+            "program": {
+              "stmts": [
+                {
+                  "type": "if",
+                  "ifs": [
+                    {
+                      "xpr": {
+                        "type": "=",
+                        "xpr": {
+                          "type": "prop",
+                          "prop": "cols.inwestycyjne"
+                        },
+                        "v": {
+                          "type": "value",
+                          "value": "1"
+                        }
+                      },
+                      "stmts": [
+                        {
+                          "type": "addAccount",
+                          "optional": true,
+                          "stmts": [
+                            {
+                              "type": "set",
+                              "prop": "account.name",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.nazwa"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "account.icon",
+                              "xpr": {
+                                "type": "value",
+                                "value": {
+                                  "type": "logo",
+                                  "id": "brokers/myfund"
+                                }
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "account.countryISO",
+                              "xpr": {
+                                "type": "value",
+                                "value": null
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "Operacje": {
+            "json": {
+              "path": "operacje"
+            },
+            "program": {
+              "stmts": [
+                {
+                  "type": "if",
+                  "ifs": [
+                    {
+                      "xpr": {
+                        "type": "or",
+                        "xprs": [
+                          {
+                            "type": "=",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.TYP"
+                            },
+                            "v": {
+                              "type": "value",
+                              "value": "Kupno"
+                            }
+                          },
+                          {
+                            "type": "=",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.TYP"
+                            },
+                            "v": {
+                              "type": "value",
+                              "value": "Sprzedaz"
+                            }
+                          },
+                          {
+                            "type": "=",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.TYP"
+                            },
+                            "v": {
+                              "type": "value",
+                              "value": "Konwersja Akcji umorzenie"
+                            }
+                          },
+                          {
+                            "type": "=",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.TYP"
+                            },
+                            "v": {
+                              "type": "value",
+                              "value": "Konwersja Akcji nabycie"
+                            }
+                          },
+                          {
+                            "type": "=",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.TYP"
+                            },
+                            "v": {
+                              "type": "value",
+                              "value": "Kupno kontraktu"
+                            }
+                          },
+                          {
+                            "type": "=",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.TYP"
+                            },
+                            "v": {
+                              "type": "value",
+                              "value": "Sprzedaz kontraktu"
+                            }
+                          }
+                        ]
+                      },
+                      "stmts": [
+                        {
+                          "type": "addTransaction",
+                          "stmts": [
+                            {
+                              "type": "lookupRows",
+                              "direction": "start",
+                              "section": "main",
+                              "stmts": [
+                                {
+                                  "type": "comment",
+                                  "md": "Lookup accounts"
+                                },
+                                {
+                                  "type": "if",
+                                  "ifs": [
+                                    {
+                                      "xpr": {
+                                        "type": "=",
+                                        "xpr": {
+                                          "type": "prop",
+                                          "prop": "lookup.cols.konto_id"
+                                        },
+                                        "v": {
+                                          "type": "prop",
+                                          "prop": "cols.KONTO_ID"
+                                        }
+                                      },
+                                      "stmts": [
+                                        {
+                                          "type": "set",
+                                          "prop": "transaction.account",
+                                          "xpr": {
+                                            "type": "prop",
+                                            "prop": "lookup.cols.nazwa"
+                                          }
+                                        },
+                                        {
+                                          "type": "return",
+                                          "levels": 1
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "if",
+                              "ifs": [
+                                {
+                                  "xpr": {
+                                    "type": "or",
+                                    "xprs": [
+                                      {
+                                        "type": "=",
+                                        "xpr": {
+                                          "type": "prop",
+                                          "prop": "cols.TYP"
+                                        },
+                                        "v": {
+                                          "type": "value",
+                                          "value": "Kupno kontraktu"
+                                        }
+                                      },
+                                      {
+                                        "type": "=",
+                                        "xpr": {
+                                          "type": "prop",
+                                          "prop": "cols.TYP"
+                                        },
+                                        "v": {
+                                          "type": "value",
+                                          "value": "Sprzedaz kontraktu"
+                                        }
+                                      }
+                                    ]
+                                  },
+                                  "stmts": [
+                                    {
+                                      "type": "comment",
+                                      "md": "Create a custom asset"
+                                    },
+                                    {
+                                      "type": "addRowNote",
+                                      "note": {
+                                        "type": "value",
+                                        "value": "☝️ Contracts are added as custom assets. They have no current price information, but will track buy/sell returns. You can add market prices manually if needed."
+                                      }
+                                    },
+                                    {
+                                      "type": "addAsset",
+                                      "optional": true,
+                                      "stmts": [
+                                        {
+                                          "type": "set",
+                                          "prop": "asset.type",
+                                          "xpr": {
+                                            "type": "value",
+                                            "value": "OTHER"
+                                          }
+                                        },
+                                        {
+                                          "type": "set",
+                                          "prop": "asset.name",
+                                          "xpr": {
+                                            "type": "prop",
+                                            "prop": "cols.TICKER"
+                                          }
+                                        },
+                                        {
+                                          "type": "set",
+                                          "prop": "asset.name",
+                                          "xpr": {
+                                            "type": "value",
+                                            "value": " (contract)"
+                                          },
+                                          "op": "append"
+                                        },
+                                        {
+                                          "type": "set",
+                                          "prop": "asset.symbol",
+                                          "xpr": {
+                                            "type": "prop",
+                                            "prop": "cols.TICKER"
+                                          }
+                                        },
+                                        {
+                                          "type": "set",
+                                          "prop": "asset.currency",
+                                          "xpr": {
+                                            "type": "prop",
+                                            "prop": "cols.WALUTA"
+                                          }
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "set",
+                                      "prop": "transaction.asset",
+                                      "xpr": {
+                                        "type": "prop",
+                                        "prop": "addedAsset"
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "stmts": [
+                                    {
+                                      "type": "set",
+                                      "prop": "transaction.asset",
+                                      "xpr": {
+                                        "type": "prop",
+                                        "prop": "cols.TICKER"
+                                      },
+                                      "trfms": [
+                                        {
+                                          "type": "lower"
+                                        }
+                                      ],
+                                      "cast": {
+                                        "asset": {
+                                          "markets": {
+                                            "type": "placeholder",
+                                            "placeholder": "Search for assets only on these markets",
+                                            "value": null,
+                                            "valueLink": "Select markets to search assets in",
+                                            "removeLink": {
+                                              "levels": 0
+                                            },
+                                            "recommend": {
+                                              "type": "value",
+                                              "value": [
+                                                {
+                                                  "id": "mic-XWAR"
+                                                },
+                                                {
+                                                  "id": "mic-XETR"
+                                                },
+                                                {
+                                                  "id": "mic-XNYS"
+                                                },
+                                                {
+                                                  "id": "mic-XNAS"
+                                                },
+                                                {
+                                                  "id": "mic-ARCX"
+                                                },
+                                                {
+                                                  "id": "mic-XASE"
+                                                },
+                                                {
+                                                  "id": "mic-XTSE"
+                                                },
+                                                {
+                                                  "id": "mic-XTSX"
+                                                },
+                                                {
+                                                  "id": "mic-XPAR"
+                                                },
+                                                {
+                                                  "id": "mic-XLUX"
+                                                },
+                                                {
+                                                  "id": "mic-XWBO"
+                                                },
+                                                {
+                                                  "id": "mic-XSWX"
+                                                },
+                                                {
+                                                  "id": "mic-XLIS"
+                                                },
+                                                {
+                                                  "id": "mic-XAMS"
+                                                },
+                                                {
+                                                  "id": "mic-XPRA"
+                                                },
+                                                {
+                                                  "id": "mic-XBER"
+                                                },
+                                                {
+                                                  "id": "mic-XHEL"
+                                                },
+                                                {
+                                                  "id": "mic-BMEX"
+                                                },
+                                                {
+                                                  "id": "mic-XBRU"
+                                                },
+                                                {
+                                                  "id": "mic-XMIL"
+                                                },
+                                                {
+                                                  "id": "mic-ASEX"
+                                                },
+                                                {
+                                                  "id": "mic-XOSL"
+                                                },
+                                                {
+                                                  "id": "mic-XSTO"
+                                                },
+                                                {
+                                                  "id": "mic-XCSE"
+                                                },
+                                                {
+                                                  "id": "mic-XLON"
+                                                },
+                                                {
+                                                  "id": "m-USFUND"
+                                                },
+                                                {
+                                                  "id": "m-EUFUND"
+                                                },
+                                                {
+                                                  "id": "m-OTC"
+                                                },
+                                                {
+                                                  "id": "mic-BATS"
+                                                },
+                                                {
+                                                  "id": "mic-XHKG"
+                                                },
+                                                {
+                                                  "id": "mic-XSES"
+                                                },
+                                                {
+                                                  "id": "mic-XJPX"
+                                                },
+                                                {
+                                                  "id": "mic-XSHE"
+                                                },
+                                                {
+                                                  "id": "mic-XSHG"
+                                                },
+                                                {
+                                                  "id": "mic-XTAE"
+                                                },
+                                                {
+                                                  "id": "mic-BVMF"
+                                                }
+                                              ]
+                                            },
+                                            "valueType": "market",
+                                            "multiple": true
+                                          },
+                                          "remote": {
+                                            "type": "value",
+                                            "value": true
+                                          }
+                                        }
+                                      }
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.type",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.TYP"
+                              },
+                              "map": [
+                                {
+                                  "cmp": {
+                                    "type": "=",
+                                    "v": {
+                                      "type": "value",
+                                      "value": "Konwersja Akcji nabycie"
+                                    }
+                                  },
+                                  "target": {
+                                    "type": "value",
+                                    "value": "OPEN"
+                                  }
+                                },
+                                {
+                                  "cmp": {
+                                    "type": "=",
+                                    "v": {
+                                      "type": "value",
+                                      "value": "Konwersja Akcji umorzenie"
+                                    }
+                                  },
+                                  "target": {
+                                    "type": "value",
+                                    "value": "CLOSE"
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.date",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.DATA"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.time",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.CZAS"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.fee",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.PROWIZJA"
+                              },
+                              "trfms": [
+                                {
+                                  "type": "abs"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.valueCurrency",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.WALUTA"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.feeCurrency",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.WALUTA"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.taxPaid",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.PODATEK_WAL"
+                              },
+                              "trfms": [
+                                {
+                                  "type": "abs"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.note",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.OPIS"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.qty",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.LICZBAJEDNOSTEK"
+                              },
+                              "trfms": [
+                                {
+                                  "type": "abs"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.price",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.CENA_WAL"
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "xpr": {
+                        "type": "or",
+                        "xprs": [
+                          {
+                            "type": "=",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.TYP"
+                            },
+                            "v": {
+                              "type": "value",
+                              "value": "Dodanie akcji po splicie"
+                            }
+                          },
+                          {
+                            "type": "=",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.TYP"
+                            },
+                            "v": {
+                              "type": "value",
+                              "value": "Odjęcie akcji po splicie"
+                            }
+                          }
+                        ]
+                      },
+                      "stmts": [
+                        {
+                          "type": "comment",
+                          "md": "Silently ignore"
+                        }
+                      ]
+                    },
+                    {
+                      "stmts": [
+                        {
+                          "type": "addRowNote",
+                          "note": {
+                            "type": "formula",
+                            "formula": "=\"🥺 Transaction type `\" + col(\"TYP\") + \"` is not recognized\""
+                          },
+                          "urgency": "warn"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "Dywidendy": {
+            "json": {
+              "path": "operacje_dywidendy"
+            },
+            "program": {
+              "stmts": [
+                {
+                  "type": "if",
+                  "ifs": [
+                    {
+                      "xpr": {
+                        "type": "or",
+                        "xprs": [
+                          {
+                            "type": "=",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.TYP"
+                            },
+                            "v": {
+                              "type": "value",
+                              "value": "0"
+                            }
+                          }
+                        ]
+                      },
+                      "stmts": [
+                        {
+                          "type": "addTransaction",
+                          "stmts": [
+                            {
+                              "type": "lookupRows",
+                              "direction": "start",
+                              "section": "main",
+                              "stmts": [
+                                {
+                                  "type": "comment",
+                                  "md": "Lookup accounts"
+                                },
+                                {
+                                  "type": "if",
+                                  "ifs": [
+                                    {
+                                      "xpr": {
+                                        "type": "=",
+                                        "xpr": {
+                                          "type": "prop",
+                                          "prop": "lookup.cols.konto_id"
+                                        },
+                                        "v": {
+                                          "type": "prop",
+                                          "prop": "cols.KONTO_ID"
+                                        }
+                                      },
+                                      "stmts": [
+                                        {
+                                          "type": "set",
+                                          "prop": "transaction.account",
+                                          "xpr": {
+                                            "type": "prop",
+                                            "prop": "lookup.cols.nazwa"
+                                          }
+                                        },
+                                        {
+                                          "type": "return",
+                                          "levels": 1
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.asset",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.TICKER"
+                              },
+                              "trfms": [
+                                {
+                                  "type": "lower"
+                                }
+                              ],
+                              "cast": {
+                                "asset": {
+                                  "markets": {
+                                    "type": "placeholder",
+                                    "placeholder": "Search for assets only on these markets",
+                                    "value": null,
+                                    "valueLink": "Select markets to search assets in",
+                                    "removeLink": {
+                                      "levels": 0
+                                    },
+                                    "recommend": {
+                                      "type": "value",
+                                      "value": [
+                                        {
+                                          "id": "mic-XWAR"
+                                        },
+                                        {
+                                          "id": "mic-XETR"
+                                        },
+                                        {
+                                          "id": "mic-XNYS"
+                                        },
+                                        {
+                                          "id": "mic-XNAS"
+                                        },
+                                        {
+                                          "id": "mic-ARCX"
+                                        },
+                                        {
+                                          "id": "mic-XASE"
+                                        },
+                                        {
+                                          "id": "mic-XTSE"
+                                        },
+                                        {
+                                          "id": "mic-XTSX"
+                                        },
+                                        {
+                                          "id": "mic-XPAR"
+                                        },
+                                        {
+                                          "id": "mic-XLUX"
+                                        },
+                                        {
+                                          "id": "mic-XWBO"
+                                        },
+                                        {
+                                          "id": "mic-XSWX"
+                                        },
+                                        {
+                                          "id": "mic-XLIS"
+                                        },
+                                        {
+                                          "id": "mic-XAMS"
+                                        },
+                                        {
+                                          "id": "mic-XPRA"
+                                        },
+                                        {
+                                          "id": "mic-XBER"
+                                        },
+                                        {
+                                          "id": "mic-XHEL"
+                                        },
+                                        {
+                                          "id": "mic-BMEX"
+                                        },
+                                        {
+                                          "id": "mic-XBRU"
+                                        },
+                                        {
+                                          "id": "mic-XMIL"
+                                        },
+                                        {
+                                          "id": "mic-ASEX"
+                                        },
+                                        {
+                                          "id": "mic-XOSL"
+                                        },
+                                        {
+                                          "id": "mic-XSTO"
+                                        },
+                                        {
+                                          "id": "mic-XCSE"
+                                        },
+                                        {
+                                          "id": "mic-XLON"
+                                        },
+                                        {
+                                          "id": "m-USFUND"
+                                        },
+                                        {
+                                          "id": "m-EUFUND"
+                                        },
+                                        {
+                                          "id": "m-OTC"
+                                        },
+                                        {
+                                          "id": "mic-BATS"
+                                        },
+                                        {
+                                          "id": "mic-XHKG"
+                                        },
+                                        {
+                                          "id": "mic-XSES"
+                                        },
+                                        {
+                                          "id": "mic-XJPX"
+                                        },
+                                        {
+                                          "id": "mic-XSHE"
+                                        },
+                                        {
+                                          "id": "mic-XSHG"
+                                        },
+                                        {
+                                          "id": "mic-XTAE"
+                                        },
+                                        {
+                                          "id": "mic-BVMF"
+                                        }
+                                      ]
+                                    },
+                                    "valueType": "market",
+                                    "multiple": true
+                                  },
+                                  "remote": {
+                                    "type": "value",
+                                    "value": true
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.value",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.WARTOSC_WAL"
+                              },
+                              "trfms": [
+                                {
+                                  "type": "abs"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.type",
+                              "xpr": {
+                                "type": "value",
+                                "value": "DIVIDEND"
+                              },
+                              "map": []
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.date",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.DATA"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.price",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.WARTOSCNAAKCJE_WAL"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.valueCurrency",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.WALUTA"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.taxPaid",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.PODATEK_WAL"
+                              },
+                              "trfms": [
+                                {
+                                  "type": "abs"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.note",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.OPIS"
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "stmts": [
+                        {
+                          "type": "addRowNote",
+                          "note": {
+                            "type": "formula",
+                            "formula": "=\"🥺 Dividend type `\" + col(\"TYP\") + \"` is not recognized\""
+                          },
+                          "urgency": "warn"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "options": {
+          "valueMap": {
+            "asset": {}
+          }
+        }
+      }
+    }
+  }
+}

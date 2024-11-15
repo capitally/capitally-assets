@@ -1,16 +1,16 @@
 {
   "version": 3,
   "type": "Capitally Data Export",
-  "exportedAt": "2024-11-14T19:56:33.135Z",
+  "exportedAt": "2024-11-15T12:27:11.201Z",
   "data": {
     "importPresets": {
-      "u-eHphWXL3TAXNOfz": {
-        "id": "u-eHphWXL3TAXNOfz",
+      "u-Q1JOfPJB5o98FF8": {
+        "id": "u-Q1JOfPJB5o98FF8",
         "name": "Transactions #beta",
-        "updatedAt": "2024-11-14T16:24",
+        "updatedAt": "2024-11-15T13:23",
         "author": "Rafal <CEzOZ77nYhZX6L0qXPKXSs6GBho2>",
-        "info": "To import your transactions from MyFund:\n\n1. Go to **Portfel** → **Historia operacji**\n2. Click **Eksport do xls** or **Eksport do csv**\n3. Open or drop that file here",
-        "mappingInfo": "🦉 As the export may contain different accounts, you will need to map them to your existing accounts, or create new ones in the dropdown below.",
+        "info": "To import only your transactions from MyFund:\n\n1. Go to **Portfel** → **Historia operacji**\n2. Click **Eksport do xls** or **Eksport do csv**\n3. Open or drop that file here",
+        "mappingInfo": "🦉 As the export may contain different accounts, you will need to map them to your existing accounts, or create new ones in the dropdown below.\n\nThere's a second importer that handles accounts",
         "sourceId": "p-app-myfund-transactions",
         "provider": "MyFund",
         "providerIcon": {
