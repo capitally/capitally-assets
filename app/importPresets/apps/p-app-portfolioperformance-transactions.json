@@ -1,0 +1,145 @@
+{
+  "version": 3,
+  "type": "Capitally Data Export",
+  "exportedAt": "2024-11-15T13:02:23.426Z",
+  "data": {
+    "importPresets": {
+      "u-POIiszczhNtRf11": {
+        "id": "u-POIiszczhNtRf11",
+        "name": "Transactions #beta",
+        "updatedAt": "2024-11-15T14:02",
+        "author": "Rafal <CEzOZ77nYhZX6L0qXPKXSs6GBho2>",
+        "info": "To import your transactions from Portfolio Performance:\n\n1. Select **File** → **Export** → **CSV Files** from the menu\n1. Select one account under **Securities Account Transactions** \n1. Click **Finish**\n1. Open or drop that file here",
+        "mappingInfo": "",
+        "sourceId": "app-portfolioperformance",
+        "provider": "Portfolio Performance",
+        "providerIcon": {
+          "type": "logo",
+          "id": "brokers/portfolioperformance"
+        },
+        "providerGroup": "Apps",
+        "parser": {
+          "formats": [
+            "csv"
+          ],
+          "allowClipboard": false
+        },
+        "sections": {
+          "main": {
+            "csv": {
+              "fromRow": 1,
+              "header": true
+            },
+            "enabledColumns": [
+              "Date",
+              "Type",
+              "Value",
+              "Transaction Currency",
+              "Gross Amount",
+              "Currency Gross Amount",
+              "Exchange Rate",
+              "Fees",
+              "Taxes",
+              "Shares",
+              "ISIN",
+              "WKN",
+              "Ticker Symbol",
+              "Security Name",
+              "Note"
+            ],
+            "program": {
+              "stmts": [
+                {
+                  "type": "addTransaction",
+                  "stmts": [
+                    {
+                      "type": "set",
+                      "prop": "transaction.account",
+                      "xpr": {
+                        "type": "value"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.date",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Date"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.type",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Type"
+                      },
+                      "map": []
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.asset",
+                      "xpr": {
+                        "type": "formula",
+                        "formula": "=col(\"ISIN\") || col(\"Ticker Symbol\") || col(\"Security Name\")"
+                      },
+                      "cast": {
+                        "asset": {
+                          "remote": {
+                            "type": "value",
+                            "value": true
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.qty",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Shares"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.value",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Value"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.fee",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Fees"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.currency",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Transaction Currency"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.note",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Note"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "options": {}
+      }
+    }
+  }
+}

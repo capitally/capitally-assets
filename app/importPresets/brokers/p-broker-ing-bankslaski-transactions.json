@@ -1,0 +1,258 @@
+{
+  "version": 3,
+  "type": "Capitally Data Export",
+  "exportedAt": "2024-11-15T13:51:11.386Z",
+  "data": {
+    "importPresets": {
+      "u-jwBkbJI2uDCB77n": {
+        "id": "u-jwBkbJI2uDCB77n",
+        "name": "Transactions #beta",
+        "updatedAt": "2024-11-15T14:50",
+        "author": "Rafal <CEzOZ77nYhZX6L0qXPKXSs6GBho2>",
+        "info": "To import your transactions from ING Bank Śląski:\n\n1. Go to ING BŚ brokerage account\n1. Open **Historia** → **Transakcje**\n 1. Choose date period\n 1. Click **Pobierz jako CSV**\n1. Download the file and open or drop it here",
+        "mappingInfo": "",
+        "sourceId": "broker-ingbs-pl",
+        "provider": "ING Bank Śląski",
+        "providerIcon": {
+          "type": "logo",
+          "id": "brokers/ing"
+        },
+        "providerGroup": "Brokers",
+        "parser": {
+          "formats": [
+            "csv"
+          ],
+          "allowClipboard": false,
+          "codepage": "windows-1250"
+        },
+        "sections": {
+          "main": {
+            "csv": {
+              "fromRow": "/[-0-9]+ [:0-9]+;[0-9]+;[A-Z]+;[a-zA-Z]+;[0-9]+/^",
+              "header": false
+            },
+            "replaceHeaders": [
+              [
+                "~Column 1~",
+                "Date"
+              ],
+              [
+                "~Column 3~",
+                "Symbol"
+              ],
+              [
+                "~Column 4~",
+                "Type"
+              ],
+              [
+                "~Column 5~",
+                "Quantity"
+              ],
+              [
+                "~Column 6~",
+                "Price"
+              ],
+              [
+                "~Column 8~",
+                "Fee"
+              ],
+              [
+                "~Column 2~",
+                "Order Id"
+              ]
+            ],
+            "enabledColumns": [
+              "Date",
+              "Order Id",
+              "Symbol",
+              "Type",
+              "Quantity",
+              "Price",
+              "Column 7",
+              "Fee",
+              "Column 9"
+            ],
+            "program": {
+              "stmts": [
+                {
+                  "type": "addAccount",
+                  "optional": true,
+                  "stmts": [
+                    {
+                      "type": "set",
+                      "prop": "account.name",
+                      "xpr": {
+                        "type": "value",
+                        "value": "ING Bank Śląski"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "account.icon",
+                      "xpr": {
+                        "type": "value",
+                        "value": {
+                          "type": "logo",
+                          "id": "brokers/ing"
+                        }
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "account.countryISO",
+                      "xpr": {
+                        "type": "value",
+                        "value": "PL"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "addTransaction",
+                  "stmts": [
+                    {
+                      "type": "set",
+                      "prop": "transaction.account",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "addedAccount"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.asset",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Symbol"
+                      },
+                      "trfms": [],
+                      "cast": {
+                        "asset": {
+                          "assetTypes": {
+                            "type": "value",
+                            "value": [
+                              "STOCK",
+                              "ETF"
+                            ]
+                          },
+                          "markets": {
+                            "type": "value",
+                            "value": [
+                              {
+                                "id": "mic-XWAR"
+                              }
+                            ]
+                          },
+                          "remote": {
+                            "type": "value",
+                            "value": true
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.date",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Date"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.type",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Type"
+                      },
+                      "map": [
+                        {
+                          "cmp": {
+                            "type": "=",
+                            "v": {
+                              "type": "value",
+                              "value": "Kupno"
+                            }
+                          },
+                          "target": {
+                            "type": "value",
+                            "value": "OPEN"
+                          }
+                        },
+                        {
+                          "cmp": {
+                            "type": "=",
+                            "v": {
+                              "type": "value",
+                              "value": "Sprzedaż"
+                            }
+                          },
+                          "target": {
+                            "type": "value",
+                            "value": "CLOSE"
+                          }
+                        },
+                        {
+                          "cmp": {
+                            "type": "=",
+                            "v": {
+                              "type": "value",
+                              "value": "Sprzedaz"
+                            }
+                          },
+                          "target": {
+                            "type": "value",
+                            "value": "CLOSE"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.qty",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Quantity"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.price",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Price"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.fee",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Fee"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.currency",
+                      "xpr": {
+                        "type": "value",
+                        "value": {
+                          "id": "c-PLN"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "options": {
+          "valueMap": {
+            "asset": {}
+          }
+        }
+      }
+    }
+  }
+}

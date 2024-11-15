@@ -535,13 +535,7 @@
           }
         },
         "options": {
-          "valueMap": {
-            "asset": {
-              "eth2": {
-                "id": "u-1p4ZKEScibSo42N"
-              }
-            }
-          }
+          "valueMap": {}
         }
       }
     }
