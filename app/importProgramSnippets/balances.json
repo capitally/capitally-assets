@@ -12,6 +12,8 @@
             "type": "placeholder",
             "value": null,
             "placeholder": "Account",
+            "propType": "account",
+            "propsLink": { "label": "Select column", "matchProp": "~cols.~^" },
             "valueLink": "Select account",
             "valueType": "account"
           }
