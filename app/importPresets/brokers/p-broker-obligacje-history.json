@@ -1,15 +1,16 @@
 {
   "version": 3,
   "type": "Capitally Data Export",
-  "exportedAt": "2024-10-20T19:12:55.902Z",
+  "exportedAt": "2024-11-18T13:25:47.473Z",
   "data": {
     "importPresets": {
-      "u-c1PHmIys258rTgZ": {
-        "id": "u-c1PHmIys258rTgZ",
+      "u-vMi6mkcdlQmWkAU": {
+        "id": "u-vMi6mkcdlQmWkAU",
         "name": "1 of 2 - Transactions #beta",
-        "updatedAt": "2024-10-20T09:31",
+        "updatedAt": "2024-11-18T14:24",
         "author": "Rafal <CEzOZ77nYhZX6L0qXPKXSs6GBho2>",
         "info": "To import your transactions from Obligacje Skarbowe (Polish National Bonds):\n\n1. Go to [Serwis Obligacji Skarbowych](https://www.zakup.obligacjeskarbowe.pl/login.html)\n2. Open **Rachunek Rejestrowy**\n3. Open **Historia dyspozycji na Rachunku Rejestrowym**\n4. Choose dates and click **Dalej**\n5. Click the **[↓]** button below the table to download the XLS file\n6. Open or drop that file here\n\n> ☝️ This imports only transactions. As Capitally does not automatically update Bond prices, you will need to regularly update your current bonds value with the separate import **Obligacje Skarbowe: 2 of 2 - Balances**",
+        "sourceId": "p-broker-obligacje-history",
         "provider": "Obligacje Skarbowe",
         "providerIcon": {
           "type": "logo",
@@ -17,8 +18,8 @@
         },
         "providerGroup": "Brokers",
         "parser": {
-          "formats": ["xls"],
           "dateOrder": "ymd",
+          "formats": ["xls"],
           "allowClipboard": false
         },
         "sections": {
@@ -174,6 +175,21 @@
                               }
                             }
                           ]
+                        },
+                        {
+                          "type": "setMarketPrice",
+                          "asset": {
+                            "type": "prop",
+                            "prop": "addedAsset"
+                          },
+                          "date": {
+                            "type": "prop",
+                            "prop": "cols.DATA DYSPOZYCJI"
+                          },
+                          "price": {
+                            "type": "value",
+                            "value": 100
+                          }
                         },
                         {
                           "type": "addTransaction",

@@ -590,7 +590,7 @@
                                                   "trfms": [
                                                     {
                                                       "type": "extract",
-                                                      "pattern": "/.+?([.,\\d\\s]+)/i^"
+                                                      "pattern": "/.+?(\\d[.,\\s\\d]*)/i^"
                                                     }
                                                   ]
                                                 },
