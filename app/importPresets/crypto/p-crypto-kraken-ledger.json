@@ -1,16 +1,16 @@
 {
   "version": 3,
   "type": "Capitally Data Export",
-  "exportedAt": "2024-11-05T11:21:28.960Z",
+  "exportedAt": "2024-11-19T22:25:03.883Z",
   "data": {
     "importPresets": {
-      "u-zOC0Bdmd8h75bcu": {
-        "id": "u-zOC0Bdmd8h75bcu",
+      "u-hZQwp6eYFIlhSvj": {
+        "id": "u-hZQwp6eYFIlhSvj",
         "name": "Ledger #beta",
-        "updatedAt": "2024-11-05T12:21",
-        "author": "Rafal <CEzOZ77nYhZX6L0qXPKXSs6GBho2>",
+        "updatedAt": "2024-11-19T23:24",
+        "author": "RL <iFIjgKg2M7TIe5ygfjFzaDEAlAX2>",
         "info": "#### To import your transactions from **Kraken**:\n\n1. Go to **[Transactions → History](https://www.kraken.com/c/transactions/history)**\n    1. Choose timeframe\n    2. Click **Export** and select **CSV**\n\n#### To import your transactions from **Kraken Pro**:\n\n1. Go to **[History → Export](https://pro.kraken.com/app/history/export)**\n    1. Set **Format** to **CSV**\n    2. Set **Export type** to **Ledger** \n    3. Enable all **Fields**\n    4. Choose timeframe\n    5. Click **Submit**\n\nOpen or drop the generated file here",
-        "sourceId": "",
+        "sourceId": "p-crypto-kraken-ledger",
         "provider": "Kraken",
         "providerIcon": {
           "type": "logo",
@@ -148,6 +148,37 @@
                           },
                           "stmts": [
                             {
+                              "type": "if",
+                              "ifs": [
+                                {
+                                  "xpr": {
+                                    "type": "pattern",
+                                    "xpr": {
+                                      "type": "prop",
+                                      "prop": "cols.asset"
+                                    },
+                                    "pattern": "/EUR|USD|CAD/b"
+                                  },
+                                  "stmts": [
+                                    {
+                                      "type": "comment",
+                                      "md": "If the first trading row is FIAT we need to skip it. The other side will pick it up and create a transaction from it.\n\nOtherwise ignore in future lookups not to create duplicates"
+                                    },
+                                    {
+                                      "type": "return"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "stmts": [
+                                    {
+                                      "type": "ignoreRow"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
                               "type": "set",
                               "prop": "transaction.type",
                               "xpr": {
@@ -194,9 +225,7 @@
                                 "asset": {
                                   "assetTypes": {
                                     "type": "value",
-                                    "value": [
-                                      "CRYPTO"
-                                    ]
+                                    "value": ["CRYPTO"]
                                   },
                                   "remote": {
                                     "type": "value",
@@ -227,11 +256,11 @@
                               "direction": "after",
                               "offset": {
                                 "type": "value",
-                                "value": 1
+                                "value": -10
                               },
                               "limit": {
                                 "type": "value",
-                                "value": 1
+                                "value": 20
                               },
                               "stmts": [
                                 {
@@ -354,10 +383,7 @@
                                 "asset": {
                                   "assetTypes": {
                                     "type": "value",
-                                    "value": [
-                                      "CASH",
-                                      "CRYPTO"
-                                    ]
+                                    "value": ["CASH", "CRYPTO"]
                                   },
                                   "remote": {
                                     "type": "value",

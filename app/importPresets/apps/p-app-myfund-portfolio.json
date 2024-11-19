@@ -1,16 +1,16 @@
 {
   "version": 3,
   "type": "Capitally Data Export",
-  "exportedAt": "2024-11-15T12:27:31.359Z",
+  "exportedAt": "2024-11-19T22:16:45.286Z",
   "data": {
     "importPresets": {
-      "u-1WMUAXSOF4UwK4c": {
-        "id": "u-1WMUAXSOF4UwK4c",
+      "u-7rbZA9mtASOObzC": {
+        "id": "u-7rbZA9mtASOObzC",
         "name": "Portfolio export #beta",
-        "updatedAt": "2024-11-15T13:22",
-        "author": "Rafal <CEzOZ77nYhZX6L0qXPKXSs6GBho2>",
+        "updatedAt": "2024-11-19T23:16",
+        "author": "RL <iFIjgKg2M7TIe5ygfjFzaDEAlAX2>",
         "info": "To import your accounts, transactions & dividends from MyFund:\n\n1. Go to **Zarządanie Portfelami** → **Twoje portfele**\n2. Export to XML\n3. Open or drop that file here\n",
-        "sourceId": "",
+        "sourceId": "p-app-myfund-portfolio",
         "provider": "MyFund",
         "providerIcon": {
           "type": "logo",
@@ -18,16 +18,76 @@
         },
         "providerGroup": "Apps",
         "parser": {
-          "formats": [
-            "xml"
-          ],
+          "formats": ["xml"],
           "allowClipboard": false
         },
         "sections": {
           "main": {
             "json": {
-              "path": "konta"
+              "path": "~konta~^$"
             },
+            "enabledColumns": [
+              "id",
+              "konto_id",
+              "nazwa",
+              "nazwa_sub",
+              "ppk",
+              "aktywne",
+              "waluta",
+              "gotowkowe",
+              "inwestycyjne",
+              "precyzja",
+              "def_got",
+              "def_inv",
+              "KONTO_INV_ID",
+              "def_ppk",
+              "STOPA_PODATKU",
+              "UWZ_PROW_SPRZ_IKZE",
+              "podatekdyw",
+              "ROUND_SPLIT",
+              "debetowe",
+              "dywidendowe",
+              "oszczednosciowe",
+              "akcje_prowizja_p",
+              "akcje_prowizja_m",
+              "etf_prowizja_p",
+              "etf_prowizja_m",
+              "akcjenc_prowizja_p",
+              "akcjenc_prowizja_m",
+              "osp_prowizja_p",
+              "osp_prowizja_m",
+              "tfi_prowizja_p",
+              "tfi_prowizja_m",
+              "waluty_prowizja_p",
+              "waluty_prowizja_m",
+              "akcje_prowizja_x",
+              "akcje_prowizja_a",
+              "etf_prowizja_x",
+              "etf_prowizja_a",
+              "akcjenc_prowizja_x",
+              "akcjenc_prowizja_a",
+              "osp_prowizja_x",
+              "osp_prowizja_a",
+              "obligacje_prowizja_x",
+              "obligacje_prowizja_a",
+              "tfi_prowizja_x",
+              "tfi_prowizja_a",
+              "waluty_prowizja_x",
+              "waluty_prowizja_a",
+              "krotkas_prowizja_p",
+              "krotkas_prowizja_m",
+              "kontrakty_prowizja_p",
+              "kontrakty_prowizja_m",
+              "kontrakty_a_prowizja_p",
+              "kontrakty_a_prowizja_m",
+              "kontrakty_w_prowizja_p",
+              "kontrakty_w_prowizja_m",
+              "kontrakty_wspolczynnik_depozytu",
+              "krotkas_wspolczynnik_depozytu",
+              "opcje_prowizja_p",
+              "opcje_prowizja_m",
+              "opcje_prowizja_x"
+            ],
             "program": {
               "stmts": [
                 {
@@ -88,8 +148,42 @@
           },
           "Operacje": {
             "json": {
-              "path": "operacje"
+              "path": "~operacje~^$"
             },
+            "enabledColumns": [
+              "id",
+              "DATA",
+              "DATA_KUPNA",
+              "CZAS",
+              "TICKER",
+              "LICZBAJEDNOSTEK",
+              "CENA",
+              "PROWIZJA",
+              "WARTOSCTRANSAKCJI",
+              "TYP",
+              "OPIS",
+              "KONTO_ID",
+              "KONTOINV_ID",
+              "KONTO_PROWIZJA_ID",
+              "ODSETKI_OBLIGACJI",
+              "AUTOADD",
+              "PODATEK",
+              "WALUTA",
+              "KURS_PRZEWALUT_KONTO_GOT",
+              "KURS_PRZEWALUT_PROWIZJA",
+              "CENA_WAL",
+              "PROWIZJA_WAL",
+              "WARTOSCTRANSAKCJI_WAL",
+              "PODATEK_WAL",
+              "OPER_CYK_ID",
+              "GRUPA_ID",
+              "GRUPA_TYP",
+              "USER_MODIFY",
+              "XTB_ORDER",
+              "DZWIGNIA",
+              "UWZ_W_PIT",
+              "AUTO_REINVEST"
+            ],
             "program": {
               "stmts": [
                 {
@@ -248,7 +342,7 @@
                                   "stmts": [
                                     {
                                       "type": "comment",
-                                      "md": "Create a custom asset"
+                                      "md": "### Contracts\n\nCreate a custom asset"
                                     },
                                     {
                                       "type": "addRowNote",
@@ -317,6 +411,10 @@
                                 {
                                   "stmts": [
                                     {
+                                      "type": "comment",
+                                      "md": "### Regular assets"
+                                    },
+                                    {
                                       "type": "set",
                                       "prop": "transaction.asset",
                                       "xpr": {
@@ -326,6 +424,11 @@
                                       "trfms": [
                                         {
                                           "type": "lower"
+                                        },
+                                        {
+                                          "type": "replace",
+                                          "pattern": "~_~",
+                                          "replace": " "
                                         }
                                       ],
                                       "cast": {
@@ -646,8 +749,30 @@
           },
           "Dywidendy": {
             "json": {
-              "path": "operacje_dywidendy"
+              "path": "~operacje_dywidendy~^$"
             },
+            "enabledColumns": [
+              "id",
+              "DATA",
+              "DATA_KUPNA",
+              "TICKER",
+              "TYP",
+              "SUBTYP",
+              "LICZBAJEDNOSTEK",
+              "WARTOSCNAAKCJE",
+              "WARTOSC",
+              "PODATEK",
+              "OPIS",
+              "KONTO_ID",
+              "KONTOINV_ID",
+              "AUTOADD",
+              "OPER_CYK_ID",
+              "WARTOSCNAAKCJE_WAL",
+              "WARTOSC_WAL",
+              "PODATEK_WAL",
+              "WALUTA",
+              "KURS_PRZEWALUT_KONTO_GOT"
+            ],
             "program": {
               "stmts": [
                 {
