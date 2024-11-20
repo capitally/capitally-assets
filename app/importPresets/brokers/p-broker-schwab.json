@@ -1,14 +1,14 @@
 {
   "version": 3,
   "type": "Capitally Data Export",
-  "exportedAt": "2024-11-14T19:55:21.132Z",
+  "exportedAt": "2024-11-20T13:54:10.431Z",
   "data": {
     "importPresets": {
-      "u-DV5vT7Wp27Kz0l6": {
-        "id": "u-DV5vT7Wp27Kz0l6",
-        "name": "Transactions #beta",
-        "updatedAt": "2024-11-14T20:20",
-        "author": "Rafal <CEzOZ77nYhZX6L0qXPKXSs6GBho2>",
+      "u-98k008bfwVxUurK": {
+        "id": "u-98k008bfwVxUurK",
+        "name": "Transactions #beta (1)",
+        "updatedAt": "2024-11-20T14:54",
+        "author": "RL <iFIjgKg2M7TIe5ygfjFzaDEAlAX2>",
         "info": "To import your transactions from Schwab:\n\n1. Go to [Schwab Client Portal](https://client.schwab.com/)\n2. Open **Accounts** → **History**\n3. Click the **↓ Export** to download the trades files\n4. Open or drop that file here",
         "sourceId": "p-broker-schwab",
         "provider": "Charles Schwab",
@@ -30,6 +30,7 @@
               "untilRow": "~Transactions Total~",
               "header": true
             },
+            "reverseRows": true,
             "enabledColumns": [
               "Date",
               "Action",
@@ -149,6 +150,71 @@
                           }
                         },
                         {
+                          "cmp": {
+                            "type": "=",
+                            "v": {
+                              "type": "value",
+                              "value": "Qualified Dividend"
+                            }
+                          },
+                          "target": {
+                            "type": "value",
+                            "value": "DIVIDEND"
+                          }
+                        },
+                        {
+                          "cmp": {
+                            "type": "=",
+                            "v": {
+                              "type": "value",
+                              "value": "Cash Dividend"
+                            }
+                          },
+                          "target": {
+                            "type": "value",
+                            "value": "DIVIDEND"
+                          }
+                        },
+                        {
+                          "cmp": {
+                            "type": "=",
+                            "v": {
+                              "type": "value",
+                              "value": "Pr Yr Cash Div"
+                            }
+                          },
+                          "target": {
+                            "type": "value",
+                            "value": "DIVIDEND"
+                          }
+                        },
+                        {
+                          "cmp": {
+                            "type": "=",
+                            "v": {
+                              "type": "value",
+                              "value": "Qual Div Reinvest"
+                            }
+                          },
+                          "target": {
+                            "type": "value",
+                            "value": "DIVIDEND"
+                          }
+                        },
+                        {
+                          "cmp": {
+                            "type": "=",
+                            "v": {
+                              "type": "value",
+                              "value": "Reinvest Shares"
+                            }
+                          },
+                          "target": {
+                            "type": "value",
+                            "value": "OPEN"
+                          }
+                        },
+                        {
                           "target": {
                             "type": "value"
                           }
@@ -182,7 +248,10 @@
                                 "asset": {
                                   "assetTypes": {
                                     "type": "value",
-                                    "value": ["STOCK", "ETF"]
+                                    "value": [
+                                      "STOCK",
+                                      "ETF"
+                                    ]
                                   },
                                   "markets": {
                                     "type": "value",
@@ -210,22 +279,6 @@
                             },
                             {
                               "type": "set",
-                              "prop": "transaction.qty",
-                              "xpr": {
-                                "type": "prop",
-                                "prop": "cols.Quantity"
-                              }
-                            },
-                            {
-                              "type": "set",
-                              "prop": "transaction.price",
-                              "xpr": {
-                                "type": "prop",
-                                "prop": "cols.Price"
-                              }
-                            },
-                            {
-                              "type": "set",
                               "prop": "transaction.fee",
                               "xpr": {
                                 "type": "prop",
@@ -241,6 +294,147 @@
                                   "id": "c-USD"
                                 }
                               }
+                            },
+                            {
+                              "type": "if",
+                              "ifs": [
+                                {
+                                  "xpr": {
+                                    "type": "in",
+                                    "xpr": {
+                                      "type": "prop",
+                                      "prop": "transaction.type"
+                                    },
+                                    "v": {
+                                      "type": "value",
+                                      "value": [
+                                        "OPEN",
+                                        "CLOSE",
+                                        "TRANSFER"
+                                      ]
+                                    }
+                                  },
+                                  "stmts": [
+                                    {
+                                      "type": "set",
+                                      "prop": "transaction.qty",
+                                      "xpr": {
+                                        "type": "prop",
+                                        "prop": "cols.Quantity"
+                                      }
+                                    },
+                                    {
+                                      "type": "set",
+                                      "prop": "transaction.price",
+                                      "xpr": {
+                                        "type": "prop",
+                                        "prop": "cols.Price"
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "xpr": {
+                                    "type": "in",
+                                    "xpr": {
+                                      "type": "prop",
+                                      "prop": "transaction.type"
+                                    },
+                                    "v": {
+                                      "type": "value",
+                                      "value": [
+                                        "DIVIDEND"
+                                      ]
+                                    }
+                                  },
+                                  "stmts": [
+                                    {
+                                      "type": "set",
+                                      "prop": "transaction.value",
+                                      "xpr": {
+                                        "type": "prop",
+                                        "prop": "cols.Amount"
+                                      }
+                                    },
+                                    {
+                                      "type": "lookupRows",
+                                      "direction": "after",
+                                      "offset": {
+                                        "type": "value",
+                                        "value": 1
+                                      },
+                                      "limit": {
+                                        "type": "value",
+                                        "value": 5
+                                      },
+                                      "stmts": [
+                                        {
+                                          "type": "comment",
+                                          "md": "**Lookup dividend reinvestment**"
+                                        },
+                                        {
+                                          "type": "if",
+                                          "ifs": [
+                                            {
+                                              "xpr": {
+                                                "type": "and",
+                                                "xprs": [
+                                                  {
+                                                    "type": "=",
+                                                    "xpr": {
+                                                      "type": "prop",
+                                                      "prop": "lookup.cols.Action"
+                                                    },
+                                                    "v": {
+                                                      "type": "value",
+                                                      "value": "Reinvest Shares"
+                                                    }
+                                                  },
+                                                  {
+                                                    "type": "=",
+                                                    "xpr": {
+                                                      "type": "prop",
+                                                      "prop": "lookup.cols.Symbol"
+                                                    },
+                                                    "v": {
+                                                      "type": "prop",
+                                                      "prop": "cols.Symbol"
+                                                    }
+                                                  },
+                                                  {
+                                                    "type": "=",
+                                                    "xpr": {
+                                                      "type": "prop",
+                                                      "prop": "lookup.cols.Amount"
+                                                    },
+                                                    "v": {
+                                                      "type": "formula",
+                                                      "formula": "=\"-\" + col(\"Amount\")"
+                                                    }
+                                                  }
+                                                ]
+                                              },
+                                              "stmts": [
+                                                {
+                                                  "type": "set",
+                                                  "prop": "transaction.incomeQty",
+                                                  "xpr": {
+                                                    "type": "prop",
+                                                    "prop": "lookup.cols.Quantity"
+                                                  }
+                                                },
+                                                {
+                                                  "type": "ignoreRow"
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
                             },
                             {
                               "type": "if",

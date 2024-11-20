@@ -1,13 +1,13 @@
 {
   "version": 3,
   "type": "Capitally Data Export",
-  "exportedAt": "2024-11-19T22:25:03.883Z",
+  "exportedAt": "2024-11-20T14:00:37.602Z",
   "data": {
     "importPresets": {
-      "u-hZQwp6eYFIlhSvj": {
-        "id": "u-hZQwp6eYFIlhSvj",
-        "name": "Ledger #beta",
-        "updatedAt": "2024-11-19T23:24",
+      "u-HqMVzN1faNFnGxY": {
+        "id": "u-HqMVzN1faNFnGxY",
+        "name": "Ledger #beta (1)",
+        "updatedAt": "2024-11-20T15:00",
         "author": "RL <iFIjgKg2M7TIe5ygfjFzaDEAlAX2>",
         "info": "#### To import your transactions from **Kraken**:\n\n1. Go to **[Transactions → History](https://www.kraken.com/c/transactions/history)**\n    1. Choose timeframe\n    2. Click **Export** and select **CSV**\n\n#### To import your transactions from **Kraken Pro**:\n\n1. Go to **[History → Export](https://pro.kraken.com/app/history/export)**\n    1. Set **Format** to **CSV**\n    2. Set **Export type** to **Ledger** \n    3. Enable all **Fields**\n    4. Choose timeframe\n    5. Click **Submit**\n\nOpen or drop the generated file here",
         "sourceId": "p-crypto-kraken-ledger",
@@ -225,7 +225,9 @@
                                 "asset": {
                                   "assetTypes": {
                                     "type": "value",
-                                    "value": ["CRYPTO"]
+                                    "value": [
+                                      "CRYPTO"
+                                    ]
                                   },
                                   "remote": {
                                     "type": "value",
@@ -244,6 +246,42 @@
                               "trfms": [
                                 {
                                   "type": "abs"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "if",
+                              "ifs": [
+                                {
+                                  "xpr": {
+                                    "type": ">",
+                                    "xpr": {
+                                      "type": "prop",
+                                      "prop": "cols.fee"
+                                    },
+                                    "v": {
+                                      "type": "value",
+                                      "value": "0"
+                                    }
+                                  },
+                                  "stmts": [
+                                    {
+                                      "type": "set",
+                                      "prop": "transaction.fee",
+                                      "xpr": {
+                                        "type": "prop",
+                                        "prop": "cols.fee"
+                                      }
+                                    },
+                                    {
+                                      "type": "set",
+                                      "prop": "transaction.feeCurrency",
+                                      "xpr": {
+                                        "type": "prop",
+                                        "prop": "cols.asset"
+                                      }
+                                    }
+                                  ]
                                 }
                               ]
                             },
@@ -301,20 +339,40 @@
                                           }
                                         },
                                         {
-                                          "type": "set",
-                                          "prop": "transaction.fee",
-                                          "xpr": {
-                                            "type": "prop",
-                                            "prop": "lookup.cols.fee"
-                                          }
-                                        },
-                                        {
-                                          "type": "set",
-                                          "prop": "transaction.feeCurrency",
-                                          "xpr": {
-                                            "type": "prop",
-                                            "prop": "lookup.cols.asset"
-                                          }
+                                          "type": "if",
+                                          "ifs": [
+                                            {
+                                              "xpr": {
+                                                "type": ">",
+                                                "xpr": {
+                                                  "type": "prop",
+                                                  "prop": "lookup.cols.fee"
+                                                },
+                                                "v": {
+                                                  "type": "value",
+                                                  "value": "0"
+                                                }
+                                              },
+                                              "stmts": [
+                                                {
+                                                  "type": "set",
+                                                  "prop": "transaction.fee",
+                                                  "xpr": {
+                                                    "type": "prop",
+                                                    "prop": "lookup.cols.fee"
+                                                  }
+                                                },
+                                                {
+                                                  "type": "set",
+                                                  "prop": "transaction.feeCurrency",
+                                                  "xpr": {
+                                                    "type": "prop",
+                                                    "prop": "lookup.cols.asset"
+                                                  }
+                                                }
+                                              ]
+                                            }
+                                          ]
                                         },
                                         {
                                           "type": "ignoreRow"
@@ -383,7 +441,10 @@
                                 "asset": {
                                   "assetTypes": {
                                     "type": "value",
-                                    "value": ["CASH", "CRYPTO"]
+                                    "value": [
+                                      "CASH",
+                                      "CRYPTO"
+                                    ]
                                   },
                                   "remote": {
                                     "type": "value",

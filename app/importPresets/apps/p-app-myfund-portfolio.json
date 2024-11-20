@@ -1,13 +1,13 @@
 {
   "version": 3,
   "type": "Capitally Data Export",
-  "exportedAt": "2024-11-19T22:16:45.286Z",
+  "exportedAt": "2024-11-20T11:55:47.067Z",
   "data": {
     "importPresets": {
       "u-7rbZA9mtASOObzC": {
         "id": "u-7rbZA9mtASOObzC",
         "name": "Portfolio export #beta",
-        "updatedAt": "2024-11-19T23:16",
+        "updatedAt": "2024-11-20T12:48",
         "author": "RL <iFIjgKg2M7TIe5ygfjFzaDEAlAX2>",
         "info": "To import your accounts, transactions & dividends from MyFund:\n\n1. Go to **Zarządanie Portfelami** → **Twoje portfele**\n2. Export to XML\n3. Open or drop that file here\n",
         "sourceId": "p-app-myfund-portfolio",
@@ -147,6 +147,7 @@
             }
           },
           "Operacje": {
+            "optional": true,
             "json": {
               "path": "~operacje~^$"
             },
@@ -342,7 +343,7 @@
                                   "stmts": [
                                     {
                                       "type": "comment",
-                                      "md": "### Contracts\n\nCreate a custom asset"
+                                      "md": "**Contracts**\n\nCreate a custom asset"
                                     },
                                     {
                                       "type": "addRowNote",
@@ -412,7 +413,7 @@
                                   "stmts": [
                                     {
                                       "type": "comment",
-                                      "md": "### Regular assets"
+                                      "md": "**Regular assets**"
                                     },
                                     {
                                       "type": "set",
@@ -448,13 +449,13 @@
                                                   "id": "mic-XWAR"
                                                 },
                                                 {
-                                                  "id": "mic-XETR"
-                                                },
-                                                {
                                                   "id": "mic-XNYS"
                                                 },
                                                 {
                                                   "id": "mic-XNAS"
+                                                },
+                                                {
+                                                  "id": "mic-XETR"
                                                 },
                                                 {
                                                   "id": "mic-ARCX"
@@ -700,6 +701,30 @@
                         "type": "or",
                         "xprs": [
                           {
+                            "type": "pattern",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.TYP"
+                            },
+                            "pattern": "~opcji~ib"
+                          }
+                        ]
+                      },
+                      "stmts": [
+                        {
+                          "type": "addRowNote",
+                          "note": {
+                            "type": "value",
+                            "value": "💶 Options are currently not imported"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "xpr": {
+                        "type": "or",
+                        "xprs": [
+                          {
                             "type": "=",
                             "xpr": {
                               "type": "prop",
@@ -748,6 +773,7 @@
             }
           },
           "Dywidendy": {
+            "optional": true,
             "json": {
               "path": "~operacje_dywidendy~^$"
             },
@@ -852,6 +878,11 @@
                               "trfms": [
                                 {
                                   "type": "lower"
+                                },
+                                {
+                                  "type": "replace",
+                                  "pattern": "~_~",
+                                  "replace": " "
                                 }
                               ],
                               "cast": {
@@ -871,13 +902,13 @@
                                           "id": "mic-XWAR"
                                         },
                                         {
-                                          "id": "mic-XETR"
-                                        },
-                                        {
                                           "id": "mic-XNYS"
                                         },
                                         {
                                           "id": "mic-XNAS"
+                                        },
+                                        {
+                                          "id": "mic-XETR"
                                         },
                                         {
                                           "id": "mic-ARCX"
@@ -1071,6 +1102,41 @@
                       ]
                     }
                   ]
+                }
+              ]
+            }
+          },
+          "Przeplywy": {
+            "optional": true,
+            "json": {
+              "path": "przeplywy"
+            },
+            "enabledColumns": [
+              "id",
+              "TYP",
+              "SUB_TYP",
+              "KWOTA",
+              "PODATEK",
+              "DATA",
+              "CZAS",
+              "OPIS",
+              "KONTO_ID",
+              "TICKER",
+              "AUTOADD",
+              "TYP_KPN",
+              "CAT_ID",
+              "OPER_CYK_ID",
+              "GRUPA_ID",
+              "GRUPA_TYP"
+            ],
+            "program": {
+              "stmts": [
+                {
+                  "type": "addRowNote",
+                  "note": {
+                    "type": "value",
+                    "value": "💸 Cash transactions are currently not imported"
+                  }
                 }
               ]
             }

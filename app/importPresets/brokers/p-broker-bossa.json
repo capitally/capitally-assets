@@ -1,14 +1,14 @@
 {
   "version": 3,
   "type": "Capitally Data Export",
-  "exportedAt": "2024-10-23T20:08:29.744Z",
+  "exportedAt": "2024-11-20T13:08:59.227Z",
   "data": {
     "importPresets": {
-      "u-53BK7h8Z1QvEAXT": {
-        "id": "u-53BK7h8Z1QvEAXT",
+      "u-8RuvGjKCP4ZPBVY": {
+        "id": "u-8RuvGjKCP4ZPBVY",
         "name": "Transactions & dividends #beta",
-        "updatedAt": "2024-10-23T22:08",
-        "author": "Rafal <CEzOZ77nYhZX6L0qXPKXSs6GBho2>",
+        "updatedAt": "2024-11-20T14:08",
+        "author": "RL <iFIjgKg2M7TIe5ygfjFzaDEAlAX2>",
         "info": "To import your transactions from Bossa:\n\n1. Go to [Bossa](https://online.bossa.pl/bossaapp/login)\n2. Open **Portfel** → **Historia finansowa** \n3. Set **Pokaż** → **Wszystkie**\n4. Choose time frame\n5. Select **Eksportuj do CSV**\n6. Click **Wykonaj** and save the file\n7. Open or drop that file here\n",
         "mappingInfo": "🦉 If you previously imported transactions using the `Transakcje` table format, importing overlapping dates will create duplicate entries.",
         "sourceId": "p-broker-bossa",
@@ -327,8 +327,10 @@
                               }
                             },
                             {
-                              "type": "set",
-                              "prop": "transaction.asset",
+                              "type": "var",
+                              "varId": "symbol",
+                              "varType": "scalar",
+                              "multiple": false,
                               "xpr": {
                                 "type": "prop",
                                 "prop": "cols.tytuł operacji"
@@ -344,7 +346,16 @@
                                   "pattern": "/ (PLN|EUR|USD|GBP|CHF)/$",
                                   "replace": ""
                                 }
-                              ],
+                              ]
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.asset",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "$symbol"
+                              },
+                              "trfms": [],
                               "cast": {
                                 "asset": {
                                   "assetTypes": {
@@ -492,17 +503,190 @@
                               ]
                             },
                             {
-                              "type": "addRowNote",
-                              "note": {
-                                "type": "value",
-                                "value": "🧑‍⚖️ Bossa does *not* include information about the dividend tax withheld"
-                              }
+                              "type": "lookupRows",
+                              "direction": "start",
+                              "stmts": [
+                                {
+                                  "type": "comment",
+                                  "md": "**Search for tax withheld**"
+                                },
+                                {
+                                  "type": "var",
+                                  "varId": "lookupTitle",
+                                  "varType": "scalar",
+                                  "shared": false,
+                                  "multiple": false,
+                                  "xpr": {
+                                    "type": "value",
+                                    "value": "Podatek od odsetek lub dywidendy "
+                                  }
+                                },
+                                {
+                                  "type": "set",
+                                  "prop": "$lookupTitle",
+                                  "op": "append",
+                                  "xpr": {
+                                    "type": "prop",
+                                    "prop": "$symbol"
+                                  }
+                                },
+                                {
+                                  "type": "if",
+                                  "ifs": [
+                                    {
+                                      "xpr": {
+                                        "type": "and",
+                                        "xprs": [
+                                          {
+                                            "type": "=",
+                                            "xpr": {
+                                              "type": "prop",
+                                              "prop": "lookup.cols.tytuł operacji"
+                                            },
+                                            "v": {
+                                              "type": "prop",
+                                              "prop": "$lookupTitle"
+                                            }
+                                          },
+                                          {
+                                            "type": "=",
+                                            "xpr": {
+                                              "type": "prop",
+                                              "prop": "lookup.cols.data"
+                                            },
+                                            "v": {
+                                              "type": "prop",
+                                              "prop": "cols.data"
+                                            }
+                                          }
+                                        ]
+                                      },
+                                      "stmts": [
+                                        {
+                                          "type": "set",
+                                          "prop": "transaction.taxPaid",
+                                          "xpr": {
+                                            "type": "prop",
+                                            "prop": "lookup.cols.kwota"
+                                          },
+                                          "trfms": [
+                                            {
+                                              "type": "abs"
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "type": "return",
+                                          "levels": 1
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
                             },
                             {
                               "type": "addRowNote",
                               "note": {
                                 "type": "value",
                                 "value": "☝️ Bossa reports dividends under a different symbol then buy/sell transactions. Make sure they both refer to the same asset!"
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "xpr": {
+                        "type": "or",
+                        "xprs": [
+                          {
+                            "type": "pattern",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.tytuł operacji"
+                            },
+                            "pattern": "~Opłata za~^"
+                          },
+                          {
+                            "type": "pattern",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.tytuł operacji"
+                            },
+                            "pattern": "~Korekta księgowa (opłata za~^"
+                          }
+                        ]
+                      },
+                      "stmts": [
+                        {
+                          "type": "addTransaction",
+                          "stmts": [
+                            {
+                              "type": "comment",
+                              "md": "**Koszty**"
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.asset",
+                              "xpr": {
+                                "type": "value",
+                                "value": {
+                                  "id": "c-PLN"
+                                }
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.account",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "addedAccount"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.type",
+                              "xpr": {
+                                "type": "value",
+                                "value": "OTHER"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.date",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.data"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.value",
+                              "xpr": {
+                                "type": "value",
+                                "value": 0
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.fee",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.kwota"
+                              },
+                              "trfms": [
+                                {
+                                  "type": "negate"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.note",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.tytuł operacji"
                               }
                             }
                           ]
@@ -544,6 +728,22 @@
                             "type": "value",
                             "value": "💴 Currency exchanges are currently not imported"
                           }
+                        }
+                      ]
+                    },
+                    {
+                      "xpr": {
+                        "type": "pattern",
+                        "xpr": {
+                          "type": "prop",
+                          "prop": "cols.tytuł operacji"
+                        },
+                        "pattern": "~Podatek od odsetek~^"
+                      },
+                      "stmts": [
+                        {
+                          "type": "comment",
+                          "md": "Ignore silently (already handled above)"
                         }
                       ]
                     },

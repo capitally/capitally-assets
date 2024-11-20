@@ -1,15 +1,16 @@
 {
   "version": 3,
   "type": "Capitally Data Export",
-  "exportedAt": "2024-10-23T08:55:40.392Z",
+  "exportedAt": "2024-11-20T13:22:27.152Z",
   "data": {
     "importPresets": {
-      "u-FBJMmDnBkwn4scW": {
-        "id": "u-FBJMmDnBkwn4scW",
+      "u-ZdD2hAf3AARhI4Q": {
+        "id": "u-ZdD2hAf3AARhI4Q",
         "name": "Transactions & dividends #beta",
-        "updatedAt": "2024-10-23T10:53",
-        "author": "Rafal <CEzOZ77nYhZX6L0qXPKXSs6GBho2>",
+        "updatedAt": "2024-11-20T14:22",
+        "author": "RL <iFIjgKg2M7TIe5ygfjFzaDEAlAX2>",
         "info": "To import your transactions from Interactive Brokers:\n\n1. Go to [IBKR](https://www.interactivebrokers.co.uk/)\n2. Open **Performance & Reports** → **Flex Queries** → **Activity Flex Query** \n3. Create new Flex Query with a **+** sign\n4. From **Sections** choose the: \n**- Cash Transactions**\n**- Trades**\n**- Transfers**\n5. Set Format to **CSV**\n6. Set Date Format to **yyyy-MM-dd**\n7. Set Time Format to **HH:mm:ss**\n8. Save the query\n9. Run created query with the arrow sign (**→**)\n10. Choose date period (maximum is one year, you will need an export per each year), ensure Format is **CSV** format and save the file somewhere\n11. Open or drop that file here\n\n> 🦉 If your IBKR account was recently migrated from HU to IE, first import transactions from the HU account, and then continue with the new one. You can select your account near the `Flex Queries` title.",
+        "sourceId": "p-broker-ibkr",
         "provider": "Interactive Brokers",
         "providerIcon": {
           "type": "logo",
@@ -782,15 +783,53 @@
                     },
                     {
                       "xpr": {
-                        "type": "=",
-                        "xpr": {
-                          "type": "prop",
-                          "prop": "cols.Type"
-                        },
-                        "v": {
-                          "type": "value",
-                          "value": "Broker Fees"
-                        }
+                        "type": "or",
+                        "xprs": [
+                          {
+                            "type": "=",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Type"
+                            },
+                            "v": {
+                              "type": "value",
+                              "value": "Broker Fees"
+                            }
+                          },
+                          {
+                            "type": "=",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Type"
+                            },
+                            "v": {
+                              "type": "value",
+                              "value": "Other Fees"
+                            }
+                          },
+                          {
+                            "type": "=",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Type"
+                            },
+                            "v": {
+                              "type": "value",
+                              "value": "Broker Interest Paid"
+                            }
+                          },
+                          {
+                            "type": "=",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Type"
+                            },
+                            "v": {
+                              "type": "value",
+                              "value": "Broker Interest Received"
+                            }
+                          }
+                        ]
                       },
                       "stmts": [
                         {
