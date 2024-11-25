@@ -1,16 +1,16 @@
 {
   "version": 3,
   "type": "Capitally Data Export",
-  "exportedAt": "2024-10-28T11:19:43.519Z",
+  "exportedAt": "2024-11-25T14:47:37.176Z",
   "data": {
     "importPresets": {
-      "u-s5NwhBEOsdjtjVA": {
-        "id": "u-s5NwhBEOsdjtjVA",
-        "name": "History #beta",
-        "updatedAt": "2024-10-28T12:19",
-        "author": "Rafal <CEzOZ77nYhZX6L0qXPKXSs6GBho2>",
+      "u-c4eXEXoSOehAm97": {
+        "id": "u-c4eXEXoSOehAm97",
+        "name": "History #beta (1)",
+        "updatedAt": "2024-11-25T15:45",
+        "author": "RL <iFIjgKg2M7TIe5ygfjFzaDEAlAX2>",
         "info": "To import your transactions from TastyTrade:\n\n1. Go to [TastyTrade Trading](https://trade.tastytrade.com/)\n2. Open **History** from the left menu\n3. Make sure **Transactions** tab is opened\n4. Set desired time period with the **Date Filter**\n5. Ensure that **Any** is selected in the **Type Filter**\n6. Click the **↑** icon above the Date Filter to download the trades file\n7. Open or drop that file here\n",
-        "sourceId": "",
+        "sourceId": "p-broker-tastytrade-history",
         "provider": "TastyTrade",
         "providerIcon": {
           "type": "logo",
@@ -259,7 +259,12 @@
                                       "xpr": {
                                         "type": "prop",
                                         "prop": "cols.Average Price"
-                                      }
+                                      },
+                                      "trfms": [
+                                        {
+                                          "type": "abs"
+                                        }
+                                      ]
                                     },
                                     {
                                       "type": "set",
@@ -525,6 +530,28 @@
                               "type": "value",
                               "value": "Credit Interest"
                             }
+                          },
+                          {
+                            "type": "=",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Sub Type"
+                            },
+                            "v": {
+                              "type": "value",
+                              "value": "Fully Paid Stock Lending Income"
+                            }
+                          },
+                          {
+                            "type": "=",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Sub Type"
+                            },
+                            "v": {
+                              "type": "value",
+                              "value": "Debit Interest"
+                            }
                           }
                         ]
                       },
@@ -649,7 +676,8 @@
                           "note": {
                             "type": "formula",
                             "formula": "=\"`\" + col(\"Sub Type\") + \"` is currently not supported\""
-                          }
+                          },
+                          "urgency": "warn"
                         }
                       ]
                     }
