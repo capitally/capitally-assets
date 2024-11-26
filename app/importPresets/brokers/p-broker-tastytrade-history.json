@@ -6,7 +6,7 @@
     "importPresets": {
       "u-c4eXEXoSOehAm97": {
         "id": "u-c4eXEXoSOehAm97",
-        "name": "History #beta (1)",
+        "name": "History #beta",
         "updatedAt": "2024-11-25T15:45",
         "author": "RL <iFIjgKg2M7TIe5ygfjFzaDEAlAX2>",
         "info": "To import your transactions from TastyTrade:\n\n1. Go to [TastyTrade Trading](https://trade.tastytrade.com/)\n2. Open **History** from the left menu\n3. Make sure **Transactions** tab is opened\n4. Set desired time period with the **Date Filter**\n5. Ensure that **Any** is selected in the **Type Filter**\n6. Click the **↑** icon above the Date Filter to download the trades file\n7. Open or drop that file here\n",
@@ -126,10 +126,7 @@
                                 "asset": {
                                   "assetTypes": {
                                     "type": "value",
-                                    "value": [
-                                      "STOCK",
-                                      "ETF"
-                                    ]
+                                    "value": ["STOCK", "ETF"]
                                   },
                                   "markets": {
                                     "type": "value",
@@ -238,10 +235,7 @@
                                     },
                                     "v": {
                                       "type": "value",
-                                      "value": [
-                                        "OPEN",
-                                        "CLOSE"
-                                      ]
+                                      "value": ["OPEN", "CLOSE"]
                                     }
                                   },
                                   "stmts": [
@@ -285,9 +279,7 @@
                                     },
                                     "v": {
                                       "type": "value",
-                                      "value": [
-                                        "DIVIDEND"
-                                      ]
+                                      "value": ["DIVIDEND"]
                                     }
                                   },
                                   "stmts": [

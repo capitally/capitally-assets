@@ -1,13 +1,13 @@
 {
   "version": 3,
   "type": "Capitally Data Export",
-  "exportedAt": "2024-11-20T13:08:59.227Z",
+  "exportedAt": "2024-11-26T08:23:16.608Z",
   "data": {
     "importPresets": {
-      "u-8RuvGjKCP4ZPBVY": {
-        "id": "u-8RuvGjKCP4ZPBVY",
+      "u-3U0h9OBD5RgJ61k": {
+        "id": "u-3U0h9OBD5RgJ61k",
         "name": "Transactions & dividends #beta",
-        "updatedAt": "2024-11-20T14:08",
+        "updatedAt": "2024-11-26T09:18",
         "author": "RL <iFIjgKg2M7TIe5ygfjFzaDEAlAX2>",
         "info": "To import your transactions from Bossa:\n\n1. Go to [Bossa](https://online.bossa.pl/bossaapp/login)\n2. Open **Portfel** → **Historia finansowa** \n3. Set **Pokaż** → **Wszystkie**\n4. Choose time frame\n5. Select **Eksportuj do CSV**\n6. Click **Wykonaj** and save the file\n7. Open or drop that file here\n",
         "mappingInfo": "🦉 If you previously imported transactions using the `Transakcje` table format, importing overlapping dates will create duplicate entries.",
@@ -695,12 +695,25 @@
                     },
                     {
                       "xpr": {
-                        "type": "pattern",
-                        "xpr": {
-                          "type": "prop",
-                          "prop": "cols.tytuł operacji"
-                        },
-                        "pattern": "~Przelew ~^"
+                        "type": "or",
+                        "xprs": [
+                          {
+                            "type": "pattern",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.tytuł operacji"
+                            },
+                            "pattern": "~Przelew ~^"
+                          },
+                          {
+                            "type": "pattern",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.tytuł operacji"
+                            },
+                            "pattern": "~Zwrot nadpłaty~^"
+                          }
+                        ]
                       },
                       "stmts": [
                         {
@@ -727,6 +740,38 @@
                           "note": {
                             "type": "value",
                             "value": "💴 Currency exchanges are currently not imported"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "xpr": {
+                        "type": "or",
+                        "xprs": [
+                          {
+                            "type": "pattern",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.tytuł operacji"
+                            },
+                            "pattern": "~Wykup certyfikatów ~^"
+                          },
+                          {
+                            "type": "pattern",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.tytuł operacji"
+                            },
+                            "pattern": "~Płatność bonusowa dotycząca likwidacji ~"
+                          }
+                        ]
+                      },
+                      "stmts": [
+                        {
+                          "type": "addRowNote",
+                          "note": {
+                            "type": "formula",
+                            "formula": "=\"🤚 One of your holdings was liquidated and you received it's value. There's no quantity provided by the broker, so you'll need to close this position manually with the provided value:\\n**\" + col(\"kwota\") + \"** for *\" + col(\"tytuł operacji\") +\"*\""
                           }
                         }
                       ]

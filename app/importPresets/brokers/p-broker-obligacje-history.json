@@ -1,13 +1,13 @@
 {
   "version": 3,
   "type": "Capitally Data Export",
-  "exportedAt": "2024-11-20T14:17:12.042Z",
+  "exportedAt": "2024-11-26T08:44:00.839Z",
   "data": {
     "importPresets": {
-      "u-WJNCAilgu8EC0fe": {
-        "id": "u-WJNCAilgu8EC0fe",
-        "name": "1 of 2 - Transactions #beta (1)",
-        "updatedAt": "2024-11-20T15:17",
+      "u-KX8gR2OLPSJiMwO": {
+        "id": "u-KX8gR2OLPSJiMwO",
+        "name": "1 of 2 - Transactions #beta",
+        "updatedAt": "2024-11-26T09:43",
         "author": "RL <iFIjgKg2M7TIe5ygfjFzaDEAlAX2>",
         "info": "To import your transactions from Obligacje Skarbowe (Polish National Bonds):\n\n1. Go to [Serwis Obligacji Skarbowych](https://www.zakup.obligacjeskarbowe.pl/login.html)\n2. Open **Rachunek Rejestrowy**\n3. Open **Historia dyspozycji na Rachunku Rejestrowym**\n4. Choose dates and click **Dalej**\n5. Click the **[↓]** button below the table to download the XLS file\n6. Open or drop that file here\n\n> ☝️ This imports only transactions. As Capitally does not automatically update Bond prices, you will need to regularly update your current bonds value with the separate import **Obligacje Skarbowe: 2 of 2 - Balances**",
         "sourceId": "p-broker-obligacje-history",
@@ -19,9 +19,7 @@
         "providerGroup": "Brokers",
         "parser": {
           "dateOrder": "ymd",
-          "formats": [
-            "xls"
-          ],
+          "formats": ["xls"],
           "allowClipboard": false
         },
         "sections": {
@@ -103,15 +101,20 @@
                   "ifs": [
                     {
                       "xpr": {
-                        "type": "=",
-                        "xpr": {
-                          "type": "prop",
-                          "prop": "cols.RODZAJ DYSPOZYCJI"
-                        },
-                        "v": {
-                          "type": "value",
-                          "value": "zakup papierów"
-                        }
+                        "type": "or",
+                        "xprs": [
+                          {
+                            "type": "=",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.RODZAJ DYSPOZYCJI"
+                            },
+                            "v": {
+                              "type": "value",
+                              "value": "zakup papierów"
+                            }
+                          }
+                        ]
                       },
                       "stmts": [
                         {
@@ -238,18 +241,18 @@
                             },
                             {
                               "type": "set",
-                              "prop": "transaction.qty",
-                              "xpr": {
-                                "type": "prop",
-                                "prop": "cols.LICZBA OBLIGACJI"
-                              }
-                            },
-                            {
-                              "type": "set",
                               "prop": "transaction.price",
                               "xpr": {
                                 "type": "value",
                                 "value": 100
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.qty",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.LICZBA OBLIGACJI"
                               }
                             }
                           ]
@@ -284,9 +287,7 @@
                                 "asset": {
                                   "assetTypes": {
                                     "type": "value",
-                                    "value": [
-                                      "BOND"
-                                    ]
+                                    "value": ["BOND"]
                                   }
                                 }
                               }
@@ -425,9 +426,7 @@
                                 "asset": {
                                   "assetTypes": {
                                     "type": "value",
-                                    "value": [
-                                      "BOND"
-                                    ]
+                                    "value": ["BOND"]
                                   }
                                 }
                               }
@@ -483,15 +482,28 @@
                     },
                     {
                       "xpr": {
-                        "type": "=",
-                        "xpr": {
-                          "type": "prop",
-                          "prop": "cols.RODZAJ DYSPOZYCJI"
-                        },
-                        "v": {
-                          "type": "value",
-                          "value": "przedterminowy wykup"
-                        }
+                        "type": "or",
+                        "xprs": [
+                          {
+                            "type": "=",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.RODZAJ DYSPOZYCJI"
+                            },
+                            "v": {
+                              "type": "value",
+                              "value": "przedterminowy wykup"
+                            }
+                          },
+                          {
+                            "type": "pattern",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.RODZAJ DYSPOZYCJI"
+                            },
+                            "pattern": "~naliczenie wykupu~^"
+                          }
+                        ]
                       },
                       "stmts": [
                         {
@@ -512,9 +524,7 @@
                                 "asset": {
                                   "assetTypes": {
                                     "type": "value",
-                                    "value": [
-                                      "BOND"
-                                    ]
+                                    "value": ["BOND"]
                                   }
                                 }
                               }
@@ -590,23 +600,80 @@
                                             }
                                           },
                                           {
-                                            "type": "falsy",
+                                            "type": "or",
+                                            "xprs": [
+                                              {
+                                                "type": "falsy",
+                                                "xpr": {
+                                                  "type": "prop",
+                                                  "prop": "lookup.cols.DATA DYSPOZYCJI"
+                                                }
+                                              },
+                                              {
+                                                "type": "=",
+                                                "xpr": {
+                                                  "type": "prop",
+                                                  "prop": "lookup.cols.DATA DYSPOZYCJI"
+                                                },
+                                                "v": {
+                                                  "type": "prop",
+                                                  "prop": "cols.DATA DYSPOZYCJI"
+                                                }
+                                              }
+                                            ]
+                                          },
+                                          {
+                                            "type": "!pattern",
                                             "xpr": {
                                               "type": "prop",
-                                              "prop": "lookup.cols.DATA DYSPOZYCJI"
-                                            }
+                                              "prop": "lookup.cols.RODZAJ DYSPOZYCJI"
+                                            },
+                                            "pattern": "~wypłata~^"
                                           }
                                         ]
                                       },
                                       "stmts": [
                                         {
-                                          "type": "set",
-                                          "prop": "transaction.value",
-                                          "op": "+=",
-                                          "xpr": {
-                                            "type": "prop",
-                                            "prop": "lookup.cols.KWOTA OPERACJI"
-                                          }
+                                          "type": "if",
+                                          "ifs": [
+                                            {
+                                              "xpr": {
+                                                "type": "=",
+                                                "xpr": {
+                                                  "type": "prop",
+                                                  "prop": "lookup.cols.RODZAJ DYSPOZYCJI"
+                                                },
+                                                "v": {
+                                                  "type": "value",
+                                                  "value": "opłata - interwencyjny wykup"
+                                                }
+                                              },
+                                              "stmts": [
+                                                {
+                                                  "type": "set",
+                                                  "prop": "transaction.fee",
+                                                  "op": "+=",
+                                                  "xpr": {
+                                                    "type": "prop",
+                                                    "prop": "lookup.cols.KWOTA OPERACJI"
+                                                  }
+                                                }
+                                              ]
+                                            },
+                                            {
+                                              "stmts": [
+                                                {
+                                                  "type": "set",
+                                                  "prop": "transaction.value",
+                                                  "op": "+=",
+                                                  "xpr": {
+                                                    "type": "prop",
+                                                    "prop": "lookup.cols.KWOTA OPERACJI"
+                                                  }
+                                                }
+                                              ]
+                                            }
+                                          ]
                                         },
                                         {
                                           "type": "ignoreRow"
@@ -679,6 +746,28 @@
                             "v": {
                               "type": "value",
                               "value": "dyspozycja przedterminowego wykupu"
+                            }
+                          },
+                          {
+                            "type": "=",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.RODZAJ DYSPOZYCJI"
+                            },
+                            "v": {
+                              "type": "value",
+                              "value": "zamiana obligacji"
+                            }
+                          },
+                          {
+                            "type": "=",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.RODZAJ DYSPOZYCJI"
+                            },
+                            "v": {
+                              "type": "value",
+                              "value": "zakup papierów - zamiana"
                             }
                           }
                         ]
