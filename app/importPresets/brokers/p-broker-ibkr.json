@@ -1,13 +1,13 @@
 {
   "version": 3,
   "type": "Capitally Data Export",
-  "exportedAt": "2024-11-20T13:22:27.152Z",
+  "exportedAt": "2024-11-27T12:15:30.012Z",
   "data": {
     "importPresets": {
-      "u-ZdD2hAf3AARhI4Q": {
-        "id": "u-ZdD2hAf3AARhI4Q",
+      "u-oOHQhjBzuWKDJLa": {
+        "id": "u-oOHQhjBzuWKDJLa",
         "name": "Transactions & dividends #beta",
-        "updatedAt": "2024-11-20T14:22",
+        "updatedAt": "2024-11-27T13:14",
         "author": "RL <iFIjgKg2M7TIe5ygfjFzaDEAlAX2>",
         "info": "To import your transactions from Interactive Brokers:\n\n1. Go to [IBKR](https://www.interactivebrokers.co.uk/)\n2. Open **Performance & Reports** → **Flex Queries** → **Activity Flex Query** \n3. Create new Flex Query with a **+** sign\n4. From **Sections** choose the: \n**- Cash Transactions**\n**- Trades**\n**- Transfers**\n5. Set Format to **CSV**\n6. Set Date Format to **yyyy-MM-dd**\n7. Set Time Format to **HH:mm:ss**\n8. Save the query\n9. Run created query with the arrow sign (**→**)\n10. Choose date period (maximum is one year, you will need an export per each year), ensure Format is **CSV** format and save the file somewhere\n11. Open or drop that file here\n\n> 🦉 If your IBKR account was recently migrated from HU to IE, first import transactions from the HU account, and then continue with the new one. You can select your account near the `Flex Queries` title.",
         "sourceId": "p-broker-ibkr",
@@ -465,6 +465,33 @@
                         "type": "prop",
                         "prop": "cols.TradeID"
                       }
+                    },
+                    {
+                      "type": "if",
+                      "ifs": [
+                        {
+                          "xpr": {
+                            "type": "=",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.SubCategory"
+                            },
+                            "v": {
+                              "type": "value",
+                              "value": "ADR"
+                            }
+                          },
+                          "stmts": [
+                            {
+                              "type": "addRowNote",
+                              "note": {
+                                "type": "value",
+                                "value": "☝️ ADRs are imported as their underlying stock"
+                              }
+                            }
+                          ]
+                        }
+                      ]
                     }
                   ]
                 }
@@ -714,7 +741,7 @@
                                                   },
                                                   "trfms": [
                                                     {
-                                                      "type": "abs"
+                                                      "type": "negate"
                                                     }
                                                   ]
                                                 }
@@ -772,6 +799,44 @@
                                           "type": "ignoreRow"
                                         }
                                       ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "if",
+                              "ifs": [
+                                {
+                                  "xpr": {
+                                    "type": "and",
+                                    "xprs": [
+                                      {
+                                        "type": "falsy",
+                                        "xpr": {
+                                          "type": "prop",
+                                          "prop": "transaction.value"
+                                        }
+                                      },
+                                      {
+                                        "type": "truthy",
+                                        "xpr": {
+                                          "type": "prop",
+                                          "prop": "transaction.taxPaid"
+                                        }
+                                      }
+                                    ]
+                                  },
+                                  "stmts": [
+                                    {
+                                      "type": "addRowNote",
+                                      "note": {
+                                        "type": "value",
+                                        "value": "🔭 This file contains Withholding tax updates for dividends that are not in it. You need to export both the dividend and the tax transactions in a *single file*.\n\nIf the dividend is already imported, it will be marked as a duplicate - once you combine the files, locate these dividends and change their status from `Duplicate` to `Update`"
+                                      }
+                                    },
+                                    {
+                                      "type": "return"
                                     }
                                   ]
                                 }
