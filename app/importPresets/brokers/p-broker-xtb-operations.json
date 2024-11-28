@@ -1,15 +1,16 @@
 {
   "version": 3,
   "type": "Capitally Data Export",
-  "exportedAt": "2024-10-23T08:56:13.699Z",
+  "exportedAt": "2024-11-28T14:52:35.356Z",
   "data": {
     "importPresets": {
-      "u-NFzAT42vld2pcwQ": {
-        "id": "u-NFzAT42vld2pcwQ",
+      "u-r10ctI1TxgFTF8M": {
+        "id": "u-r10ctI1TxgFTF8M",
         "name": "Transactions & dividends #beta",
-        "updatedAt": "2024-10-23T00:03",
-        "author": "Rafal <CEzOZ77nYhZX6L0qXPKXSs6GBho2>",
+        "updatedAt": "2024-11-28T15:42",
+        "author": "RL <iFIjgKg2M7TIe5ygfjFzaDEAlAX2>",
         "info": "To import your stock transactions from XTB (CFDs or shorts are not supported yet):\n\n1. Go to [xStation](https://xstation5.xtb.com/)\n2. Open **Account History/Historia** → **Cash operations/Operacje gotówkowe** \n3. Choose timeframe\n4. Click **Export/Eksportuj** → **Excel** and download it\n5. Open or drop that file here\n",
+        "sourceId": "p-broker-xtb-operations",
         "provider": "XTB",
         "providerIcon": {
           "type": "logo",
@@ -17,9 +18,9 @@
         },
         "providerGroup": "Brokers",
         "parser": {
-          "formats": ["xls"],
           "dateOrder": "ymd",
           "decimalSeparator": ".",
+          "formats": ["xls"],
           "allowClipboard": false
         },
         "sections": {
@@ -971,15 +972,28 @@
                     },
                     {
                       "xpr": {
-                        "type": "=",
-                        "xpr": {
-                          "type": "prop",
-                          "prop": "cols.Typ"
-                        },
-                        "v": {
-                          "type": "value",
-                          "value": "Sec Fee"
-                        }
+                        "type": "or",
+                        "xprs": [
+                          {
+                            "type": "=",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Typ"
+                            },
+                            "v": {
+                              "type": "value",
+                              "value": "Sec Fee"
+                            }
+                          },
+                          {
+                            "type": "pattern",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Typ"
+                            },
+                            "pattern": "~Stamp duty~i"
+                          }
+                        ]
                       },
                       "stmts": [
                         {
@@ -1251,6 +1265,17 @@
                             "v": {
                               "type": "value",
                               "value": "Wypłata"
+                            }
+                          },
+                          {
+                            "type": "=",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Typ"
+                            },
+                            "v": {
+                              "type": "value",
+                              "value": "Subaccount Transfer"
                             }
                           }
                         ]

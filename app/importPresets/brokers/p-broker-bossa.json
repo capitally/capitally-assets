@@ -1,13 +1,13 @@
 {
   "version": 3,
   "type": "Capitally Data Export",
-  "exportedAt": "2024-11-26T08:23:16.608Z",
+  "exportedAt": "2024-11-28T14:56:21.231Z",
   "data": {
     "importPresets": {
-      "u-3U0h9OBD5RgJ61k": {
-        "id": "u-3U0h9OBD5RgJ61k",
+      "u-LXmULyLaqEYQW6N": {
+        "id": "u-LXmULyLaqEYQW6N",
         "name": "Transactions & dividends #beta",
-        "updatedAt": "2024-11-26T09:18",
+        "updatedAt": "2024-11-28T15:56",
         "author": "RL <iFIjgKg2M7TIe5ygfjFzaDEAlAX2>",
         "info": "To import your transactions from Bossa:\n\n1. Go to [Bossa](https://online.bossa.pl/bossaapp/login)\n2. Open **Portfel** → **Historia finansowa** \n3. Set **Pokaż** → **Wszystkie**\n4. Choose time frame\n5. Select **Eksportuj do CSV**\n6. Click **Wykonaj** and save the file\n7. Open or drop that file here\n",
         "mappingInfo": "🦉 If you previously imported transactions using the `Transakcje` table format, importing overlapping dates will create duplicate entries.",
@@ -106,6 +106,11 @@
                                   "type": "replace",
                                   "pattern": "/[- \\d.,]+ x .+/i$",
                                   "replace": ""
+                                },
+                                {
+                                  "type": "replace",
+                                  "pattern": "~-NC ~",
+                                  "replace": " "
                                 },
                                 {
                                   "type": "trim"
@@ -235,7 +240,7 @@
                               "prop": "transaction.fee",
                               "xpr": {
                                 "type": "formula",
-                                "formula": "=abs(Number(col(\"kwota\"))) - transaction.price * transaction.qty"
+                                "formula": "=abs(abs(Number(col(\"kwota\"))) - abs(transaction.price * transaction.qty))"
                               }
                             },
                             {
@@ -338,7 +343,12 @@
                               "trfms": [
                                 {
                                   "type": "replace",
-                                  "pattern": "/Wypłata dywidendy( brutto)? /^",
+                                  "pattern": "/Wypłata dywidendy( brutto| netto)? /^",
+                                  "replace": ""
+                                },
+                                {
+                                  "type": "replace",
+                                  "pattern": "/\\d+% /",
                                   "replace": ""
                                 },
                                 {
@@ -586,6 +596,65 @@
                               ]
                             },
                             {
+                              "type": "if",
+                              "ifs": [
+                                {
+                                  "xpr": {
+                                    "type": "pattern",
+                                    "xpr": {
+                                      "type": "prop",
+                                      "prop": "cols.tytuł operacji"
+                                    },
+                                    "pattern": "~dywidendy netto~"
+                                  },
+                                  "stmts": [
+                                    {
+                                      "type": "comment",
+                                      "md": "Dividend can be paid out with tax withheld. In such case, we calculate the WHT and *increase* the dividend value to brutto"
+                                    },
+                                    {
+                                      "type": "var",
+                                      "varId": "rate",
+                                      "varType": "number",
+                                      "multiple": false,
+                                      "xpr": {
+                                        "type": "prop",
+                                        "prop": "cols.tytuł operacji"
+                                      },
+                                      "trfms": [
+                                        {
+                                          "type": "extract",
+                                          "pattern": "/([0-9]+)%/"
+                                        },
+                                        {
+                                          "type": "formula",
+                                          "formula": "=x / 100"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "set",
+                                      "prop": "transaction.value",
+                                      "op": "/=",
+                                      "xpr": {
+                                        "type": "prop",
+                                        "prop": "$rate"
+                                      }
+                                    },
+                                    {
+                                      "type": "set",
+                                      "prop": "transaction.taxPaid",
+                                      "op": "+=",
+                                      "xpr": {
+                                        "type": "formula",
+                                        "formula": "=transaction.value * (1 - $rate)"
+                                      }
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
                               "type": "addRowNote",
                               "note": {
                                 "type": "value",
@@ -624,7 +693,7 @@
                           "stmts": [
                             {
                               "type": "comment",
-                              "md": "**Koszty**"
+                              "md": "**Costs**"
                             },
                             {
                               "type": "set",
@@ -810,7 +879,11 @@
             }
           }
         },
-        "options": {}
+        "options": {
+          "valueMap": {
+            "asset": {}
+          }
+        }
       }
     }
   }
