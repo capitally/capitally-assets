@@ -1,16 +1,17 @@
 {
   "version": 3,
   "type": "Capitally Data Export",
-  "exportedAt": "2024-10-21T11:00:42.905Z",
+  "exportedAt": "2024-11-29T17:50:30.953Z",
   "data": {
     "importPresets": {
-      "u-7tc10iGBe0jipKY": {
-        "id": "u-7tc10iGBe0jipKY",
-        "name": "1 of 2 - Transactions #beta",
-        "updatedAt": "2024-10-21T13:00",
-        "author": "Rafal <CEzOZ77nYhZX6L0qXPKXSs6GBho2>",
+      "u-So1dq9Q0w2C1omh": {
+        "id": "u-So1dq9Q0w2C1omh",
+        "name": "1 of 2 - Transactions #beta (1)",
+        "updatedAt": "2024-11-29T18:45",
+        "author": "RL <iFIjgKg2M7TIe5ygfjFzaDEAlAX2>",
         "info": "To import your transactions from Finax:\n\n1. Login to [Finax](https://finax.eu/en/login)\n2. Choose **Transactions** from the top menu\n3. Choose a time period\n4. Select the whole table and **copy** it (`Ctrl+C` / `Cmd+C`)\n5. Click **paste** below\n\n> 🦉 Use the second preset - **Finax: Dividends & Fees** - for a full picture",
         "mappingInfo": "",
+        "sourceId": "p-broker-finax-transactions",
         "provider": "Finax",
         "providerIcon": {
           "type": "logo",
@@ -19,7 +20,9 @@
         "providerGroup": "Brokers",
         "parser": {
           "dateOrder": "dmy",
-          "formats": ["csv"],
+          "formats": [
+            "csv"
+          ],
           "allowClipboard": true,
           "csv": {}
         },
@@ -30,39 +33,114 @@
               "header": true
             },
             "replaceHeaders": [
-              ["~Data~^$", "Date"],
-              ["~Dátum~^$", "Date"],
-              ["~Datum~^$", "Date"],
-              ["~Dată~^$", "Date"],
-
-              ["~Typ transakcji~^$", "Trade type"],
-              ["~Typ obchodu~^$", "Trade type"],
-              ["~Ügylet típusa~^$", "Trade type"],
-              ["~Typ obchodu~^$", "Trade type"],
-              ["~Vrsta trgovine~^$", "Trade type"],
-              ["~Tipul tranzacției~^$", "Trade type"],
-
-              ["~Ilość sztuk~^$", "Shares"],
-              ["~Počet kusov~^$", "Shares"],
-              ["~Darabszám~^$", "Shares"],
-              ["~Počet kusů~^$", "Shares"],
-              ["~Komada udjela~^$", "Shares"],
-              ["~Acțiuni~^$", "Shares"],
-
-              ["~Cena za sztukę~^$", "Price per share"],
-
-              ["~Cena za kus~^$", "Price per share"],
-              ["~Darabár~^$", "Price per share"],
-              ["~Cijena po komadu~^$", "Price per share"],
-              ["~Preț pe acțiune~^$", "Price per share"],
-
-              ["~Wartość transakcji~^$", "Value of trade"],
-
-              ["~Objem obchodu~^$", "Value of trade"],
-              ["~Kereskedelmi volumen~^$", "Value of trade"],
-              ["~Objem obchodu~^$", "Value of trade"],
-              ["~Vrijednost trgovine~^$", "Value of trade"],
-              ["~Valoarea tranzacției~^$", "Value of trade"]
+              [
+                "~Data~^$",
+                "Date"
+              ],
+              [
+                "~Dátum~^$",
+                "Date"
+              ],
+              [
+                "~Datum~^$",
+                "Date"
+              ],
+              [
+                "~Dată~^$",
+                "Date"
+              ],
+              [
+                "~Typ transakcji~^$",
+                "Trade type"
+              ],
+              [
+                "~Typ obchodu~^$",
+                "Trade type"
+              ],
+              [
+                "~Ügylet típusa~^$",
+                "Trade type"
+              ],
+              [
+                "~Typ obchodu~^$",
+                "Trade type"
+              ],
+              [
+                "~Vrsta trgovine~^$",
+                "Trade type"
+              ],
+              [
+                "~Tipul tranzacției~^$",
+                "Trade type"
+              ],
+              [
+                "~Ilość sztuk~^$",
+                "Shares"
+              ],
+              [
+                "~Počet kusov~^$",
+                "Shares"
+              ],
+              [
+                "~Darabszám~^$",
+                "Shares"
+              ],
+              [
+                "~Počet kusů~^$",
+                "Shares"
+              ],
+              [
+                "~Komada udjela~^$",
+                "Shares"
+              ],
+              [
+                "~Acțiuni~^$",
+                "Shares"
+              ],
+              [
+                "~Cena za sztukę~^$",
+                "Price per share"
+              ],
+              [
+                "~Cena za kus~^$",
+                "Price per share"
+              ],
+              [
+                "~Darabár~^$",
+                "Price per share"
+              ],
+              [
+                "~Cijena po komadu~^$",
+                "Price per share"
+              ],
+              [
+                "~Preț pe acțiune~^$",
+                "Price per share"
+              ],
+              [
+                "~Wartość transakcji~^$",
+                "Value of trade"
+              ],
+              [
+                "~Objem obchodu~^$",
+                "Value of trade"
+              ],
+              [
+                "~Kereskedelmi volumen~^$",
+                "Value of trade"
+              ],
+              [
+                "~Objem obchodu~^$",
+                "Value of trade"
+              ],
+              [
+                "~Vrijednost trgovine~^$",
+                "Value of trade"
+              ],
+              [
+                "~Valoarea tranzacției~^$",
+                "Value of trade"
+              ]
             ],
             "replaceCells": [],
             "enabledColumns": [
@@ -129,7 +207,9 @@
                         "asset": {
                           "assetTypes": {
                             "type": "value",
-                            "value": ["ETF"]
+                            "value": [
+                              "ETF"
+                            ]
                           },
                           "remote": {
                             "type": "value",
@@ -180,7 +260,6 @@
                             "value": "OPEN"
                           }
                         },
-
                         {
                           "cmp": {
                             "type": "=",
@@ -246,7 +325,6 @@
                             "value": "OPEN"
                           }
                         },
-
                         {
                           "cmp": {
                             "type": "=",
@@ -273,7 +351,6 @@
                             "value": "CLOSE"
                           }
                         },
-
                         {
                           "cmp": {
                             "type": "=",
@@ -359,12 +436,10 @@
                     },
                     {
                       "type": "set",
-                      "prop": "transaction.currency",
+                      "prop": "transaction.valueCurrency",
                       "xpr": {
-                        "type": "value",
-                        "value": {
-                          "id": "c-EUR"
-                        }
+                        "type": "prop",
+                        "prop": "cols.Price per share"
                       }
                     }
                   ]

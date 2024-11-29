@@ -1,16 +1,17 @@
 {
   "version": 3,
   "type": "Capitally Data Export",
-  "exportedAt": "2024-10-21T12:27:02.413Z",
+  "exportedAt": "2024-11-29T17:50:52.355Z",
   "data": {
     "importPresets": {
-      "u-fiCC8NhObgSgnx8": {
-        "id": "u-fiCC8NhObgSgnx8",
-        "name": "2 of 2 - Dividends & fees #beta",
-        "updatedAt": "2024-10-21T14:26",
-        "author": "Rafal <CEzOZ77nYhZX6L0qXPKXSs6GBho2>",
+      "u-TS8wWVJmsFGZR2F": {
+        "id": "u-TS8wWVJmsFGZR2F",
+        "name": "2 of 2 - Dividends & fees #beta (1)",
+        "updatedAt": "2024-11-29T18:47",
+        "author": "RL <iFIjgKg2M7TIe5ygfjFzaDEAlAX2>",
         "info": "To import your fees from Finax:\n\n1. Login to [Finax](https://finax.eu/en/login)\n2. Choose **Transactions** from the top menu\n3. Choose **Operations** from the second-level menu\n4. Choose a time period\n5. Select the whole table and **copy** it (`Ctrl+C` / `Cmd+C`)\n6. Click **paste** below\n\n> 🦉 Use the **Finax: Transactions** to import the actual transactions",
         "mappingInfo": "",
+        "sourceId": "p-broker-finax-operations",
         "provider": "Finax",
         "providerIcon": {
           "type": "logo",
@@ -18,7 +19,9 @@
         },
         "providerGroup": "Brokers",
         "parser": {
-          "formats": ["csv"],
+          "formats": [
+            "csv"
+          ],
           "allowClipboard": true,
           "csv": {}
         },
@@ -29,12 +32,29 @@
               "header": true
             },
             "replaceHeaders": [
-              ["~Data~", "Date"],
-              ["~Rodzaj~", "Type"],
-              ["~Uwaga~", "Comment"],
-              ["~Kwota~", "Amount"]
+              [
+                "~Data~",
+                "Date"
+              ],
+              [
+                "~Rodzaj~",
+                "Type"
+              ],
+              [
+                "~Uwaga~",
+                "Comment"
+              ],
+              [
+                "~Kwota~",
+                "Amount"
+              ]
             ],
-            "enabledColumns": ["Date", "Type", "Comment", "Amount"],
+            "enabledColumns": [
+              "Date",
+              "Type",
+              "Comment",
+              "Amount"
+            ],
             "program": {
               "stmts": [
                 {
@@ -105,12 +125,18 @@
                             },
                             {
                               "type": "set",
+                              "prop": "transaction.currency",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Amount"
+                              }
+                            },
+                            {
+                              "type": "set",
                               "prop": "transaction.asset",
                               "xpr": {
-                                "type": "value",
-                                "value": {
-                                  "id": "c-EUR"
-                                }
+                                "type": "prop",
+                                "prop": "transaction.valueCurrency"
                               },
                               "cast": {
                                 "asset": {
@@ -158,16 +184,6 @@
                                   "type": "abs"
                                 }
                               ]
-                            },
-                            {
-                              "type": "set",
-                              "prop": "transaction.currency",
-                              "xpr": {
-                                "type": "value",
-                                "value": {
-                                  "id": "c-EUR"
-                                }
-                              }
                             },
                             {
                               "type": "set",
