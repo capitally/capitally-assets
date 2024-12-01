@@ -1,13 +1,13 @@
 {
   "version": 3,
   "type": "Capitally Data Export",
-  "exportedAt": "2024-11-26T08:44:00.839Z",
+  "exportedAt": "2024-12-01T11:22:39.491Z",
   "data": {
     "importPresets": {
-      "u-KX8gR2OLPSJiMwO": {
-        "id": "u-KX8gR2OLPSJiMwO",
-        "name": "1 of 2 - Transactions #beta",
-        "updatedAt": "2024-11-26T09:43",
+      "u-FLFGT6KAC61WzKU": {
+        "id": "u-FLFGT6KAC61WzKU",
+        "name": "1 of 2 - Transactions #beta (1)",
+        "updatedAt": "2024-12-01T12:22",
         "author": "RL <iFIjgKg2M7TIe5ygfjFzaDEAlAX2>",
         "info": "To import your transactions from Obligacje Skarbowe (Polish National Bonds):\n\n1. Go to [Serwis Obligacji Skarbowych](https://www.zakup.obligacjeskarbowe.pl/login.html)\n2. Open **Rachunek Rejestrowy**\n3. Open **Historia dyspozycji na Rachunku Rejestrowym**\n4. Choose dates and click **Dalej**\n5. Click the **[↓]** button below the table to download the XLS file\n6. Open or drop that file here\n\n> ☝️ This imports only transactions. As Capitally does not automatically update Bond prices, you will need to regularly update your current bonds value with the separate import **Obligacje Skarbowe: 2 of 2 - Balances**",
         "sourceId": "p-broker-obligacje-history",
@@ -19,7 +19,9 @@
         "providerGroup": "Brokers",
         "parser": {
           "dateOrder": "ymd",
-          "formats": ["xls"],
+          "formats": [
+            "xls"
+          ],
           "allowClipboard": false
         },
         "sections": {
@@ -287,7 +289,9 @@
                                 "asset": {
                                   "assetTypes": {
                                     "type": "value",
-                                    "value": ["BOND"]
+                                    "value": [
+                                      "BOND"
+                                    ]
                                   }
                                 }
                               }
@@ -426,7 +430,9 @@
                                 "asset": {
                                   "assetTypes": {
                                     "type": "value",
-                                    "value": ["BOND"]
+                                    "value": [
+                                      "BOND"
+                                    ]
                                   }
                                 }
                               }
@@ -508,7 +514,7 @@
                       "stmts": [
                         {
                           "type": "comment",
-                          "md": "## Buyout before expiration"
+                          "md": "## Buyout"
                         },
                         {
                           "type": "addTransaction",
@@ -524,7 +530,9 @@
                                 "asset": {
                                   "assetTypes": {
                                     "type": "value",
-                                    "value": ["BOND"]
+                                    "value": [
+                                      "BOND"
+                                    ]
                                   }
                                 }
                               }
@@ -661,6 +669,39 @@
                                               ]
                                             },
                                             {
+                                              "xpr": {
+                                                "type": "=",
+                                                "xpr": {
+                                                  "type": "prop",
+                                                  "prop": "lookup.cols.RODZAJ DYSPOZYCJI"
+                                                },
+                                                "v": {
+                                                  "type": "value",
+                                                  "value": "przedterminowy wykup"
+                                                }
+                                              },
+                                              "stmts": [
+                                                {
+                                                  "type": "set",
+                                                  "prop": "transaction.qty",
+                                                  "op": "+=",
+                                                  "xpr": {
+                                                    "type": "formula",
+                                                    "formula": "=N(lookup.col(\"KWOTA OPERACJI\")) / 100"
+                                                  }
+                                                },
+                                                {
+                                                  "type": "set",
+                                                  "prop": "transaction.value",
+                                                  "op": "+=",
+                                                  "xpr": {
+                                                    "type": "prop",
+                                                    "prop": "lookup.cols.KWOTA OPERACJI"
+                                                  }
+                                                }
+                                              ]
+                                            },
+                                            {
                                               "stmts": [
                                                 {
                                                   "type": "set",
@@ -717,7 +758,7 @@
                           "type": "addRowNote",
                           "note": {
                             "type": "value",
-                            "value": "💸 Cash transfers are currently not imported"
+                            "value": "💸 Cash transfers are [currently not imported](https://www.mycapitally.com/help/tracking-cash)"
                           }
                         }
                       ]
@@ -787,6 +828,25 @@
                         },
                         {
                           "type": "return"
+                        }
+                      ]
+                    },
+                    {
+                      "xpr": {
+                        "type": "=",
+                        "xpr": {
+                          "type": "prop",
+                          "prop": "cols.RODZAJ DYSPOZYCJI"
+                        },
+                        "v": {
+                          "type": "value",
+                          "value": "wykup papierów"
+                        }
+                      },
+                      "stmts": [
+                        {
+                          "type": "comment",
+                          "md": "Silently ignore - it's already handled"
                         }
                       ]
                     },
