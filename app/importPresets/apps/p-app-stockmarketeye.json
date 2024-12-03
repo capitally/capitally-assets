@@ -70,7 +70,7 @@
                           "type": "addRowNote",
                           "note": {
                             "type": "value",
-                            "value": "💸 Cash transfers are currently not imported"
+                            "value": "💸 Cash transfers are [currently not imported](https://www.mycapitally.com/help/tracking-cash)"
                           }
                         },
                         {
@@ -234,9 +234,7 @@
                                 "asset": {
                                   "assetTypes": {
                                     "type": "value",
-                                    "value": [
-                                      "CASH"
-                                    ]
+                                    "value": ["CASH"]
                                   },
                                   "remote": {
                                     "type": "value",
@@ -325,10 +323,7 @@
                             },
                             "v": {
                               "type": "value",
-                              "value": [
-                                "OPEN",
-                                "CLOSE"
-                              ]
+                              "value": ["OPEN", "CLOSE"]
                             }
                           },
                           "stmts": [
@@ -409,9 +404,7 @@
                             },
                             "v": {
                               "type": "value",
-                              "value": [
-                                "DIVIDEND"
-                              ]
+                              "value": ["DIVIDEND"]
                             }
                           },
                           "stmts": [
@@ -455,11 +448,7 @@
                             },
                             "v": {
                               "type": "value",
-                              "value": [
-                                "INTEREST",
-                                "RENT",
-                                "OTHER"
-                              ]
+                              "value": ["INTEREST", "RENT", "OTHER"]
                             }
                           },
                           "stmts": [

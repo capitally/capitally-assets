@@ -789,7 +789,7 @@
                           "type": "addRowNote",
                           "note": {
                             "type": "value",
-                            "value": "💸 Cash transfers are currently not imported"
+                            "value": "💸 Cash transfers are [currently not imported](https://www.mycapitally.com/help/tracking-cash)"
                           }
                         }
                       ]

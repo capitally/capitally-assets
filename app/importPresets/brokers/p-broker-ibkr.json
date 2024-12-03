@@ -1,15 +1,15 @@
 {
   "version": 3,
   "type": "Capitally Data Export",
-  "exportedAt": "2024-11-27T12:15:30.012Z",
+  "exportedAt": "2024-12-01T20:47:29.820Z",
   "data": {
     "importPresets": {
-      "u-oOHQhjBzuWKDJLa": {
-        "id": "u-oOHQhjBzuWKDJLa",
-        "name": "Transactions & dividends #beta",
-        "updatedAt": "2024-11-27T13:14",
+      "u-Tzj6Bh5Pagck4y4": {
+        "id": "u-Tzj6Bh5Pagck4y4",
+        "name": "Transactions & dividends #beta (1)",
+        "updatedAt": "2024-12-01T21:47",
         "author": "RL <iFIjgKg2M7TIe5ygfjFzaDEAlAX2>",
-        "info": "To import your transactions from Interactive Brokers:\n\n1. Go to [IBKR](https://www.interactivebrokers.co.uk/)\n2. Open **Performance & Reports** → **Flex Queries** → **Activity Flex Query** \n3. Create new Flex Query with a **+** sign\n4. From **Sections** choose the: \n**- Cash Transactions**\n**- Trades**\n**- Transfers**\n5. Set Format to **CSV**\n6. Set Date Format to **yyyy-MM-dd**\n7. Set Time Format to **HH:mm:ss**\n8. Save the query\n9. Run created query with the arrow sign (**→**)\n10. Choose date period (maximum is one year, you will need an export per each year), ensure Format is **CSV** format and save the file somewhere\n11. Open or drop that file here\n\n> 🦉 If your IBKR account was recently migrated from HU to IE, first import transactions from the HU account, and then continue with the new one. You can select your account near the `Flex Queries` title.",
+        "info": "To import your transactions from Interactive Brokers:\n\n1. Go to [IBKR](https://www.interactivebrokers.co.uk/)\n2. Open **Performance & Reports** → **Flex Queries** → **Activity Flex Query** \n3. Create new Flex Query with a **+** sign\n4. From **Sections** choose the: \n**- Cash Transactions** (all Options apart **Summary**)\n**- Trades** (only **Execution** option)\n**- Transfers** (only **Transfer** option)\nDon't modify default Options. \nCheck the \"Select All\" checkbox to select all columns. \n5. Set Format to **CSV**\n6. Set Date Format to **yyyy-MM-dd**\n7. Set Time Format to **HH:mm:ss**\n8. Save the query\n9. Run created query with the arrow sign (**→**)\n10. Choose date period (maximum is one year, you will need an export per each year), ensure Format is **CSV** format and save the file somewhere\n11. Open or drop that file here\n\n> 🦉 If your IBKR account was recently migrated from HU to IE, first import transactions from the HU account, and then continue with the new one. You can select your account near the `Flex Queries` title.",
         "sourceId": "p-broker-ibkr",
         "provider": "Interactive Brokers",
         "providerIcon": {
@@ -31,11 +31,26 @@
               "header": true
             },
             "replaceHeaders": [
-              ["~Commission~^$", "IBCommission"],
-              ["~CommissionCurrency~^$", "IBCommissionCurrency"],
-              ["~Price~^$", "TradePrice"],
-              ["~Tax~^$", "Taxes"],
-              ["~Date/Time~^$", "DateTime"]
+              [
+                "~Commission~^$",
+                "IBCommission"
+              ],
+              [
+                "~CommissionCurrency~^$",
+                "IBCommissionCurrency"
+              ],
+              [
+                "~Price~^$",
+                "TradePrice"
+              ],
+              [
+                "~Tax~^$",
+                "Taxes"
+              ],
+              [
+                "~Date/Time~^$",
+                "DateTime"
+              ]
             ],
             "enabledColumns": [
               "ClientAccountID",
@@ -376,7 +391,11 @@
                         "asset": {
                           "assetTypes": {
                             "type": "value",
-                            "value": ["STOCK", "ETF", "FUND"]
+                            "value": [
+                              "STOCK",
+                              "ETF",
+                              "FUND"
+                            ]
                           },
                           "markets": {
                             "type": "value",
@@ -642,7 +661,10 @@
                                 "asset": {
                                   "assetTypes": {
                                     "type": "value",
-                                    "value": ["STOCK", "ETF"]
+                                    "value": [
+                                      "STOCK",
+                                      "ETF"
+                                    ]
                                   },
                                   "remote": {
                                     "type": "value",
@@ -915,7 +937,9 @@
                                 "asset": {
                                   "assetTypes": {
                                     "type": "value",
-                                    "value": ["CASH"]
+                                    "value": [
+                                      "CASH"
+                                    ]
                                   },
                                   "remote": {
                                     "type": "value",
@@ -1058,7 +1082,7 @@
                           "type": "addRowNote",
                           "note": {
                             "type": "value",
-                            "value": "💸 Cash deposits and withdrawals are currently not imported"
+                            "value": "💸 Cash deposits and withdrawals are [currently not imported](https://www.mycapitally.com/help/tracking-cash)"
                           }
                         }
                       ]
@@ -1242,7 +1266,10 @@
                                 "asset": {
                                   "assetTypes": {
                                     "type": "value",
-                                    "value": ["STOCK", "ETF"]
+                                    "value": [
+                                      "STOCK",
+                                      "ETF"
+                                    ]
                                   },
                                   "remote": {
                                     "type": "value",
