@@ -1,15 +1,15 @@
 {
   "version": 3,
   "type": "Capitally Data Export",
-  "exportedAt": "2024-11-20T13:54:10.431Z",
+  "exportedAt": "2024-12-04T12:19:15.674Z",
   "data": {
     "importPresets": {
-      "u-98k008bfwVxUurK": {
-        "id": "u-98k008bfwVxUurK",
+      "u-tnJ4xHk7lq4aIwy": {
+        "id": "u-tnJ4xHk7lq4aIwy",
         "name": "Transactions #beta (1)",
-        "updatedAt": "2024-11-20T14:54",
+        "updatedAt": "2024-12-04T13:19",
         "author": "RL <iFIjgKg2M7TIe5ygfjFzaDEAlAX2>",
-        "info": "To import your transactions from Schwab:\n\n1. Go to [Schwab Client Portal](https://client.schwab.com/)\n2. Open **Accounts** → **History**\n3. Click the **↓ Export** to download the trades files\n4. Open or drop that file here",
+        "info": "To import your transactions from Schwab:\n\n1. Go to [Schwab Client Portal](https://client.schwab.com/)\n2. Open **Accounts** → **Transaction History**\n3. Select account, Change date range to **All**\n4. Click **Search**\n5. Click the **↓ Export** to download the trades files\n6. Open or drop that file here",
         "sourceId": "p-broker-schwab",
         "provider": "Charles Schwab",
         "providerIcon": {
@@ -215,6 +215,19 @@
                           }
                         },
                         {
+                          "cmp": {
+                            "type": "=",
+                            "v": {
+                              "type": "value",
+                              "value": "Security Transfer"
+                            }
+                          },
+                          "target": {
+                            "type": "value",
+                            "value": "TRANSFER"
+                          }
+                        },
+                        {
                           "target": {
                             "type": "value"
                           }
@@ -248,10 +261,7 @@
                                 "asset": {
                                   "assetTypes": {
                                     "type": "value",
-                                    "value": [
-                                      "STOCK",
-                                      "ETF"
-                                    ]
+                                    "value": ["STOCK", "ETF"]
                                   },
                                   "markets": {
                                     "type": "value",
@@ -307,11 +317,7 @@
                                     },
                                     "v": {
                                       "type": "value",
-                                      "value": [
-                                        "OPEN",
-                                        "CLOSE",
-                                        "TRANSFER"
-                                      ]
+                                      "value": ["OPEN", "CLOSE", "TRANSFER"]
                                     }
                                   },
                                   "stmts": [
@@ -342,9 +348,7 @@
                                     },
                                     "v": {
                                       "type": "value",
-                                      "value": [
-                                        "DIVIDEND"
-                                      ]
+                                      "value": ["DIVIDEND"]
                                     }
                                   },
                                   "stmts": [
@@ -433,6 +437,29 @@
                                       ]
                                     }
                                   ]
+                                },
+                                {
+                                  "xpr": {
+                                    "type": "in",
+                                    "xpr": {
+                                      "type": "prop",
+                                      "prop": "transaction.type"
+                                    },
+                                    "v": {
+                                      "type": "value",
+                                      "value": ["TRANSFER"]
+                                    }
+                                  },
+                                  "stmts": [
+                                    {
+                                      "type": "set",
+                                      "prop": "transaction.qty",
+                                      "xpr": {
+                                        "type": "prop",
+                                        "prop": "cols.Quantity"
+                                      }
+                                    }
+                                  ]
                                 }
                               ]
                             },
@@ -472,12 +499,25 @@
                         },
                         {
                           "xpr": {
-                            "type": "pattern",
-                            "xpr": {
-                              "type": "prop",
-                              "prop": "cols.Action"
-                            },
-                            "pattern": "~Credit Interest~"
+                            "type": "or",
+                            "xprs": [
+                              {
+                                "type": "pattern",
+                                "xpr": {
+                                  "type": "prop",
+                                  "prop": "cols.Action"
+                                },
+                                "pattern": "~Credit Interest~"
+                              },
+                              {
+                                "type": "pattern",
+                                "xpr": {
+                                  "type": "prop",
+                                  "prop": "cols.Action"
+                                },
+                                "pattern": "~Bank Interest~"
+                              }
+                            ]
                           },
                           "stmts": [
                             {
@@ -714,6 +754,57 @@
                                   "type": "prop",
                                   "prop": "cols.Action"
                                 },
+                                "pattern": "~Buy to~^"
+                              },
+                              {
+                                "type": "pattern",
+                                "xpr": {
+                                  "type": "prop",
+                                  "prop": "cols.Action"
+                                },
+                                "pattern": "~Sell to~^"
+                              },
+                              {
+                                "type": "pattern",
+                                "xpr": {
+                                  "type": "prop",
+                                  "prop": "cols.Action"
+                                },
+                                "pattern": "~Assigned~^$"
+                              },
+                              {
+                                "type": "pattern",
+                                "xpr": {
+                                  "type": "prop",
+                                  "prop": "cols.Action"
+                                },
+                                "pattern": "~Expired~^$"
+                              }
+                            ]
+                          },
+                          "stmts": [
+                            {
+                              "type": "addRowNote",
+                              "note": {
+                                "type": "value",
+                                "value": "💶 Option transactions are currently not imported, we have it on the [roadmap](https://community.mycapitally.com/t/support-for-tracking-options/41)"
+                              }
+                            },
+                            {
+                              "type": "return"
+                            }
+                          ]
+                        },
+                        {
+                          "xpr": {
+                            "type": "or",
+                            "xprs": [
+                              {
+                                "type": "pattern",
+                                "xpr": {
+                                  "type": "prop",
+                                  "prop": "cols.Action"
+                                },
                                 "pattern": "~Wire~"
                               },
                               {
@@ -739,7 +830,7 @@
                               "type": "addRowNote",
                               "note": {
                                 "type": "value",
-                                "value": "💸 Money transfers are currently not imported"
+                                "value": "💸 Money transfers are currently not imported, we have it on the [roadmap](https://community.mycapitally.com/t/tracking-cash-balances-double-entry-bookkeeping/38?u=rafal)"
                               }
                             },
                             {
