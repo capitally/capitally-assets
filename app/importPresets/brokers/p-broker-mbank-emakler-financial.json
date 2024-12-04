@@ -1,15 +1,15 @@
 {
   "version": 3,
   "type": "Capitally Data Export",
-  "exportedAt": "2024-10-23T18:43:31.119Z",
+  "exportedAt": "2024-12-04T09:34:31.808Z",
   "data": {
     "importPresets": {
-      "u-e18fpUY1gUdKBz1": {
-        "id": "u-e18fpUY1gUdKBz1",
+      "u-ORIJyUWcMxcUGJ1": {
+        "id": "u-ORIJyUWcMxcUGJ1",
         "name": "2 of 2 - Dividends #beta",
-        "updatedAt": "2024-10-23T20:43",
-        "author": "Rafal <CEzOZ77nYhZX6L0qXPKXSs6GBho2>",
-        "info": "To import your dividends and fees from eMakler:\n\n1. Go to [mBank](https://online.mbank.pl/)\n2. Open **Produkty** → **Inwestycje** → **Wszystkie** → **eMakler** \n3. Open **Operacje** \n4. Choose option **Typ** → **Historia finansowa**\n5. Choose time frame\n6. Click **Pobierz listę** → **CSV**\n7. Open or drop that file here\n\n> 🦉 To import transactions, use the other preset - **eMakler - Transactions**",
+        "updatedAt": "2024-12-04T10:31",
+        "author": "RL <iFIjgKg2M7TIe5ygfjFzaDEAlAX2>",
+        "info": "To import your dividends and fees from eMakler:\n\n1. Go to [mBank](https://online.mbank.pl/)\n2. Open **Produkty** → **Inwestycje** → **Wszystkie** → **eMakler** \n3. Open **Zlecenia** \n4. Choose option **TYP OPERACJI** → **Historia finansowa**\n5. Choose time frame\n6. Click **Pobierz listę** → **CSV**\n7. Open or drop that file here\n\n> 🦉 To import transactions, use the other preset - **eMakler - Transactions**",
         "mappingInfo": "> 🧑‍💼 Assets are only searched within the project. Make sure you import the **Transactions** first",
         "sourceId": "p-broker-mbank-emakler-financial",
         "provider": "mBank eMakler",
@@ -36,6 +36,7 @@
             "replaceHeaders": [["~Column 4~", "Kwota 2"]],
             "enabledColumns": ["Data", "Opis", "Kwota", "Kwota 2"],
             "disabledColumns": ["Column 5", "Column 6", "Column 7"],
+            "optionalColumns": ["Kwota 2"],
             "program": {
               "stmts": [
                 {

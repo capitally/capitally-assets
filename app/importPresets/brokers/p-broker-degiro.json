@@ -1,13 +1,13 @@
 {
   "version": 3,
   "type": "Capitally Data Export",
-  "exportedAt": "2024-11-28T21:34:20.000Z",
+  "exportedAt": "2024-12-03T22:24:13.142Z",
   "data": {
     "importPresets": {
-      "u-TJEVX6EMwgCnClB": {
-        "id": "u-TJEVX6EMwgCnClB",
-        "name": "Transactions & dividends #beta (1)",
-        "updatedAt": "2024-11-28T22:34",
+      "u-cM6QLJ9XvtC0r2X": {
+        "id": "u-cM6QLJ9XvtC0r2X",
+        "name": "Transactions & dividends #beta",
+        "updatedAt": "2024-12-03T23:16",
         "author": "RL <iFIjgKg2M7TIe5ygfjFzaDEAlAX2>",
         "info": "To import your transactions from Degiro:\n\n1. Go to [Degiro](https://degiro.com/)\n2. Open **Inbox** → **Account statements** \n3. Pick a date range\n4. Click the **↓ Export** button, choose **CSV** format and save the file somewhere\n5. Open or drop that file here",
         "mappingInfo": "🦉 If you previously imported transactions using the `Transactions` table format, importing overlapping dates may create duplicate entries.",
@@ -46,7 +46,8 @@
               ["~Opis~^$", "Description"],
               ["~Kurs~^$", "FX"],
               ["~Zmiana~^$", "Change currency"],
-              ["~Identyfikator zlecenia~^$", "Order Id"]
+              ["~Identyfikator zlecenia~^$", "Order Id"],
+              ["~Order ID~^$", "Order Id"]
             ],
             "enabledColumns": [
               "Date",
@@ -133,7 +134,7 @@
                               "type": "prop",
                               "prop": "cols.Description"
                             },
-                            "pattern": "~stock split~"
+                            "pattern": "~stock split~i"
                           }
                         ]
                       },
@@ -653,7 +654,7 @@
                                                     {
                                                       "cmp": {
                                                         "type": "pattern",
-                                                        "pattern": "~Compra~"
+                                                        "pattern": "~Compra~i^"
                                                       },
                                                       "target": {
                                                         "type": "value",
@@ -663,7 +664,7 @@
                                                     {
                                                       "cmp": {
                                                         "type": "pattern",
-                                                        "pattern": "~Venta~"
+                                                        "pattern": "~Venta~i^"
                                                       },
                                                       "target": {
                                                         "type": "value",
@@ -834,6 +835,14 @@
                                                       "prop": "$lookupDescription"
                                                     },
                                                     "pattern": "~currency~ib"
+                                                  },
+                                                  {
+                                                    "type": "pattern",
+                                                    "xpr": {
+                                                      "type": "prop",
+                                                      "prop": "$lookupDescription"
+                                                    },
+                                                    "pattern": "~fx~ib"
                                                   }
                                                 ]
                                               },

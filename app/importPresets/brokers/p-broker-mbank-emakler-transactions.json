@@ -1,16 +1,17 @@
 {
   "version": 3,
   "type": "Capitally Data Export",
-  "exportedAt": "2024-10-23T10:10:11.194Z",
+  "exportedAt": "2024-12-04T09:34:16.819Z",
   "data": {
     "importPresets": {
-      "u-wGFHfUEgU9Hf7He": {
-        "id": "u-wGFHfUEgU9Hf7He",
+      "u-DqcnXdxLCXzPVyW": {
+        "id": "u-DqcnXdxLCXzPVyW",
         "name": "1 of 2 - Transactions #beta",
-        "updatedAt": "2024-10-22T23:59",
-        "author": "Rafal <CEzOZ77nYhZX6L0qXPKXSs6GBho2>",
-        "info": "To import your transactions from eMakler:\n\n1. Go to [mBank](https://online.mbank.pl/)\n2. Open **Produkty** → **Inwestycje** → **Wszystkie** → **eMakler** \n3. Open **Operacje** \n4. Choose option **Typ** → **Transakcje**\n5. Choose time frame\n6. Click **Pobierz listę** → **CSV**\n7. Open or drop that file here\n\n> 🦉 To import dividends, use the other preset - **eMakler - Dividends**",
+        "updatedAt": "2024-12-03T23:25",
+        "author": "RL <iFIjgKg2M7TIe5ygfjFzaDEAlAX2>",
+        "info": "To import your transactions from eMakler:\n\n1. Go to [mBank](https://online.mbank.pl/)\n2. Open **Produkty** → **Inwestycje** → **Wszystkie** → **eMakler** \n3. Open **Zlecenia** \n4. Choose option **TYP OPERACJI** → **Transakcje**\n5. Choose time frame\n6. Click **Pobierz listę** → **CSV**\n7. Open or drop that file here\n\n> 🦉 To import dividends, use the other preset - **eMakler - Dividends**",
         "mappingInfo": "> ☝️ mBank does not provide official market symbols. Make sure to verify your assets, or manually search for the [right symbol](https://www.mycapitally.com/help/choosing-the-right-asset-symbol).\n\n#### Asset mapping\n\nVerify if the assets are correct. If not, choose the right symbol from the list or search by typing in the field the ISIN (`PLOPTTC00011`), symbol (`CDR.GPW`) or name",
+        "sourceId": "p-broker-mbank-emakler-transactions",
         "provider": "mBank eMakler",
         "providerIcon": {
           "type": "logo",
