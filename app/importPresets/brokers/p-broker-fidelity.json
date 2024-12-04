@@ -1,14 +1,14 @@
 {
   "version": 3,
   "type": "Capitally Data Export",
-  "exportedAt": "2024-10-26T13:28:15.135Z",
+  "exportedAt": "2024-12-04T21:25:19.525Z",
   "data": {
     "importPresets": {
-      "u-wt7SrhnflsLStA8": {
-        "id": "u-wt7SrhnflsLStA8",
+      "u-4SgeUlfcnj2vo2h": {
+        "id": "u-4SgeUlfcnj2vo2h",
         "name": "Transactions & dividends #beta",
-        "updatedAt": "2024-10-26T12:49",
-        "author": "Rafal <CEzOZ77nYhZX6L0qXPKXSs6GBho2>",
+        "updatedAt": "2024-12-04T22:25",
+        "author": "RL <iFIjgKg2M7TIe5ygfjFzaDEAlAX2>",
         "info": "To import your transactions from Fidelity:\n\n1. Login to your Fidelity Client Portal\n2. Choose **Account** → **Activity & Orders**\n3. Choose a time period\n4. Download transactions in CSV format with the green ↓ icon\n5. Open or drop that file here",
         "sourceId": "p-broker-fidelity",
         "provider": "Fidelity",
@@ -27,24 +27,31 @@
           "main": {
             "csv": {
               "fromRow": "~Run Date~^",
-              "untilRow": -16,
+              "untilRow": "/[a-z ]{5,}/i^",
               "header": true
             },
-            "replaceHeaders": [["~( )~", ""]],
+            "replaceHeaders": [
+              ["~( )~", ""],
+              ["~Security Description~^$", "Description"],
+              ["~Security Type~^$", "Type"]
+            ],
+            "reverseRows": true,
             "enabledColumns": [
               "Run Date",
               "Action",
               "Symbol",
-              "Security Description",
-              "Security Type",
+              "Description",
+              "Type",
               "Quantity",
               "Price",
               "Commission",
               "Fees",
               "Accrued Interest",
               "Amount",
+              "Cash Balance",
               "Settlement Date"
             ],
+            "optionalColumns": ["Cash Balance"],
             "program": {
               "stmts": [
                 {
@@ -77,6 +84,33 @@
                         "type": "value",
                         "value": "US"
                       }
+                    }
+                  ]
+                },
+                {
+                  "type": "if",
+                  "ifs": [
+                    {
+                      "xpr": {
+                        "type": "pattern",
+                        "xpr": {
+                          "type": "prop",
+                          "prop": "cols.Description"
+                        },
+                        "pattern": "~UNITED STATES TREAS ~^"
+                      },
+                      "stmts": [
+                        {
+                          "type": "addRowNote",
+                          "note": {
+                            "type": "value",
+                            "value": "🏦 Treasury bills and notes are currently not imported"
+                          }
+                        },
+                        {
+                          "type": "return"
+                        }
+                      ]
                     }
                   ]
                 },
@@ -136,6 +170,16 @@
                           "cmp": {
                             "type": "pattern",
                             "pattern": "~DIVIDEND RECEIVED~^"
+                          },
+                          "target": {
+                            "type": "value",
+                            "value": "DIVIDEND"
+                          }
+                        },
+                        {
+                          "cmp": {
+                            "type": "pattern",
+                            "pattern": "~RECEIVED FROM YOU ~^"
                           },
                           "target": {
                             "type": "value",
@@ -287,6 +331,84 @@
                                       ]
                                     }
                                   ]
+                                },
+                                {
+                                  "type": "if",
+                                  "ifs": [
+                                    {
+                                      "xpr": {
+                                        "type": "and",
+                                        "xprs": [
+                                          {
+                                            "type": "pattern",
+                                            "xpr": {
+                                              "type": "prop",
+                                              "prop": "lookup.cols.Action"
+                                            },
+                                            "pattern": "~FOREIGN TAX PAID ~"
+                                          },
+                                          {
+                                            "type": "=",
+                                            "xpr": {
+                                              "type": "prop",
+                                              "prop": "lookup.cols.Symbol"
+                                            },
+                                            "v": {
+                                              "type": "prop",
+                                              "prop": "cols.Symbol"
+                                            }
+                                          },
+                                          {
+                                            "type": "=",
+                                            "xpr": {
+                                              "type": "prop",
+                                              "prop": "lookup.cols.Run Date"
+                                            },
+                                            "v": {
+                                              "type": "prop",
+                                              "prop": "cols.Run Date"
+                                            }
+                                          }
+                                        ]
+                                      },
+                                      "stmts": [
+                                        {
+                                          "type": "set",
+                                          "prop": "transaction.taxPaid",
+                                          "xpr": {
+                                            "type": "prop",
+                                            "prop": "lookup.cols.Amount"
+                                          },
+                                          "trfms": [
+                                            {
+                                              "type": "negate"
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "type": "ignoreRow"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "xpr": {
+                                        "type": "and",
+                                        "xprs": [
+                                          {
+                                            "type": "=",
+                                            "xpr": {
+                                              "type": "prop",
+                                              "prop": "lookup.cols.Action"
+                                            },
+                                            "v": {
+                                              "type": "value"
+                                            }
+                                          }
+                                        ]
+                                      },
+                                      "stmts": []
+                                    }
+                                  ]
                                 }
                               ]
                             }
@@ -294,12 +416,17 @@
                         },
                         {
                           "xpr": {
-                            "type": "pattern",
-                            "xpr": {
-                              "type": "prop",
-                              "prop": "cols.Action"
-                            },
-                            "pattern": "~INTEREST EARNED~"
+                            "type": "or",
+                            "xprs": [
+                              {
+                                "type": "pattern",
+                                "xpr": {
+                                  "type": "prop",
+                                  "prop": "cols.Action"
+                                },
+                                "pattern": "~INTEREST EARNED~"
+                              }
+                            ]
                           },
                           "stmts": [
                             {
@@ -320,12 +447,25 @@
                         },
                         {
                           "xpr": {
-                            "type": "pattern",
-                            "xpr": {
-                              "type": "prop",
-                              "prop": "cols.Action"
-                            },
-                            "pattern": "~CASH~"
+                            "type": "or",
+                            "xprs": [
+                              {
+                                "type": "pattern",
+                                "xpr": {
+                                  "type": "prop",
+                                  "prop": "cols.Action"
+                                },
+                                "pattern": "~CASH~"
+                              },
+                              {
+                                "type": "pattern",
+                                "xpr": {
+                                  "type": "prop",
+                                  "prop": "cols.Action"
+                                },
+                                "pattern": "~Electronic Funds Transfer~"
+                              }
+                            ]
                           },
                           "stmts": [
                             {
@@ -379,8 +519,9 @@
                               "type": "addRowNote",
                               "note": {
                                 "type": "formula",
-                                "formula": "=\"Transaction `\" + col(\"Action\") + \"` is currently not supported\""
-                              }
+                                "formula": "=\"🥺 Transaction `\" + col(\"Action\") + \"` is currently not supported\""
+                              },
+                              "urgency": "warn"
                             },
                             {
                               "type": "return"
@@ -422,6 +563,9 @@
                               },
                               {
                                 "id": "m-OTC"
+                              },
+                              {
+                                "id": "m-USFUND"
                               }
                             ]
                           },
@@ -454,6 +598,11 @@
                 }
               ]
             }
+          }
+        },
+        "options": {
+          "valueMap": {
+            "asset": {}
           }
         }
       }
