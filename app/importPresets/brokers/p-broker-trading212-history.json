@@ -1,16 +1,17 @@
 {
   "version": 3,
   "type": "Capitally Data Export",
-  "exportedAt": "2024-10-27T09:45:11.501Z",
+  "exportedAt": "2024-12-04T17:22:27.728Z",
   "data": {
     "importPresets": {
-      "u-E2g9HmBeKWMoVAn": {
-        "id": "u-E2g9HmBeKWMoVAn",
+      "u-pHKFFsmvPCwxn3x": {
+        "id": "u-pHKFFsmvPCwxn3x",
         "name": "History #beta",
-        "updatedAt": "2024-10-27T10:30",
-        "author": "Rafal <CEzOZ77nYhZX6L0qXPKXSs6GBho2>",
-        "info": "To import your transactions from Trading 212:\n\n1. Open the Trading 212 app\n1. Open the main menu and navigate to **History**\n1. Click the download icon in the top-right\n1. Select the date range and click **Export CSV**\n1. Download the file and open or drop that file here\n",
+        "updatedAt": "2024-12-04T18:15",
+        "author": "RL <iFIjgKg2M7TIe5ygfjFzaDEAlAX2>",
+        "info": "To import your transactions from Trading 212:\n\n1. Open the **Trading 212** app\n2. Open the main menu and navigate to **History**\n3. Click the download icon in the top-right\n4. Select the date range and click **Export CSV**\n5. Download the file and open or drop that file here",
         "mappingInfo": "",
+        "sourceId": "p-broker-trading212-history",
         "provider": "Trading 212",
         "providerIcon": {
           "type": "logo",
@@ -19,7 +20,9 @@
         "providerGroup": "Brokers",
         "parser": {
           "decimalSeparator": ".",
-          "formats": ["csv"],
+          "formats": [
+            "csv"
+          ],
           "allowClipboard": false,
           "csv": {}
         },
@@ -48,6 +51,24 @@
               "Currency (Charge amount)",
               "Notes",
               "ID",
+              "Deposit fee",
+              "Currency (Deposit fee)",
+              "Currency conversion fee",
+              "Currency (Currency conversion fee)",
+              "French transaction tax",
+              "Currency (French transaction tax)"
+            ],
+            "optionalColumns": [
+              "Exchange rate",
+              "Result",
+              "Currency (Result)",
+              "Withholding tax",
+              "Currency (Withholding tax)",
+              "Charge amount",
+              "Currency (Charge amount)",
+              "Notes",
+              "Deposit fee",
+              "Currency (Deposit fee)",
               "Currency conversion fee",
               "Currency (Currency conversion fee)",
               "French transaction tax",
@@ -98,11 +119,19 @@
                         "type": "formula",
                         "formula": "=col(\"ISIN\") + \" \" + col(\"Ticker\")"
                       },
+                      "trfms": [
+                        {
+                          "type": "trim"
+                        }
+                      ],
                       "cast": {
                         "asset": {
                           "assetTypes": {
                             "type": "value",
-                            "value": ["STOCK", "ETF"]
+                            "value": [
+                              "STOCK",
+                              "ETF"
+                            ]
                           },
                           "markets": {
                             "type": "value",
@@ -182,11 +211,8 @@
                       "map": [
                         {
                           "cmp": {
-                            "type": "=",
-                            "v": {
-                              "type": "value",
-                              "value": "Market buy"
-                            }
+                            "type": "pattern",
+                            "pattern": "~ buy~$"
                           },
                           "target": {
                             "type": "value",
@@ -195,11 +221,8 @@
                         },
                         {
                           "cmp": {
-                            "type": "=",
-                            "v": {
-                              "type": "value",
-                              "value": "Market sell"
-                            }
+                            "type": "pattern",
+                            "pattern": "~ sell~$"
                           },
                           "target": {
                             "type": "value",
@@ -208,11 +231,8 @@
                         },
                         {
                           "cmp": {
-                            "type": "=",
-                            "v": {
-                              "type": "value",
-                              "value": "Dividend (Ordinary)"
-                            }
+                            "type": "pattern",
+                            "pattern": "~Dividend ~^"
                           },
                           "target": {
                             "type": "value",
@@ -221,15 +241,12 @@
                         },
                         {
                           "cmp": {
-                            "type": "=",
-                            "v": {
-                              "type": "value",
-                              "value": "Dividend (Ordinary manufactured payment)"
-                            }
+                            "type": "pattern",
+                            "pattern": "~Interest~^"
                           },
                           "target": {
                             "type": "value",
-                            "value": "DIVIDEND"
+                            "value": "INTEREST"
                           }
                         },
                         {
@@ -237,25 +254,12 @@
                             "type": "=",
                             "v": {
                               "type": "value",
-                              "value": "Dividend (Return of capital non us)"
+                              "value": "Lending interest"
                             }
                           },
                           "target": {
                             "type": "value",
-                            "value": "DIVIDEND"
-                          }
-                        },
-                        {
-                          "cmp": {
-                            "type": "=",
-                            "v": {
-                              "type": "value",
-                              "value": "Dividend (Bonus)"
-                            }
-                          },
-                          "target": {
-                            "type": "value",
-                            "value": "DIVIDEND"
+                            "value": "INTEREST"
                           }
                         },
                         {
@@ -307,7 +311,10 @@
                             },
                             "v": {
                               "type": "value",
-                              "value": ["OPEN", "CLOSE"]
+                              "value": [
+                                "OPEN",
+                                "CLOSE"
+                              ]
                             }
                           },
                           "stmts": [
@@ -354,7 +361,9 @@
                             },
                             "v": {
                               "type": "value",
-                              "value": ["DIVIDEND"]
+                              "value": [
+                                "DIVIDEND"
+                              ]
                             }
                           },
                           "stmts": [
@@ -409,6 +418,57 @@
                                   ]
                                 }
                               ]
+                            }
+                          ]
+                        },
+                        {
+                          "xpr": {
+                            "type": "in",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "transaction.type"
+                            },
+                            "v": {
+                              "type": "value",
+                              "value": [
+                                "INTEREST"
+                              ]
+                            }
+                          },
+                          "stmts": [
+                            {
+                              "type": "comment",
+                              "md": "### Interest"
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.asset",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Currency (Total)"
+                              },
+                              "cast": {
+                                "asset": {
+                                  "assetTypes": {
+                                    "type": "value",
+                                    "value": [
+                                      "CASH"
+                                    ]
+                                  },
+                                  "remote": {
+                                    "type": "value",
+                                    "value": true
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.value",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Total"
+                              }
                             }
                           ]
                         },
