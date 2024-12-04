@@ -1,17 +1,17 @@
 {
   "version": 3,
   "type": "Capitally Data Export",
-  "exportedAt": "2024-11-04T19:53:43.975Z",
+  "exportedAt": "2024-12-04T19:27:06.164Z",
   "data": {
     "importPresets": {
-      "u-XBVnyx3WVU1gfrZ": {
-        "id": "u-XBVnyx3WVU1gfrZ",
+      "u-1HmWA1QXUecT5P2": {
+        "id": "u-1HmWA1QXUecT5P2",
         "name": "Stocks #beta",
-        "updatedAt": "2024-11-04T20:53",
-        "author": "Rafal <CEzOZ77nYhZX6L0qXPKXSs6GBho2>",
-        "info": "To import your transactions from Robinhood:\n\n1. Open the Robinhood app\n2. Click on the Account icon in the lower right corner\n3. Open the navigation menu in the upper right and choose **Reports and statements**\n4. Click on **Reports**\n5. Click on **Generate new report** button\n6. Choose the account you need, and specify a date range, then click **Done**\n7. Robinhood will notify you when your CSV report is ready\n8. Download the file and open or drop that file here\n\n> ☝️ These statements **do not** contain crypto transactions",
+        "updatedAt": "2024-12-04T20:26",
+        "author": "RL <iFIjgKg2M7TIe5ygfjFzaDEAlAX2>",
+        "info": "To import your transactions from Robinhood:\n\n1. Open the **Robinhood** app\n2. Click on the Account icon in the lower right corner\n3. Open the navigation menu in the upper right and choose **Reports and statements**\n4. Click on **Reports**\n5. Click on **Generate new report** button\n6. Choose the account you need, and specify a date range, then click **Done**\n7. Robinhood will notify you when your CSV report is ready\n8. Download the file and open or drop that file here\n\n> ☝️ These statements **do not** contain crypto transactions",
         "mappingInfo": "",
-        "sourceId": "broker-robinhood",
+        "sourceId": "p-broker-robinhood-stocks",
         "provider": "Robinhood",
         "providerIcon": {
           "type": "logo",
@@ -19,9 +19,7 @@
         },
         "providerGroup": "Brokers",
         "parser": {
-          "formats": [
-            "csv"
-          ],
+          "formats": ["csv"],
           "allowClipboard": false,
           "csv": {}
         },
@@ -44,9 +42,7 @@
               "Price",
               "Amount"
             ],
-            "disabledColumns": [
-              "Column 10"
-            ],
+            "disabledColumns": ["Column 10"],
             "program": {
               "stmts": [
                 {
@@ -196,6 +192,19 @@
                           }
                         },
                         {
+                          "cmp": {
+                            "type": "=",
+                            "v": {
+                              "type": "value",
+                              "value": "ACATI"
+                            }
+                          },
+                          "target": {
+                            "type": "value",
+                            "value": "TRANSFER"
+                          }
+                        },
+                        {
                           "target": {
                             "type": "value"
                           }
@@ -214,10 +223,7 @@
                             },
                             "v": {
                               "type": "value",
-                              "value": [
-                                "OPEN",
-                                "CLOSE"
-                              ]
+                              "value": ["OPEN", "CLOSE"]
                             }
                           },
                           "stmts": [
@@ -338,9 +344,7 @@
                             },
                             "v": {
                               "type": "value",
-                              "value": [
-                                "DIVIDEND"
-                              ]
+                              "value": ["DIVIDEND"]
                             }
                           },
                           "stmts": [
@@ -502,6 +506,59 @@
                             },
                             "v": {
                               "type": "value",
+                              "value": "ACATI"
+                            }
+                          },
+                          "stmts": [
+                            {
+                              "type": "comment",
+                              "md": "## Transfers"
+                            },
+                            {
+                              "type": "if",
+                              "ifs": [
+                                {
+                                  "xpr": {
+                                    "type": "falsy",
+                                    "xpr": {
+                                      "type": "prop",
+                                      "prop": "cols.Instrument"
+                                    }
+                                  },
+                                  "stmts": [
+                                    {
+                                      "type": "addRowNote",
+                                      "note": {
+                                        "type": "value",
+                                        "value": "💸 Cash transfers are currently not imported"
+                                      }
+                                    },
+                                    {
+                                      "type": "return"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.qty",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Quantity"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "xpr": {
+                            "type": "=",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Trans Code"
+                            },
+                            "v": {
+                              "type": "value",
                               "value": "SLIP"
                             }
                           },
@@ -616,6 +673,17 @@
                                   "type": "value",
                                   "value": "CFIR"
                                 }
+                              },
+                              {
+                                "type": "=",
+                                "xpr": {
+                                  "type": "prop",
+                                  "prop": "cols.Trans Code"
+                                },
+                                "v": {
+                                  "type": "value",
+                                  "value": "PFIR"
+                                }
                               }
                             ]
                           },
@@ -673,10 +741,7 @@
                                 "asset": {
                                   "assetTypes": {
                                     "type": "value",
-                                    "value": [
-                                      "STOCK",
-                                      "ETF"
-                                    ]
+                                    "value": ["STOCK", "ETF"]
                                   },
                                   "markets": {
                                     "type": "value",
