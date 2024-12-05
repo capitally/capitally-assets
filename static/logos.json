@@ -23,6 +23,10 @@
     "file": "brokers/fidelity.png",
     "name": "Fidelity"
   },
+  "brokers/firstrade": {
+    "file": "brokers/firstrade.png",
+    "name": "Firstrade"
+  },
   "brokers/finax": {
     "file": "brokers/finax.png",
     "name": "Finax"
@@ -68,6 +72,10 @@
   "brokers/selfbank": {
     "file": "brokers/selfbank.png",
     "name": "Self Bank"
+  },
+  "brokers/santander": {
+    "file": "brokers/santander.png",
+    "name": "Santander"
   },
   "brokers/tastyworks": {
     "file": "brokers/tastyworks.png",

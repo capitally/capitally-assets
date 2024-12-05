@@ -1,0 +1,476 @@
+{
+  "version": 3,
+  "type": "Capitally Data Export",
+  "exportedAt": "2024-12-05T19:27:30.449Z",
+  "data": {
+    "importPresets": {
+      "u-5fn4gPE3TPeb53k": {
+        "id": "u-5fn4gPE3TPeb53k",
+        "name": "2 of 2 - Dividends #beta (1)",
+        "updatedAt": "2024-12-05T20:27",
+        "author": "RL <iFIjgKg2M7TIe5ygfjFzaDEAlAX2>",
+        "info": "To import dividends from Santander:\n\n1. Open brokerage website\n2. Open **Historia** from the top-right menu\n3. Open **Historia operacji finansowych**\n4. Choose at least `Dywidendy i odsetki`\n5. Choose time frame\n6. Click **Eksportuj do CSV**\n7. Open or drop that file here",
+        "sourceId": "p-broker-santander-pl-operations",
+        "provider": "Santander BM",
+        "providerIcon": {
+          "type": "logo",
+          "id": "brokers/santander"
+        },
+        "providerGroup": "Brokers",
+        "parser": {
+          "allowClipboard": false,
+          "csv": {}
+        },
+        "sections": {
+          "main": {
+            "csv": {
+              "header": true
+            },
+            "reverseRows": true,
+            "enabledColumns": [
+              "Data operacji",
+              "Id operacji",
+              "Opis",
+              "Kwota",
+              "Waluta Kwota"
+            ],
+            "program": {
+              "stmts": [
+                {
+                  "type": "addAccount",
+                  "optional": true,
+                  "stmts": [
+                    {
+                      "type": "set",
+                      "prop": "account.name",
+                      "xpr": {
+                        "type": "value",
+                        "value": "Santander BM"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "account.icon",
+                      "xpr": {
+                        "type": "value",
+                        "value": {
+                          "type": "logo",
+                          "id": "brokers/santander"
+                        }
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "account.countryISO",
+                      "xpr": {
+                        "type": "value",
+                        "value": "PL"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "addTransaction",
+                  "stmts": [
+                    {
+                      "type": "set",
+                      "prop": "transaction.account",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "addedAccount"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.date",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Data operacji"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.currency",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Waluta Kwota"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.reference",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Id operacji"
+                      }
+                    },
+                    {
+                      "type": "if",
+                      "ifs": [
+                        {
+                          "xpr": {
+                            "type": "pattern",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Opis"
+                            },
+                            "pattern": "~DYW.;~^"
+                          },
+                          "stmts": [
+                            {
+                              "type": "set",
+                              "prop": "transaction.type",
+                              "xpr": {
+                                "type": "value",
+                                "value": "DIVIDEND"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.asset",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Opis"
+                              },
+                              "trfms": [
+                                {
+                                  "type": "extract",
+                                  "pattern": "/DYW.;(.+);/"
+                                },
+                                {
+                                  "type": "replace",
+                                  "pattern": "~-NC~$",
+                                  "replace": ""
+                                }
+                              ],
+                              "cast": {
+                                "asset": {
+                                  "assetTypes": {
+                                    "type": "value",
+                                    "value": [
+                                      "STOCK",
+                                      "ETF"
+                                    ]
+                                  },
+                                  "markets": {
+                                    "type": "value",
+                                    "value": [
+                                      {
+                                        "id": "mic-XWAR"
+                                      },
+                                      {
+                                        "id": "mic-XNYS"
+                                      },
+                                      {
+                                        "id": "mic-XNAS"
+                                      },
+                                      {
+                                        "id": "mic-XETR"
+                                      },
+                                      {
+                                        "id": "mic-XFRA"
+                                      },
+                                      {
+                                        "id": "mic-XLON"
+                                      },
+                                      {
+                                        "id": "mic-ARCX"
+                                      },
+                                      {
+                                        "id": "mic-XASE"
+                                      },
+                                      {
+                                        "id": "mic-XPAR"
+                                      },
+                                      {
+                                        "id": "mic-BMEX"
+                                      },
+                                      {
+                                        "id": "mic-XWBO"
+                                      },
+                                      {
+                                        "id": "mic-XSWX"
+                                      },
+                                      {
+                                        "id": "mic-XLIS"
+                                      },
+                                      {
+                                        "id": "mic-XAMS"
+                                      },
+                                      {
+                                        "id": "mic-XHEL"
+                                      },
+                                      {
+                                        "id": "mic-XSTO"
+                                      },
+                                      {
+                                        "id": "mic-XBUD"
+                                      },
+                                      {
+                                        "id": "mic-XBRU"
+                                      },
+                                      {
+                                        "id": "mic-XMIL"
+                                      },
+                                      {
+                                        "id": "mic-XPRA"
+                                      },
+                                      {
+                                        "id": "mic-XCSE"
+                                      },
+                                      {
+                                        "id": "mic-XOSL"
+                                      },
+                                      {
+                                        "id": "mic-BATS"
+                                      },
+                                      {
+                                        "id": "m-OTC"
+                                      }
+                                    ]
+                                  },
+                                  "remote": {
+                                    "type": "value",
+                                    "value": true
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.value",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Kwota"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.valueCurrency",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Waluta Kwota"
+                              }
+                            },
+                            {
+                              "type": "var",
+                              "varId": "taxDescription",
+                              "varType": "string",
+                              "multiple": false,
+                              "xpr": {
+                                "type": "value",
+                                "value": "PD;DYW;"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "$taxDescription",
+                              "op": "append",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Opis"
+                              },
+                              "trfms": [
+                                {
+                                  "type": "replace",
+                                  "pattern": "~DYW.;~",
+                                  "replace": ""
+                                }
+                              ]
+                            },
+                            {
+                              "type": "lookupRows",
+                              "direction": "after",
+                              "offset": {
+                                "type": "value",
+                                "value": 1
+                              },
+                              "limit": {
+                                "type": "value",
+                                "value": 5
+                              },
+                              "stmts": [
+                                {
+                                  "type": "if",
+                                  "ifs": [
+                                    {
+                                      "xpr": {
+                                        "type": "=",
+                                        "xpr": {
+                                          "type": "prop",
+                                          "prop": "lookup.cols.Opis"
+                                        },
+                                        "v": {
+                                          "type": "prop",
+                                          "prop": "$taxDescription"
+                                        }
+                                      },
+                                      "stmts": [
+                                        {
+                                          "type": "set",
+                                          "prop": "transaction.taxPaid",
+                                          "xpr": {
+                                            "type": "prop",
+                                            "prop": "lookup.cols.Kwota"
+                                          },
+                                          "trfms": [
+                                            {
+                                              "type": "abs"
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "type": "ignoreRow"
+                                        },
+                                        {
+                                          "type": "return",
+                                          "levels": 1
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "xpr": {
+                            "type": "pattern",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Opis"
+                            },
+                            "pattern": "~OPŁATA ~^"
+                          },
+                          "stmts": [
+                            {
+                              "type": "set",
+                              "prop": "transaction.asset",
+                              "xpr": {
+                                "type": "value",
+                                "value": {
+                                  "id": "c-PLN"
+                                }
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.type",
+                              "xpr": {
+                                "type": "value",
+                                "value": "OTHER"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.value",
+                              "xpr": {
+                                "type": "value",
+                                "value": 0
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.fee",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Kwota"
+                              },
+                              "trfms": [
+                                {
+                                  "type": "negate"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.note",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Opis"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "xpr": {
+                            "type": "or",
+                            "xprs": [
+                              {
+                                "type": "pattern",
+                                "xpr": {
+                                  "type": "prop",
+                                  "prop": "cols.Opis"
+                                },
+                                "pattern": "~K:~^"
+                              },
+                              {
+                                "type": "pattern",
+                                "xpr": {
+                                  "type": "prop",
+                                  "prop": "cols.Opis"
+                                },
+                                "pattern": "~S:~^"
+                              }
+                            ]
+                          },
+                          "stmts": [
+                            {
+                              "type": "comment",
+                              "md": "Silently ignore Buy & Sell internal transfers"
+                            },
+                            {
+                              "type": "return"
+                            }
+                          ]
+                        },
+                        {
+                          "xpr": {
+                            "type": "pattern",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Opis"
+                            },
+                            "pattern": "~Wlasne~^"
+                          },
+                          "stmts": [
+                            {
+                              "type": "addRowNote",
+                              "note": {
+                                "type": "value",
+                                "value": "💸 Money transfers are currently not imported"
+                              }
+                            },
+                            {
+                              "type": "return"
+                            }
+                          ]
+                        },
+                        {
+                          "stmts": [
+                            {
+                              "type": "addRowNote",
+                              "note": {
+                                "type": "formula",
+                                "formula": "=\"🥺 Operation `\" + col(\"Opis\") + \"` is currently not supported\""
+                              },
+                              "urgency": "warn"
+                            },
+                            {
+                              "type": "return"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+}

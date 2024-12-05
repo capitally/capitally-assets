@@ -55,7 +55,8 @@
               "label": "Choose balance column",
               "matchProp": "~cols.~^"
             },
-            "valueType": "positiveNumber"
+            "valueType": "positiveNumber",
+            "valueLink": "Enter balance"
           },
           "trfms": [{ "type": "abs" }]
         },

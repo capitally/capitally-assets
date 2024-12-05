@@ -1,0 +1,312 @@
+{
+  "version": 3,
+  "type": "Capitally Data Export",
+  "exportedAt": "2024-12-05T19:23:29.970Z",
+  "data": {
+    "importPresets": {
+      "u-U34Ecw8Wg5IaZiD": {
+        "id": "u-U34Ecw8Wg5IaZiD",
+        "name": "1 of 2 - Transactions #beta",
+        "updatedAt": "2024-12-05T20:12",
+        "author": "RL <iFIjgKg2M7TIe5ygfjFzaDEAlAX2>",
+        "info": "To import transactions from Santander:\n\n1. Open brokerage website\n2. Open **Historia** from the top-right menu\n3. Open **Historia Transakcji**\n4. Open **Historyczne** tab\n5. Choose time frame\n6. Click **Eksportuj do CSV**\n7. Open or drop that file here",
+        "mappingInfo": "",
+        "sourceId": "p-broker-pkobp-transactions",
+        "provider": "Santander BM",
+        "providerIcon": {
+          "type": "logo",
+          "id": "brokers/santander"
+        },
+        "providerGroup": "Brokers",
+        "parser": {
+          "formats": [
+            "csv"
+          ],
+          "allowClipboard": false,
+          "csv": {}
+        },
+        "sections": {
+          "main": {
+            "csv": {
+              "untilRow": "~;;;~",
+              "header": true
+            },
+            "reverseRows": true,
+            "enabledColumns": [
+              "Czas zawarcia",
+              "Walor",
+              "Giełda",
+              "Waluta notowania",
+              "Oferta",
+              "Ilość",
+              "Kurs",
+              "Waluta Kurs",
+              "Wartość",
+              "Waluta Wartość",
+              "Prowizja",
+              "Waluta Prowizja",
+              "Numer transakcji",
+              "Status zlecenia",
+              "Data rozliczenia",
+              "Id zlecenia",
+              "Kwota nieopłacona",
+              "Waluta Kwota nieopłacona",
+              "Kurs przewalutowania"
+            ],
+            "program": {
+              "stmts": [
+                {
+                  "type": "addAccount",
+                  "optional": true,
+                  "stmts": [
+                    {
+                      "type": "set",
+                      "prop": "account.name",
+                      "xpr": {
+                        "type": "value",
+                        "value": "Santander BM"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "account.icon",
+                      "xpr": {
+                        "type": "value",
+                        "value": {
+                          "type": "logo",
+                          "id": "brokers/santander"
+                        }
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "account.countryISO",
+                      "xpr": {
+                        "type": "value",
+                        "value": "PL"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "addTransaction",
+                  "stmts": [
+                    {
+                      "type": "set",
+                      "prop": "transaction.account",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "addedAccount"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.date",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Czas zawarcia"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.asset",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Walor"
+                      },
+                      "trfms": [
+                        {
+                          "type": "replace",
+                          "pattern": "~-NC~$",
+                          "replace": ""
+                        }
+                      ],
+                      "map": [],
+                      "cast": {
+                        "asset": {
+                          "assetTypes": {
+                            "type": "value",
+                            "value": [
+                              "STOCK",
+                              "ETF"
+                            ]
+                          },
+                          "markets": {
+                            "type": "value",
+                            "value": [
+                              {
+                                "id": "mic-XWAR"
+                              },
+                              {
+                                "id": "mic-XNYS"
+                              },
+                              {
+                                "id": "mic-XNAS"
+                              },
+                              {
+                                "id": "mic-XETR"
+                              },
+                              {
+                                "id": "mic-XFRA"
+                              },
+                              {
+                                "id": "mic-XLON"
+                              },
+                              {
+                                "id": "mic-ARCX"
+                              },
+                              {
+                                "id": "mic-XASE"
+                              },
+                              {
+                                "id": "mic-XPAR"
+                              },
+                              {
+                                "id": "mic-BMEX"
+                              },
+                              {
+                                "id": "mic-XWBO"
+                              },
+                              {
+                                "id": "mic-XSWX"
+                              },
+                              {
+                                "id": "mic-XLIS"
+                              },
+                              {
+                                "id": "mic-XAMS"
+                              },
+                              {
+                                "id": "mic-XHEL"
+                              },
+                              {
+                                "id": "mic-XSTO"
+                              },
+                              {
+                                "id": "mic-XBUD"
+                              },
+                              {
+                                "id": "mic-XBRU"
+                              },
+                              {
+                                "id": "mic-XMIL"
+                              },
+                              {
+                                "id": "mic-XPRA"
+                              },
+                              {
+                                "id": "mic-XCSE"
+                              },
+                              {
+                                "id": "mic-XOSL"
+                              },
+                              {
+                                "id": "mic-BATS"
+                              },
+                              {
+                                "id": "m-OTC"
+                              }
+                            ]
+                          },
+                          "remote": {
+                            "type": "value",
+                            "value": true
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.type",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Oferta"
+                      },
+                      "map": [
+                        {
+                          "cmp": {
+                            "type": "=",
+                            "v": {
+                              "type": "value",
+                              "value": "Kupno"
+                            }
+                          },
+                          "target": {
+                            "type": "value",
+                            "value": "OPEN"
+                          }
+                        },
+                        {
+                          "cmp": {
+                            "type": "=",
+                            "v": {
+                              "type": "value",
+                              "value": "Sprzedaż"
+                            }
+                          },
+                          "target": {
+                            "type": "value",
+                            "value": "CLOSE"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.qty",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Ilość"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.price",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Kurs"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.valueCurrency",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Waluta Kurs"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.fee",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Prowizja"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.feeCurrency",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Waluta Prowizja"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.reference",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Numer transakcji"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "options": {}
+      }
+    }
+  }
+}

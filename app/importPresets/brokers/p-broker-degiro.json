@@ -1,14 +1,14 @@
 {
   "version": 3,
   "type": "Capitally Data Export",
-  "exportedAt": "2024-12-03T22:24:13.142Z",
+  "exportedAt": "2024-12-05T15:55:34.060Z",
   "data": {
     "importPresets": {
-      "u-cM6QLJ9XvtC0r2X": {
-        "id": "u-cM6QLJ9XvtC0r2X",
+      "u-yRsZZ3T4kmtLUej": {
+        "id": "u-yRsZZ3T4kmtLUej",
         "name": "Transactions & dividends #beta",
-        "updatedAt": "2024-12-03T23:16",
-        "author": "RL <iFIjgKg2M7TIe5ygfjFzaDEAlAX2>",
+        "updatedAt": "2024-12-05T16:44",
+        "author": "Łukasz <Z117fcTg8OeaSCDo0QCV8tx1RVn2>",
         "info": "To import your transactions from Degiro:\n\n1. Go to [Degiro](https://degiro.com/)\n2. Open **Inbox** → **Account statements** \n3. Pick a date range\n4. Click the **↓ Export** button, choose **CSV** format and save the file somewhere\n5. Open or drop that file here",
         "mappingInfo": "🦉 If you previously imported transactions using the `Transactions` table format, importing overlapping dates may create duplicate entries.",
         "sourceId": "p-broker-degiro",
@@ -566,7 +566,7 @@
                                                   "trfms": [
                                                     {
                                                       "type": "replace",
-                                                      "pattern": "/[\\wŁ ]+: /^",
+                                                      "pattern": "/[\\p{L} ]+: /^",
                                                       "replace": ""
                                                     }
                                                   ],
@@ -883,7 +883,7 @@
                                       "type": "prop",
                                       "prop": "transaction.note"
                                     },
-                                    "pattern": "/[\\wŁ ]+: /i"
+                                    "pattern": "/[\\p{L} ]+: /i"
                                   },
                                   "stmts": [
                                     {
@@ -971,6 +971,14 @@
                               "prop": "cols.Description"
                             },
                             "pattern": "~capital return~ib"
+                          },
+                          {
+                            "type": "pattern",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Description"
+                            },
+                            "pattern": "~fund distribution~ib"
                           }
                         ]
                       },
@@ -1293,7 +1301,7 @@
                                                       "type": "prop",
                                                       "prop": "lookup.cols.Description"
                                                     },
-                                                    "pattern": "~belasting~"
+                                                    "pattern": "~belasting~i"
                                                   }
                                                 ]
                                               },
@@ -1301,6 +1309,45 @@
                                                 {
                                                   "type": "set",
                                                   "prop": "transaction.taxPaid",
+                                                  "op": "+=",
+                                                  "xpr": {
+                                                    "type": "prop",
+                                                    "prop": "lookup.cols.Change"
+                                                  },
+                                                  "trfms": [
+                                                    {
+                                                      "type": "abs"
+                                                    }
+                                                  ]
+                                                }
+                                              ]
+                                            },
+                                            {
+                                              "xpr": {
+                                                "type": "or",
+                                                "xprs": [
+                                                  {
+                                                    "type": "pattern",
+                                                    "xpr": {
+                                                      "type": "prop",
+                                                      "prop": "lookup.cols.Description"
+                                                    },
+                                                    "pattern": "~fee~i"
+                                                  },
+                                                  {
+                                                    "type": "pattern",
+                                                    "xpr": {
+                                                      "type": "prop",
+                                                      "prop": "lookup.cols.Description"
+                                                    },
+                                                    "pattern": "~opłata~i"
+                                                  }
+                                                ]
+                                              },
+                                              "stmts": [
+                                                {
+                                                  "type": "set",
+                                                  "prop": "transaction.fee",
                                                   "op": "+=",
                                                   "xpr": {
                                                     "type": "prop",
@@ -1753,6 +1800,16 @@
                                   "cmp": {
                                     "type": "pattern",
                                     "pattern": "~ADR/GDR Pass-Through Fee~i^"
+                                  },
+                                  "target": {
+                                    "type": "value",
+                                    "value": "OTHER"
+                                  }
+                                },
+                                {
+                                  "cmp": {
+                                    "type": "pattern",
+                                    "pattern": "~Opłata za Transfer Portfolio DEGIRO~^$"
                                   },
                                   "target": {
                                     "type": "value",
