@@ -1,13 +1,13 @@
 {
   "version": 3,
   "type": "Capitally Data Export",
-  "exportedAt": "2024-12-06T15:05:08.837Z",
+  "exportedAt": "2024-12-06T21:39:50.798Z",
   "data": {
     "importPresets": {
-      "u-oS52GA6LuXcLFRP": {
-        "id": "u-oS52GA6LuXcLFRP",
-        "name": "Transactions & dividends #beta (1)",
-        "updatedAt": "2024-12-06T16:05",
+      "u-XaDsd0lWB5pBGpp": {
+        "id": "u-XaDsd0lWB5pBGpp",
+        "name": "Transactions & dividends #beta",
+        "updatedAt": "2024-12-06T22:37",
         "author": "RL <iFIjgKg2M7TIe5ygfjFzaDEAlAX2>",
         "info": "To import your transactions from Degiro:\n\n1. Go to [Degiro](https://degiro.com/)\n2. Open **Inbox** → **Account statements** \n3. Pick a date range\n4. Click the **↓ Export** button, choose **CSV** format and save the file somewhere\n5. Open or drop that file here",
         "mappingInfo": "🦉 If you previously imported transactions using the `Transactions` table format, importing overlapping dates may create duplicate entries.",
@@ -731,7 +731,7 @@
                                                   "trfms": [
                                                     {
                                                       "type": "extract",
-                                                      "pattern": "/.+?(\\d[.,\\s\\d]*)/i^"
+                                                      "pattern": "/.+?(\\d[., \\d]*)/i^"
                                                     }
                                                   ]
                                                 },
@@ -747,7 +747,7 @@
                                                   "trfms": [
                                                     {
                                                       "type": "extract",
-                                                      "pattern": "/@\\s*([.,\\d\\s]+)/i"
+                                                      "pattern": "/@ *([.,\\d ]+)/i"
                                                     }
                                                   ]
                                                 },
