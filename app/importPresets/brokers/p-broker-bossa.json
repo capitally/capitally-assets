@@ -1,13 +1,13 @@
 {
   "version": 3,
   "type": "Capitally Data Export",
-  "exportedAt": "2024-11-28T14:56:21.231Z",
+  "exportedAt": "2024-12-06T19:11:17.191Z",
   "data": {
     "importPresets": {
-      "u-LXmULyLaqEYQW6N": {
-        "id": "u-LXmULyLaqEYQW6N",
-        "name": "Transactions & dividends #beta",
-        "updatedAt": "2024-11-28T15:56",
+      "u-3NH9VqsVNleJv2s": {
+        "id": "u-3NH9VqsVNleJv2s",
+        "name": "Transactions & dividends #beta (1)",
+        "updatedAt": "2024-12-06T20:09",
         "author": "RL <iFIjgKg2M7TIe5ygfjFzaDEAlAX2>",
         "info": "To import your transactions from Bossa:\n\n1. Go to [Bossa](https://online.bossa.pl/bossaapp/login)\n2. Open **Portfel** → **Historia finansowa** \n3. Set **Pokaż** → **Wszystkie**\n4. Choose time frame\n5. Select **Eksportuj do CSV**\n6. Click **Wykonaj** and save the file\n7. Open or drop that file here\n",
         "mappingInfo": "🦉 If you previously imported transactions using the `Transakcje` table format, importing overlapping dates will create duplicate entries.",
@@ -30,7 +30,12 @@
             "csv": {
               "header": true
             },
-            "enabledColumns": ["data", "tytuł operacji", "szczegóły", "kwota"],
+            "enabledColumns": [
+              "data",
+              "tytuł operacji",
+              "szczegóły",
+              "kwota"
+            ],
             "program": {
               "stmts": [
                 {
@@ -120,7 +125,10 @@
                                 "asset": {
                                   "assetTypes": {
                                     "type": "value",
-                                    "value": ["STOCK", "ETF"]
+                                    "value": [
+                                      "STOCK",
+                                      "ETF"
+                                    ]
                                   },
                                   "markets": {
                                     "type": "value",
@@ -308,12 +316,25 @@
                     },
                     {
                       "xpr": {
-                        "type": "pattern",
-                        "xpr": {
-                          "type": "prop",
-                          "prop": "cols.tytuł operacji"
-                        },
-                        "pattern": "~Wypłata dywidendy~^"
+                        "type": "or",
+                        "xprs": [
+                          {
+                            "type": "pattern",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.tytuł operacji"
+                            },
+                            "pattern": "~Wypłata dywidendy~^"
+                          },
+                          {
+                            "type": "pattern",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.tytuł operacji"
+                            },
+                            "pattern": "~Wypłata odsetek~^"
+                          }
+                        ]
                       },
                       "stmts": [
                         {
@@ -348,6 +369,11 @@
                                 },
                                 {
                                   "type": "replace",
+                                  "pattern": "~Wypłata odsetek z tytułu obligacji ~^",
+                                  "replace": ""
+                                },
+                                {
+                                  "type": "replace",
                                   "pattern": "/\\d+% /",
                                   "replace": ""
                                 },
@@ -370,7 +396,10 @@
                                 "asset": {
                                   "assetTypes": {
                                     "type": "value",
-                                    "value": ["STOCK", "ETF"]
+                                    "value": [
+                                      "STOCK",
+                                      "ETF"
+                                    ]
                                   },
                                   "markets": {
                                     "type": "value",

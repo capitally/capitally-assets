@@ -1,16 +1,16 @@
 {
   "version": 3,
   "type": "Capitally Data Export",
-  "exportedAt": "2024-12-05T18:28:59.110Z",
+  "exportedAt": "2024-12-06T19:26:55.975Z",
   "data": {
     "importPresets": {
-      "u-dkzAZk9Z4DBEGzf": {
-        "id": "u-dkzAZk9Z4DBEGzf",
+      "u-gI2XqAyUWtk6Qnv": {
+        "id": "u-gI2XqAyUWtk6Qnv",
         "name": "Account History",
-        "updatedAt": "2024-12-05T19:28",
+        "updatedAt": "2024-12-06T20:26",
         "author": "RL <iFIjgKg2M7TIe5ygfjFzaDEAlAX2>",
         "info": "To import your transactions and dividends from Firstrade:\n\n1. Log in to your Firstrade account\n2. Go to **Accounts → History**\n3. In the Account History choose  **“Download Account History”** \n4. Select the account and date range\n5. Select download Format **Excel CSV Files**\n6. Click **DOWNLOAD**\n7. Open or drop that file here",
-        "sourceId": "",
+        "sourceId": "p-broker-firstrade",
         "provider": "Firstrade",
         "providerIcon": {
           "type": "logo",
@@ -18,9 +18,7 @@
         },
         "providerGroup": "Brokers",
         "parser": {
-          "formats": [
-            "csv"
-          ],
+          "formats": ["csv"],
           "allowClipboard": false
         },
         "sections": {
@@ -244,16 +242,37 @@
                             },
                             "v": {
                               "type": "value",
-                              "value": [
-                                "OPEN",
-                                "CLOSE"
-                              ]
+                              "value": ["OPEN", "CLOSE"]
                             }
                           },
                           "stmts": [
                             {
                               "type": "comment",
                               "md": "## Buy & Sell"
+                            },
+                            {
+                              "type": "if",
+                              "ifs": [
+                                {
+                                  "xpr": {
+                                    "type": "pattern",
+                                    "xpr": {
+                                      "type": "prop",
+                                      "prop": "cols.Description"
+                                    },
+                                    "pattern": "~STK SPLIT ON~b"
+                                  },
+                                  "stmts": [
+                                    {
+                                      "type": "comment",
+                                      "md": "**Stock Split** - handled automatically so has to be ignored"
+                                    },
+                                    {
+                                      "type": "return"
+                                    }
+                                  ]
+                                }
+                              ]
                             },
                             {
                               "type": "set",
@@ -287,9 +306,7 @@
                             },
                             "v": {
                               "type": "value",
-                              "value": [
-                                "DIVIDEND"
-                              ]
+                              "value": ["DIVIDEND"]
                             }
                           },
                           "stmts": [
@@ -461,9 +478,7 @@
                                 },
                                 "v": {
                                   "type": "value",
-                                  "value": [
-                                    "OTHER"
-                                  ]
+                                  "value": ["OTHER"]
                                 }
                               },
                               {
@@ -499,9 +514,7 @@
                             },
                             "v": {
                               "type": "value",
-                              "value": [
-                                "INTEREST"
-                              ]
+                              "value": ["INTEREST"]
                             }
                           },
                           "stmts": [
