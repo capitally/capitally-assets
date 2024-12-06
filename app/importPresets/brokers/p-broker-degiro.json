@@ -1,14 +1,14 @@
 {
   "version": 3,
   "type": "Capitally Data Export",
-  "exportedAt": "2024-12-05T15:55:34.060Z",
+  "exportedAt": "2024-12-06T15:05:08.837Z",
   "data": {
     "importPresets": {
-      "u-yRsZZ3T4kmtLUej": {
-        "id": "u-yRsZZ3T4kmtLUej",
-        "name": "Transactions & dividends #beta",
-        "updatedAt": "2024-12-05T16:44",
-        "author": "Łukasz <Z117fcTg8OeaSCDo0QCV8tx1RVn2>",
+      "u-oS52GA6LuXcLFRP": {
+        "id": "u-oS52GA6LuXcLFRP",
+        "name": "Transactions & dividends #beta (1)",
+        "updatedAt": "2024-12-06T16:05",
+        "author": "RL <iFIjgKg2M7TIe5ygfjFzaDEAlAX2>",
         "info": "To import your transactions from Degiro:\n\n1. Go to [Degiro](https://degiro.com/)\n2. Open **Inbox** → **Account statements** \n3. Pick a date range\n4. Click the **↓ Export** button, choose **CSV** format and save the file somewhere\n5. Open or drop that file here",
         "mappingInfo": "🦉 If you previously imported transactions using the `Transactions` table format, importing overlapping dates may create duplicate entries.",
         "sourceId": "p-broker-degiro",
@@ -170,11 +170,24 @@
                             ]
                           },
                           {
-                            "type": "truthy",
-                            "xpr": {
-                              "type": "prop",
-                              "prop": "cols.Order Id"
-                            }
+                            "type": "and",
+                            "xprs": [
+                              {
+                                "type": "truthy",
+                                "xpr": {
+                                  "type": "prop",
+                                  "prop": "cols.Order Id"
+                                }
+                              },
+                              {
+                                "type": "!pattern",
+                                "xpr": {
+                                  "type": "prop",
+                                  "prop": "cols.Description"
+                                },
+                                "pattern": "~FX ~^"
+                              }
+                            ]
                           }
                         ]
                       },
@@ -794,7 +807,7 @@
                                                   },
                                                   "trfms": [
                                                     {
-                                                      "type": "abs"
+                                                      "type": "negate"
                                                     }
                                                   ]
                                                 },
@@ -917,12 +930,34 @@
                                           },
                                           "stmts": [
                                             {
+                                              "type": "comment",
+                                              "md": "As we're transferring out, we need to negate Qty & Value (so qty is negative and price is  positive)"
+                                            },
+                                            {
                                               "type": "set",
                                               "prop": "transaction.qty",
                                               "xpr": {
-                                                "type": "formula",
-                                                "formula": "=- transaction.qty"
-                                              }
+                                                "type": "prop",
+                                                "prop": "transaction.qty"
+                                              },
+                                              "trfms": [
+                                                {
+                                                  "type": "negate"
+                                                }
+                                              ]
+                                            },
+                                            {
+                                              "type": "set",
+                                              "prop": "transaction.value",
+                                              "xpr": {
+                                                "type": "prop",
+                                                "prop": "transaction.value"
+                                              },
+                                              "trfms": [
+                                                {
+                                                  "type": "negate"
+                                                }
+                                              ]
                                             }
                                           ]
                                         }
@@ -1237,38 +1272,6 @@
                                           "ifs": [
                                             {
                                               "xpr": {
-                                                "type": ">",
-                                                "xpr": {
-                                                  "type": "prop",
-                                                  "prop": "lookup.cols.Change"
-                                                },
-                                                "v": {
-                                                  "type": "value",
-                                                  "value": "0"
-                                                }
-                                              },
-                                              "stmts": [
-                                                {
-                                                  "type": "set",
-                                                  "prop": "transaction.value",
-                                                  "op": "+=",
-                                                  "xpr": {
-                                                    "type": "prop",
-                                                    "prop": "lookup.cols.Change"
-                                                  }
-                                                },
-                                                {
-                                                  "type": "set",
-                                                  "prop": "transaction.valueCurrency",
-                                                  "xpr": {
-                                                    "type": "prop",
-                                                    "prop": "lookup.cols.Change currency"
-                                                  }
-                                                }
-                                              ]
-                                            },
-                                            {
-                                              "xpr": {
                                                 "type": "or",
                                                 "xprs": [
                                                   {
@@ -1316,7 +1319,7 @@
                                                   },
                                                   "trfms": [
                                                     {
-                                                      "type": "abs"
+                                                      "type": "negate"
                                                     }
                                                   ]
                                                 }
@@ -1355,7 +1358,7 @@
                                                   },
                                                   "trfms": [
                                                     {
-                                                      "type": "abs"
+                                                      "type": "negate"
                                                     }
                                                   ]
                                                 }
@@ -1394,14 +1397,30 @@
                                               ]
                                             },
                                             {
+                                              "xpr": {
+                                                "type": "truthy",
+                                                "xpr": {
+                                                  "type": "prop",
+                                                  "prop": "lookup.cols.Change"
+                                                }
+                                              },
                                               "stmts": [
                                                 {
-                                                  "type": "addRowNote",
-                                                  "note": {
-                                                    "type": "formula",
-                                                    "formula": "=\"🥺 Dividend transaction with negative value `\" + col(\"Description\") + \"` is currently not supported\""
-                                                  },
-                                                  "urgency": "warn"
+                                                  "type": "set",
+                                                  "prop": "transaction.value",
+                                                  "op": "+=",
+                                                  "xpr": {
+                                                    "type": "prop",
+                                                    "prop": "lookup.cols.Change"
+                                                  }
+                                                },
+                                                {
+                                                  "type": "set",
+                                                  "prop": "transaction.valueCurrency",
+                                                  "xpr": {
+                                                    "type": "prop",
+                                                    "prop": "lookup.cols.Change currency"
+                                                  }
                                                 }
                                               ]
                                             }
@@ -1587,7 +1606,7 @@
                               "type": "prop",
                               "prop": "cols.Description"
                             },
-                            "pattern": "/fx credit|fx withdrawal/i"
+                            "pattern": "~konwersja funduszu~i"
                           },
                           {
                             "type": "pattern",
@@ -1595,7 +1614,23 @@
                               "type": "prop",
                               "prop": "cols.Description"
                             },
-                            "pattern": "~konwersja funduszu~i"
+                            "pattern": "~fx credit~i"
+                          },
+                          {
+                            "type": "pattern",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Description"
+                            },
+                            "pattern": "~fx debit~i"
+                          },
+                          {
+                            "type": "pattern",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Description"
+                            },
+                            "pattern": "~fx withdrawal~i"
                           }
                         ]
                       },
@@ -1951,6 +1986,14 @@
                               "prop": "cols.Description"
                             },
                             "pattern": "~opłata~ib"
+                          },
+                          {
+                            "type": "pattern",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Description"
+                            },
+                            "pattern": "~DEGIRO Compensation~ib"
                           }
                         ]
                       },
@@ -2057,7 +2100,15 @@
                               "type": "prop",
                               "prop": "cols.Description"
                             },
-                            "pattern": "~odsetki~i"
+                            "pattern": "~odsetki~ib"
+                          },
+                          {
+                            "type": "pattern",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Description"
+                            },
+                            "pattern": "~interest~ib"
                           }
                         ]
                       },
