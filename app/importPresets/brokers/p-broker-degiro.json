@@ -1,13 +1,13 @@
 {
   "version": 3,
   "type": "Capitally Data Export",
-  "exportedAt": "2024-12-06T21:39:50.798Z",
+  "exportedAt": "2024-12-07T17:35:05.609Z",
   "data": {
     "importPresets": {
-      "u-XaDsd0lWB5pBGpp": {
-        "id": "u-XaDsd0lWB5pBGpp",
+      "u-C0JoAKDAHvqGj5n": {
+        "id": "u-C0JoAKDAHvqGj5n",
         "name": "Transactions & dividends #beta",
-        "updatedAt": "2024-12-06T22:37",
+        "updatedAt": "2024-12-07T18:34",
         "author": "RL <iFIjgKg2M7TIe5ygfjFzaDEAlAX2>",
         "info": "To import your transactions from Degiro:\n\n1. Go to [Degiro](https://degiro.com/)\n2. Open **Inbox** → **Account statements** \n3. Pick a date range\n4. Click the **↓ Export** button, choose **CSV** format and save the file somewhere\n5. Open or drop that file here",
         "mappingInfo": "🦉 If you previously imported transactions using the `Transactions` table format, importing overlapping dates may create duplicate entries.",
@@ -1211,6 +1211,14 @@
                               "xpr": {
                                 "type": "value",
                                 "value": "DIVIDEND"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.value",
+                              "xpr": {
+                                "type": "value",
+                                "value": 0
                               }
                             },
                             {

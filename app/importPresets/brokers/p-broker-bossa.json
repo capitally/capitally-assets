@@ -1,13 +1,13 @@
 {
   "version": 3,
   "type": "Capitally Data Export",
-  "exportedAt": "2024-12-06T19:11:17.191Z",
+  "exportedAt": "2024-12-07T17:35:18.656Z",
   "data": {
     "importPresets": {
-      "u-3NH9VqsVNleJv2s": {
-        "id": "u-3NH9VqsVNleJv2s",
-        "name": "Transactions & dividends #beta (1)",
-        "updatedAt": "2024-12-06T20:09",
+      "u-mprvvRNeE0vdaEZ": {
+        "id": "u-mprvvRNeE0vdaEZ",
+        "name": "Transactions & dividends #beta",
+        "updatedAt": "2024-12-07T16:26",
         "author": "RL <iFIjgKg2M7TIe5ygfjFzaDEAlAX2>",
         "info": "To import your transactions from Bossa:\n\n1. Go to [Bossa](https://online.bossa.pl/bossaapp/login)\n2. Open **Portfel** → **Historia finansowa** \n3. Set **Pokaż** → **Wszystkie**\n4. Choose time frame\n5. Select **Eksportuj do CSV**\n6. Click **Wykonaj** and save the file\n7. Open or drop that file here\n",
         "mappingInfo": "🦉 If you previously imported transactions using the `Transakcje` table format, importing overlapping dates will create duplicate entries.",
@@ -30,12 +30,7 @@
             "csv": {
               "header": true
             },
-            "enabledColumns": [
-              "data",
-              "tytuł operacji",
-              "szczegóły",
-              "kwota"
-            ],
+            "enabledColumns": ["data", "tytuł operacji", "szczegóły", "kwota"],
             "program": {
               "stmts": [
                 {
@@ -118,6 +113,11 @@
                                   "replace": " "
                                 },
                                 {
+                                  "type": "replace",
+                                  "pattern": "~-NC-FIX ~",
+                                  "replace": " "
+                                },
+                                {
                                   "type": "trim"
                                 }
                               ],
@@ -125,10 +125,7 @@
                                 "asset": {
                                   "assetTypes": {
                                     "type": "value",
-                                    "value": [
-                                      "STOCK",
-                                      "ETF"
-                                    ]
+                                    "value": ["STOCK", "ETF"]
                                   },
                                   "markets": {
                                     "type": "value",
@@ -396,10 +393,7 @@
                                 "asset": {
                                   "assetTypes": {
                                     "type": "value",
-                                    "value": [
-                                      "STOCK",
-                                      "ETF"
-                                    ]
+                                    "value": ["STOCK", "ETF"]
                                   },
                                   "markets": {
                                     "type": "value",
@@ -689,6 +683,245 @@
                                 "type": "value",
                                 "value": "☝️ Bossa reports dividends under a different symbol then buy/sell transactions. Make sure they both refer to the same asset!"
                               }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "xpr": {
+                        "type": "or",
+                        "xprs": [
+                          {
+                            "type": "pattern",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.tytuł operacji"
+                            },
+                            "pattern": "~Rozliczenie oferty ~^"
+                          }
+                        ]
+                      },
+                      "stmts": [
+                        {
+                          "type": "addTransaction",
+                          "stmts": [
+                            {
+                              "type": "set",
+                              "prop": "transaction.account",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "addedAccount"
+                              }
+                            },
+                            {
+                              "type": "var",
+                              "varId": "symbol",
+                              "varType": "scalar",
+                              "multiple": false,
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.tytuł operacji"
+                              },
+                              "trfms": [
+                                {
+                                  "type": "replace",
+                                  "pattern": "/Rozliczenie oferty( - prowizja)?/^",
+                                  "replace": ""
+                                },
+                                {
+                                  "type": "replace",
+                                  "pattern": "~-NC ~^",
+                                  "replace": ""
+                                },
+                                {
+                                  "type": "replace",
+                                  "pattern": "~-NC-FIX ~^",
+                                  "replace": ""
+                                },
+                                {
+                                  "type": "trim"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.asset",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "$symbol"
+                              },
+                              "trfms": [],
+                              "cast": {
+                                "asset": {
+                                  "assetTypes": {
+                                    "type": "value",
+                                    "value": ["STOCK", "ETF"]
+                                  },
+                                  "markets": {
+                                    "type": "value",
+                                    "value": [
+                                      {
+                                        "id": "mic-XWAR"
+                                      },
+                                      {
+                                        "id": "mic-XNAS"
+                                      },
+                                      {
+                                        "id": "mic-XNYS"
+                                      },
+                                      {
+                                        "id": "mic-XASE"
+                                      },
+                                      {
+                                        "id": "mic-ARCX"
+                                      },
+                                      {
+                                        "id": "mic-XETR"
+                                      },
+                                      {
+                                        "id": "mic-XPAR"
+                                      },
+                                      {
+                                        "id": "mic-XAMS"
+                                      },
+                                      {
+                                        "id": "mic-XSWX"
+                                      },
+                                      {
+                                        "id": "mic-XLIS"
+                                      },
+                                      {
+                                        "id": "mic-XMIL"
+                                      },
+                                      {
+                                        "id": "mic-XLON"
+                                      },
+                                      {
+                                        "id": "mic-XFRA"
+                                      },
+                                      {
+                                        "id": "mic-XBRU"
+                                      },
+                                      {
+                                        "id": "mic-BMEX"
+                                      },
+                                      {
+                                        "id": "mic-XTSE"
+                                      },
+                                      {
+                                        "id": "mic-XTSX"
+                                      }
+                                    ]
+                                  },
+                                  "remote": {
+                                    "type": "value",
+                                    "value": true
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.date",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.data"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.note",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.tytuł operacji"
+                              }
+                            },
+                            {
+                              "type": "if",
+                              "ifs": [
+                                {
+                                  "xpr": {
+                                    "type": "pattern",
+                                    "xpr": {
+                                      "type": "prop",
+                                      "prop": "cols.tytuł operacji"
+                                    },
+                                    "pattern": "~prowizja~"
+                                  },
+                                  "stmts": [
+                                    {
+                                      "type": "set",
+                                      "prop": "transaction.type",
+                                      "xpr": {
+                                        "type": "value",
+                                        "value": "OTHER"
+                                      }
+                                    },
+                                    {
+                                      "type": "set",
+                                      "prop": "transaction.value",
+                                      "xpr": {
+                                        "type": "value",
+                                        "value": 0
+                                      }
+                                    },
+                                    {
+                                      "type": "set",
+                                      "prop": "transaction.fee",
+                                      "xpr": {
+                                        "type": "prop",
+                                        "prop": "cols.kwota"
+                                      },
+                                      "trfms": [
+                                        {
+                                          "type": "negate"
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "stmts": [
+                                    {
+                                      "type": "set",
+                                      "prop": "transaction.type",
+                                      "xpr": {
+                                        "type": "value",
+                                        "value": "CLOSE"
+                                      }
+                                    },
+                                    {
+                                      "type": "set",
+                                      "prop": "transaction.qty",
+                                      "xpr": {
+                                        "type": "value",
+                                        "value": 0
+                                      }
+                                    },
+                                    {
+                                      "type": "set",
+                                      "prop": "transaction.price",
+                                      "xpr": {
+                                        "type": "prop",
+                                        "prop": "cols.kwota"
+                                      },
+                                      "trfms": [
+                                        {
+                                          "type": "abs"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "addRowNote",
+                                      "note": {
+                                        "type": "formula",
+                                        "formula": "=\"🤚 One of your holdings (**\" + $symbol + \"**) was was sold in a public offer, but the broker didn't provide the number of shares sold. You'll need to update this transaction manually, adjusting *both* quantity *and* price.\\nCurrently, the price is set to the whole sale value and quantity is set to 0, so you will see extra shares on your account.\""
+                                      }
+                                    }
+                                  ]
+                                }
+                              ]
                             }
                           ]
                         }
