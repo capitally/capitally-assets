@@ -1,0 +1,799 @@
+{
+  "version": 3,
+  "type": "Capitally Data Export",
+  "exportedAt": "2024-12-07T20:16:50.850Z",
+  "data": {
+    "importPresets": {
+      "u-vGoDBRIJiMeol6z": {
+        "id": "u-vGoDBRIJiMeol6z",
+        "name": "Transactions & Dividends #beta",
+        "updatedAt": "2024-12-07T21:16",
+        "author": "RL <iFIjgKg2M7TIe5ygfjFzaDEAlAX2>",
+        "info": "To import your transactions from Exante:\n\n1. Open **PORTFEL** → **Transakcje**\n2. Choose date range\n3. Click **Pobierz XLS**\n4. The export will be sent out to your e-mail, or you can download it from **RAPORTY → Raporty niestandardowe**\n\n> 🇵🇱 We currently only the Polish UI version of Exante, but would love to get a sample in a different language to support it too!",
+        "sourceId": "",
+        "provider": "Exante",
+        "providerIcon": {
+          "type": "logo",
+          "id": "brokers/exante"
+        },
+        "providerGroup": "Brokers",
+        "parser": {
+          "formats": ["csv"],
+          "allowClipboard": false,
+          "codepage": "utf-16"
+        },
+        "sections": {
+          "main": {
+            "csv": {
+              "header": true
+            },
+            "replaceHeaders": [
+              ["~Identyfikator transakcji~i", "Transaction ID"],
+              ["~ID symbolu~^$", "Symbol ID"],
+              ["~Rodzaj operacji~^$", "Operation"],
+              ["~Gdy~^$", "Date"],
+              ["~Suma~^$", "Amount"],
+              ["~Aktywa~^$", "Asset"],
+              ["~Ekwiwalent EUR~", "Amount EUR"],
+              ["~Komentarz~", "Comment"],
+              ["~Rodzic UUID~", "Parent UUID"]
+            ],
+            "reverseRows": true,
+            "enabledColumns": [
+              "Transaction ID",
+              "Symbol ID",
+              "ISIN",
+              "Operation",
+              "Date",
+              "Amount",
+              "Asset",
+              "Amount EUR",
+              "Comment",
+              "UUID",
+              "Parent UUID"
+            ],
+            "disabledColumns": [
+              "Identyfikator konta",
+              "Waluta",
+              "Nazwa handlowca",
+              "Kwota"
+            ],
+            "program": {
+              "stmts": [
+                {
+                  "type": "addAccount",
+                  "optional": true,
+                  "stmts": [
+                    {
+                      "type": "set",
+                      "prop": "account.name",
+                      "xpr": {
+                        "type": "value",
+                        "value": "Exante"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "account.icon",
+                      "xpr": {
+                        "type": "value",
+                        "value": {
+                          "type": "logo",
+                          "id": "brokers/exante"
+                        }
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "account.countryISO",
+                      "xpr": {
+                        "type": "value",
+                        "value": "CY"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "if",
+                  "ifs": [
+                    {
+                      "xpr": {
+                        "type": "=",
+                        "xpr": {
+                          "type": "prop",
+                          "prop": "cols.Operation"
+                        },
+                        "v": {
+                          "type": "value",
+                          "value": "FUNDING/WITHDRAWAL"
+                        }
+                      },
+                      "stmts": [
+                        {
+                          "type": "addRowNote",
+                          "note": {
+                            "type": "value",
+                            "value": "💸 Cash transactions are currently not imported"
+                          }
+                        },
+                        {
+                          "type": "return"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "addTransaction",
+                  "stmts": [
+                    {
+                      "type": "comment",
+                      "md": "Transactions are spread across multiple rows. \n\nFirst row defines the asset being operated on, and type of operation can be deduced. Other rows will carry additional details."
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.account",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "addedAccount"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.date",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Date"
+                      }
+                    },
+                    {
+                      "type": "if",
+                      "ifs": [
+                        {
+                          "xpr": {
+                            "type": "=",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Operation"
+                            },
+                            "v": {
+                              "type": "value",
+                              "value": "TRADE"
+                            }
+                          },
+                          "stmts": [
+                            {
+                              "type": "set",
+                              "prop": "transaction.type",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Amount"
+                              },
+                              "map": [
+                                {
+                                  "cmp": {
+                                    "type": "<",
+                                    "v": {
+                                      "type": "value",
+                                      "value": "0"
+                                    }
+                                  },
+                                  "target": {
+                                    "type": "value",
+                                    "value": "CLOSE"
+                                  }
+                                },
+                                {
+                                  "target": {
+                                    "type": "value",
+                                    "value": "OPEN"
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "stmts": [
+                            {
+                              "type": "set",
+                              "prop": "transaction.type",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Operation"
+                              },
+                              "map": [
+                                {
+                                  "cmp": {
+                                    "type": "=",
+                                    "v": {
+                                      "type": "value",
+                                      "value": "CORPORATE ACTION"
+                                    }
+                                  },
+                                  "target": {
+                                    "type": "value",
+                                    "value": "TRANSFER"
+                                  }
+                                },
+                                {
+                                  "cmp": {
+                                    "type": "=",
+                                    "v": {
+                                      "type": "value",
+                                      "value": "ROLLOVER"
+                                    }
+                                  },
+                                  "target": {
+                                    "type": "value",
+                                    "value": "OTHER"
+                                  }
+                                },
+                                {
+                                  "cmp": {
+                                    "type": "=",
+                                    "v": {
+                                      "type": "value",
+                                      "value": "AUTOCONVERSION"
+                                    }
+                                  },
+                                  "target": {
+                                    "type": "value",
+                                    "value": "OTHER"
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.note",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Comment"
+                      },
+                      "map": [
+                        {
+                          "cmp": {
+                            "type": "=",
+                            "v": {
+                              "type": "value",
+                              "value": "None"
+                            }
+                          },
+                          "target": {
+                            "type": "value"
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "type": "var",
+                      "varId": "subrow",
+                      "varType": "number",
+                      "shared": false,
+                      "multiple": false,
+                      "xpr": {
+                        "type": "value",
+                        "value": 0
+                      }
+                    },
+                    {
+                      "type": "lookupRows",
+                      "direction": "after",
+                      "stmts": [
+                        {
+                          "type": "if",
+                          "ifs": [
+                            {
+                              "xpr": {
+                                "type": "and",
+                                "xprs": [
+                                  {
+                                    "type": "=",
+                                    "xpr": {
+                                      "type": "prop",
+                                      "prop": "lookup.cols.Date"
+                                    },
+                                    "v": {
+                                      "type": "prop",
+                                      "prop": "cols.Date"
+                                    }
+                                  },
+                                  {
+                                    "type": "or",
+                                    "xprs": [
+                                      {
+                                        "type": "=",
+                                        "xpr": {
+                                          "type": "prop",
+                                          "prop": "lookup.cols.Symbol ID"
+                                        },
+                                        "v": {
+                                          "type": "prop",
+                                          "prop": "cols.Symbol ID"
+                                        }
+                                      },
+                                      {
+                                        "type": "!=",
+                                        "xpr": {
+                                          "type": "prop",
+                                          "prop": "lookup.cols.Parent UUID"
+                                        },
+                                        "v": {
+                                          "type": "value",
+                                          "value": "None"
+                                        }
+                                      }
+                                    ]
+                                  }
+                                ]
+                              },
+                              "stmts": [
+                                {
+                                  "type": "ignoreRow"
+                                },
+                                {
+                                  "type": "set",
+                                  "prop": "$subrow",
+                                  "op": "+=",
+                                  "xpr": {
+                                    "type": "value",
+                                    "value": 1
+                                  }
+                                },
+                                {
+                                  "type": "addRowNote",
+                                  "note": {
+                                    "type": "prop",
+                                    "prop": "$subrow"
+                                  },
+                                  "urgency": "log"
+                                },
+                                {
+                                  "type": "if",
+                                  "ifs": [
+                                    {
+                                      "xpr": {
+                                        "type": "=",
+                                        "xpr": {
+                                          "type": "prop",
+                                          "prop": "lookup.cols.Operation"
+                                        },
+                                        "v": {
+                                          "type": "value",
+                                          "value": "TRADE"
+                                        }
+                                      },
+                                      "stmts": [
+                                        {
+                                          "type": "comment",
+                                          "md": "#### Buy / Sell"
+                                        },
+                                        {
+                                          "type": "if",
+                                          "ifs": [
+                                            {
+                                              "xpr": {
+                                                "type": "=",
+                                                "xpr": {
+                                                  "type": "prop",
+                                                  "prop": "lookup.cols.Asset"
+                                                },
+                                                "v": {
+                                                  "type": "prop",
+                                                  "prop": "cols.Asset"
+                                                }
+                                              },
+                                              "stmts": [
+                                                {
+                                                  "type": "set",
+                                                  "prop": "transaction.qty",
+                                                  "op": "+=",
+                                                  "xpr": {
+                                                    "type": "prop",
+                                                    "prop": "lookup.cols.Amount"
+                                                  },
+                                                  "trfms": [
+                                                    {
+                                                      "type": "abs"
+                                                    }
+                                                  ]
+                                                }
+                                              ]
+                                            },
+                                            {
+                                              "stmts": [
+                                                {
+                                                  "type": "set",
+                                                  "prop": "transaction.value",
+                                                  "op": "+=",
+                                                  "xpr": {
+                                                    "type": "prop",
+                                                    "prop": "lookup.cols.Amount"
+                                                  },
+                                                  "trfms": [
+                                                    {
+                                                      "type": "abs"
+                                                    }
+                                                  ]
+                                                },
+                                                {
+                                                  "type": "set",
+                                                  "prop": "transaction.valueCurrency",
+                                                  "xpr": {
+                                                    "type": "prop",
+                                                    "prop": "lookup.cols.Asset"
+                                                  }
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "xpr": {
+                                        "type": "or",
+                                        "xprs": [
+                                          {
+                                            "type": "=",
+                                            "xpr": {
+                                              "type": "prop",
+                                              "prop": "lookup.cols.Operation"
+                                            },
+                                            "v": {
+                                              "type": "value",
+                                              "value": "DIVIDEND"
+                                            }
+                                          },
+                                          {
+                                            "type": "=",
+                                            "xpr": {
+                                              "type": "prop",
+                                              "prop": "lookup.cols.Operation"
+                                            },
+                                            "v": {
+                                              "type": "value",
+                                              "value": "INTEREST"
+                                            }
+                                          }
+                                        ]
+                                      },
+                                      "stmts": [
+                                        {
+                                          "type": "comment",
+                                          "md": "#### Dividend / Interest"
+                                        },
+                                        {
+                                          "type": "set",
+                                          "prop": "transaction.value",
+                                          "op": "+=",
+                                          "xpr": {
+                                            "type": "prop",
+                                            "prop": "lookup.cols.Amount"
+                                          },
+                                          "trfms": []
+                                        },
+                                        {
+                                          "type": "set",
+                                          "prop": "transaction.feeCurrency",
+                                          "xpr": {
+                                            "type": "prop",
+                                            "prop": "lookup.cols.Asset"
+                                          }
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "xpr": {
+                                        "type": "or",
+                                        "xprs": [
+                                          {
+                                            "type": "=",
+                                            "xpr": {
+                                              "type": "prop",
+                                              "prop": "lookup.cols.Operation"
+                                            },
+                                            "v": {
+                                              "type": "value",
+                                              "value": "COMMISSION"
+                                            }
+                                          },
+                                          {
+                                            "type": "=",
+                                            "xpr": {
+                                              "type": "prop",
+                                              "prop": "lookup.cols.Operation"
+                                            },
+                                            "v": {
+                                              "type": "value",
+                                              "value": "ROLLOVER"
+                                            }
+                                          }
+                                        ]
+                                      },
+                                      "stmts": [
+                                        {
+                                          "type": "comment",
+                                          "md": "#### Fees"
+                                        },
+                                        {
+                                          "type": "set",
+                                          "prop": "transaction.fee",
+                                          "op": "+=",
+                                          "xpr": {
+                                            "type": "prop",
+                                            "prop": "lookup.cols.Amount"
+                                          },
+                                          "trfms": [
+                                            {
+                                              "type": "negate"
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "type": "set",
+                                          "prop": "transaction.feeCurrency",
+                                          "xpr": {
+                                            "type": "prop",
+                                            "prop": "lookup.cols.Asset"
+                                          }
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "xpr": {
+                                        "type": "or",
+                                        "xprs": [
+                                          {
+                                            "type": "=",
+                                            "xpr": {
+                                              "type": "prop",
+                                              "prop": "lookup.cols.Operation"
+                                            },
+                                            "v": {
+                                              "type": "value",
+                                              "value": "CORPORATE ACTION"
+                                            }
+                                          }
+                                        ]
+                                      },
+                                      "stmts": [
+                                        {
+                                          "type": "comment",
+                                          "md": "#### Corporate actions"
+                                        },
+                                        {
+                                          "type": "set",
+                                          "prop": "transaction.qty",
+                                          "op": "+=",
+                                          "xpr": {
+                                            "type": "prop",
+                                            "prop": "lookup.cols.Amount"
+                                          },
+                                          "trfms": []
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "xpr": {
+                                        "type": "=",
+                                        "xpr": {
+                                          "type": "prop",
+                                          "prop": "lookup.cols.Operation"
+                                        },
+                                        "v": {
+                                          "type": "value",
+                                          "value": "AUTOCONVERSION"
+                                        }
+                                      },
+                                      "stmts": [
+                                        {
+                                          "type": "comment",
+                                          "md": "#### FX Conversion"
+                                        },
+                                        {
+                                          "type": "addRowNote",
+                                          "note": {
+                                            "type": "value",
+                                            "value": "💴 FX conversion rates are not imported"
+                                          }
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "xpr": {
+                                        "type": "pattern",
+                                        "xpr": {
+                                          "type": "prop",
+                                          "prop": "lookup.cols.Operation"
+                                        },
+                                        "pattern": "~TAX~b"
+                                      },
+                                      "stmts": [
+                                        {
+                                          "type": "set",
+                                          "prop": "transaction.taxPaid",
+                                          "op": "+=",
+                                          "xpr": {
+                                            "type": "prop",
+                                            "prop": "lookup.cols.Amount"
+                                          },
+                                          "trfms": [
+                                            {
+                                              "type": "negate"
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "stmts": [
+                                        {
+                                          "type": "addRowNote",
+                                          "note": {
+                                            "type": "formula",
+                                            "formula": "=\"🥺 Transaction `\" + lookup.col(\"Operation\") + \"` is currently not supported\""
+                                          },
+                                          "urgency": "warn"
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "stmts": [
+                                {
+                                  "type": "return",
+                                  "levels": 1
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "comment",
+                      "md": "Asset is set at the very end, because if it cannot be found, it will stop the processing. \n\nWe need to go through all the subrows without interruption."
+                    },
+                    {
+                      "type": "if",
+                      "ifs": [
+                        {
+                          "xpr": {
+                            "type": "=",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Symbol ID"
+                            },
+                            "v": {
+                              "type": "value",
+                              "value": "None"
+                            }
+                          },
+                          "stmts": [
+                            {
+                              "type": "comment",
+                              "md": "Cash transactions have no symbol"
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.asset",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Asset"
+                              },
+                              "cast": {
+                                "asset": {
+                                  "assetTypes": {
+                                    "type": "value",
+                                    "value": ["CASH"]
+                                  },
+                                  "remote": {
+                                    "type": "value",
+                                    "value": true
+                                  }
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "xpr": {
+                            "type": "pattern",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Symbol ID"
+                            },
+                            "pattern": "~.USD~$"
+                          },
+                          "stmts": [
+                            {
+                              "type": "comment",
+                              "md": "**Crypto** ends in .USD"
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.asset",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Symbol ID"
+                              },
+                              "trfms": [
+                                {
+                                  "type": "replace",
+                                  "pattern": "/\\.[A-Z]+/$",
+                                  "replace": ""
+                                }
+                              ],
+                              "cast": {
+                                "asset": {
+                                  "assetTypes": {
+                                    "type": "value",
+                                    "value": ["CRYPTO"]
+                                  },
+                                  "remote": {
+                                    "type": "value",
+                                    "value": true
+                                  }
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "stmts": [
+                            {
+                              "type": "set",
+                              "prop": "transaction.asset",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Symbol ID"
+                              },
+                              "trfms": [
+                                {
+                                  "type": "replace",
+                                  "pattern": "~.ARCA~$",
+                                  "replace": ".NYSE"
+                                },
+                                {
+                                  "type": "replace",
+                                  "pattern": "~.SIX~$",
+                                  "replace": ".SWX"
+                                }
+                              ],
+                              "cast": {
+                                "asset": {
+                                  "remote": {
+                                    "type": "value",
+                                    "value": true
+                                  }
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "options": {
+          "valueMap": {
+            "asset": {}
+          }
+        }
+      }
+    }
+  }
+}

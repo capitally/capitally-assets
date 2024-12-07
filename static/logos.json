@@ -15,6 +15,10 @@
     "file": "brokers/coinbase.png",
     "name": "Coinbase"
   },
+  "brokers/exante": {
+    "file": "brokers/exante.png",
+    "name": "Exante"
+  },
   "brokers/degiro": {
     "file": "brokers/degiro.png",
     "name": "Degiro"
