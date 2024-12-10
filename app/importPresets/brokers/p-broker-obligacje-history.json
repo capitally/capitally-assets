@@ -1,13 +1,13 @@
 {
   "version": 3,
   "type": "Capitally Data Export",
-  "exportedAt": "2024-12-01T11:22:39.491Z",
+  "exportedAt": "2024-12-10T22:27:02.010Z",
   "data": {
     "importPresets": {
-      "u-FLFGT6KAC61WzKU": {
-        "id": "u-FLFGT6KAC61WzKU",
+      "u-HKway76PvWgSCre": {
+        "id": "u-HKway76PvWgSCre",
         "name": "1 of 2 - Transactions #beta (1)",
-        "updatedAt": "2024-12-01T12:22",
+        "updatedAt": "2024-12-10T23:26",
         "author": "RL <iFIjgKg2M7TIe5ygfjFzaDEAlAX2>",
         "info": "To import your transactions from Obligacje Skarbowe (Polish National Bonds):\n\n1. Go to [Serwis Obligacji Skarbowych](https://www.zakup.obligacjeskarbowe.pl/login.html)\n2. Open **Rachunek Rejestrowy**\n3. Open **Historia dyspozycji na Rachunku Rejestrowym**\n4. Choose dates and click **Dalej**\n5. Click the **[↓]** button below the table to download the XLS file\n6. Open or drop that file here\n\n> ☝️ This imports only transactions. As Capitally does not automatically update Bond prices, you will need to regularly update your current bonds value with the separate import **Obligacje Skarbowe: 2 of 2 - Balances**",
         "sourceId": "p-broker-obligacje-history",
@@ -121,7 +121,7 @@
                       "stmts": [
                         {
                           "type": "comment",
-                          "md": "## Buy transaction\n\nCreates the custom asset"
+                          "md": "## Buy transaction\n\nCreates the custom asset "
                         },
                         {
                           "type": "addAsset",
@@ -179,6 +179,74 @@
                                 "value": {
                                   "id": "c-PLN"
                                 }
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "asset.txn.category",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.KOD OBLIGACJI"
+                              },
+                              "map": [
+                                {
+                                  "cmp": {
+                                    "type": "pattern",
+                                    "pattern": "~EDO~^"
+                                  },
+                                  "target": {
+                                    "type": "value",
+                                    "value": {
+                                      "id": "Bonds/Government/Inflation-Protected"
+                                    }
+                                  }
+                                },
+                                {
+                                  "cmp": {
+                                    "type": "pattern",
+                                    "pattern": "~ROD~^"
+                                  },
+                                  "target": {
+                                    "type": "value",
+                                    "value": {
+                                      "id": "Bonds/Government/Inflation-Protected"
+                                    }
+                                  }
+                                },
+                                {
+                                  "target": {
+                                    "type": "value",
+                                    "value": {
+                                      "id": "Bonds/Government"
+                                    }
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "type": "set",
+                              "prop": "asset.txn.regions",
+                              "xpr": {
+                                "type": "value",
+                                "value": [
+                                  {
+                                    "id": "Emerging/Europe/Poland",
+                                    "value": 1
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "asset.txn.sectors",
+                              "xpr": {
+                                "type": "value",
+                                "value": [
+                                  {
+                                    "id": "Government/Central Bank",
+                                    "value": 1
+                                  }
+                                ]
                               }
                             },
                             {
