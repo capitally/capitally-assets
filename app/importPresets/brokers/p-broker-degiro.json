@@ -1,13 +1,13 @@
 {
   "version": 3,
   "type": "Capitally Data Export",
-  "exportedAt": "2024-12-07T17:35:05.609Z",
+  "exportedAt": "2024-12-10T18:49:09.241Z",
   "data": {
     "importPresets": {
-      "u-C0JoAKDAHvqGj5n": {
-        "id": "u-C0JoAKDAHvqGj5n",
-        "name": "Transactions & dividends #beta",
-        "updatedAt": "2024-12-07T18:34",
+      "u-g8AdpHLyGSkyY0E": {
+        "id": "u-g8AdpHLyGSkyY0E",
+        "name": "Transactions & dividends #beta (1)",
+        "updatedAt": "2024-12-10T19:48",
         "author": "RL <iFIjgKg2M7TIe5ygfjFzaDEAlAX2>",
         "info": "To import your transactions from Degiro:\n\n1. Go to [Degiro](https://degiro.com/)\n2. Open **Inbox** → **Account statements** \n3. Pick a date range\n4. Click the **↓ Export** button, choose **CSV** format and save the file somewhere\n5. Open or drop that file here",
         "mappingInfo": "🦉 If you previously imported transactions using the `Transactions` table format, importing overlapping dates may create duplicate entries.",
@@ -29,25 +29,82 @@
               "header": true
             },
             "replaceHeaders": [
-              ["~Change~^$", "Change currency"],
-              ["~Column 9~^$", "Change"],
-              ["~Balance~^$", "Balance currency"],
-              ["~Column 11~^$", "Balance"],
-              ["~Datum~^$", "Date"],
-              ["~Tijd~^$", "Time"],
-              ["~Valutadatum~^$", "Value date"],
-              ["~Omschrijving~^$", "Description"],
-              ["~Mutatie~^$", "Change currency"],
-              ["~Saldo~^$", "Balance currency"],
-              ["~Data~^$", "Date"],
-              ["~Czas~^$", "Time"],
-              ["~Date (1)~^$", "Value date"],
-              ["~Produkt~^$", "Product"],
-              ["~Opis~^$", "Description"],
-              ["~Kurs~^$", "FX"],
-              ["~Zmiana~^$", "Change currency"],
-              ["~Identyfikator zlecenia~^$", "Order Id"],
-              ["~Order ID~^$", "Order Id"]
+              [
+                "~Change~^$",
+                "Change currency"
+              ],
+              [
+                "~Column 9~^$",
+                "Change"
+              ],
+              [
+                "~Balance~^$",
+                "Balance currency"
+              ],
+              [
+                "~Column 11~^$",
+                "Balance"
+              ],
+              [
+                "~Datum~^$",
+                "Date"
+              ],
+              [
+                "~Tijd~^$",
+                "Time"
+              ],
+              [
+                "~Valutadatum~^$",
+                "Value date"
+              ],
+              [
+                "~Omschrijving~^$",
+                "Description"
+              ],
+              [
+                "~Mutatie~^$",
+                "Change currency"
+              ],
+              [
+                "~Saldo~^$",
+                "Balance currency"
+              ],
+              [
+                "~Data~^$",
+                "Date"
+              ],
+              [
+                "~Czas~^$",
+                "Time"
+              ],
+              [
+                "~Date (1)~^$",
+                "Value date"
+              ],
+              [
+                "~Produkt~^$",
+                "Product"
+              ],
+              [
+                "~Opis~^$",
+                "Description"
+              ],
+              [
+                "~Kurs~^$",
+                "FX"
+              ],
+              [
+                "~Zmiana~^$",
+                "Change currency"
+              ],
+              [
+                "~Identyfikator zlecenia~^$",
+                "Order Id"
+              ],
+              [
+                "~Order ID~^$",
+                "Order Id"
+              ]
             ],
             "enabledColumns": [
               "Date",
@@ -173,11 +230,12 @@
                             "type": "and",
                             "xprs": [
                               {
-                                "type": "truthy",
+                                "type": "pattern",
                                 "xpr": {
                                   "type": "prop",
                                   "prop": "cols.Order Id"
-                                }
+                                },
+                                "pattern": "/[a-z0-9]+-[a-z0-9]+/"
                               },
                               {
                                 "type": "!pattern",
@@ -218,7 +276,10 @@
                                 "asset": {
                                   "assetTypes": {
                                     "type": "value",
-                                    "value": ["STOCK", "ETF"]
+                                    "value": [
+                                      "STOCK",
+                                      "ETF"
+                                    ]
                                   },
                                   "markets": {
                                     "type": "value",
@@ -381,7 +442,21 @@
                               "xpr": {
                                 "type": "prop",
                                 "prop": "cols.Order Id"
-                              }
+                              },
+                              "map": [
+                                {
+                                  "cmp": {
+                                    "type": "=",
+                                    "v": {
+                                      "type": "value",
+                                      "value": "-1"
+                                    }
+                                  },
+                                  "target": {
+                                    "type": "value"
+                                  }
+                                }
+                              ]
                             },
                             {
                               "type": "lookupRows",
@@ -452,7 +527,21 @@
                                   "xpr": {
                                     "type": "prop",
                                     "prop": "lookup.cols.Order Id"
-                                  }
+                                  },
+                                  "map": [
+                                    {
+                                      "cmp": {
+                                        "type": "=",
+                                        "v": {
+                                          "type": "value",
+                                          "value": "-1"
+                                        }
+                                      },
+                                      "target": {
+                                        "type": "value"
+                                      }
+                                    }
+                                  ]
                                 },
                                 {
                                   "type": "var",
@@ -731,7 +820,7 @@
                                                   "trfms": [
                                                     {
                                                       "type": "extract",
-                                                      "pattern": "/.+?(\\d[., \\d]*)/i^"
+                                                      "pattern": "/.+?(\\d[’'., \\d]*)/i^"
                                                     }
                                                   ]
                                                 },
@@ -747,7 +836,7 @@
                                                   "trfms": [
                                                     {
                                                       "type": "extract",
-                                                      "pattern": "/@ *([.,\\d ]+)/i"
+                                                      "pattern": "/@ *([’'.,\\d ]+)/i"
                                                     }
                                                   ]
                                                 },
@@ -774,8 +863,18 @@
                                                   "prop": "transaction.valueCurrency",
                                                   "xpr": {
                                                     "type": "prop",
-                                                    "prop": "lookup.cols.Change currency"
-                                                  }
+                                                    "prop": "lookup.cols.Description"
+                                                  },
+                                                  "trfms": [
+                                                    {
+                                                      "type": "extract",
+                                                      "pattern": "/@ *[’'.,\\d ]+ ([A-Z]{3})(?: |$)/i"
+                                                    },
+                                                    {
+                                                      "type": "formula",
+                                                      "formula": "=x || lookup.col(\"Change currency\")"
+                                                    }
+                                                  ]
                                                 },
                                                 {
                                                   "type": "set",
@@ -925,7 +1024,9 @@
                                             },
                                             "v": {
                                               "type": "value",
-                                              "value": ["CLOSE"]
+                                              "value": [
+                                                "CLOSE"
+                                              ]
                                             }
                                           },
                                           "stmts": [
@@ -1044,7 +1145,10 @@
                                 "asset": {
                                   "assetTypes": {
                                     "type": "value",
-                                    "value": ["STOCK", "ETF"]
+                                    "value": [
+                                      "STOCK",
+                                      "ETF"
+                                    ]
                                   },
                                   "markets": {
                                     "type": "value",
@@ -1571,6 +1675,14 @@
                               "prop": "cols.Description"
                             },
                             "pattern": "~funduszu gotówkowego~ib"
+                          },
+                          {
+                            "type": "pattern",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.Description"
+                            },
+                            "pattern": "~money market fund~ib"
                           }
                         ]
                       },
@@ -1684,7 +1796,10 @@
                                 "asset": {
                                   "assetTypes": {
                                     "type": "value",
-                                    "value": ["STOCK", "ETF"]
+                                    "value": [
+                                      "STOCK",
+                                      "ETF"
+                                    ]
                                   },
                                   "markets": {
                                     "type": "value",
@@ -1895,7 +2010,9 @@
                                     },
                                     "v": {
                                       "type": "value",
-                                      "value": ["OTHER"]
+                                      "value": [
+                                        "OTHER"
+                                      ]
                                     }
                                   },
                                   "stmts": [
@@ -2032,7 +2149,9 @@
                                 "asset": {
                                   "assetTypes": {
                                     "type": "value",
-                                    "value": ["CASH"]
+                                    "value": [
+                                      "CASH"
+                                    ]
                                   },
                                   "remote": {
                                     "type": "value",
@@ -2147,7 +2266,9 @@
                                 "asset": {
                                   "assetTypes": {
                                     "type": "value",
-                                    "value": ["CASH"]
+                                    "value": [
+                                      "CASH"
+                                    ]
                                   },
                                   "remote": {
                                     "type": "value",
@@ -2220,7 +2341,11 @@
           }
         },
         "options": {
-          "valueMap": {}
+          "valueMap": {
+            "asset": {
+              "nl0010872347": null
+            }
+          }
         }
       }
     }
