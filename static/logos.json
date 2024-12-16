@@ -1,4 +1,28 @@
 {
+  "brokers/aion": {
+    "file": "brokers/aion.png",
+    "name": "Aion"
+  },
+  "brokers/nest": {
+    "file": "brokers/nest.png",
+    "name": "Nest"
+  },
+  "brokers/n26": {
+    "file": "brokers/n26.png",
+    "name": "N26"
+  },
+  "brokers/zen": {
+    "file": "brokers/zen.png",
+    "name": "Zen"
+  },
+  "brokers/wise": {
+    "file": "brokers/wise.png",
+    "name": "Wise"
+  },
+  "brokers/payoneer": {
+    "file": "brokers/payoneer.png",
+    "name": "Payoneer"
+  },
   "brokers/bitstamp": {
     "file": "brokers/bitstamp.png",
     "name": "Bitstamp"
