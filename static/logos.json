@@ -119,6 +119,10 @@
     "file": "brokers/sharesight.png",
     "name": "ShareSight"
   },
+  "brokers/snowball": {
+    "file": "brokers/snowball.png",
+    "name": "Snowball"
+  },
   "brokers/stockmarketeye": {
     "file": "brokers/stockmarketeye.png",
     "name": "Stock Market Eye"
