@@ -63,6 +63,10 @@
     "file": "brokers/finax.png",
     "name": "Finax"
   },
+  "brokers/goldsaver": {
+    "file": "brokers/goldsaver.png",
+    "name": "Goldsaver"
+  },
   "brokers/ibkr": {
     "file": "brokers/ibkr.png",
     "kw": "ibkr",

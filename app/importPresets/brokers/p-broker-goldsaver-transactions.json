@@ -1,0 +1,211 @@
+{
+  "version": 3,
+  "type": "Capitally Data Export",
+  "exportedAt": "2024-12-23T15:15:46.961Z",
+  "data": {
+    "importPresets": {
+      "u-lsqsRH8bZm6hm9a": {
+        "id": "u-lsqsRH8bZm6hm9a",
+        "name": "Transactions",
+        "updatedAt": "2024-12-23T16:15",
+        "author": "RL <iFIjgKg2M7TIe5ygfjFzaDEAlAX2>",
+        "info": "To import your stock transactions from Goldsaver:\n\n1. Login to your Goldsaver account\n2. Find the **Historia transakcji** table\n3. Click the **↓** arrow in the top-right corner and then **Pobierz CSV**\n4. Open or drop that file here\n",
+        "sourceId": "",
+        "provider": "Goldsaver",
+        "providerIcon": {
+          "type": "logo",
+          "id": "brokers/goldsaver"
+        },
+        "providerGroup": "Brokers",
+        "parser": {
+          "formats": [
+            "csv"
+          ],
+          "allowClipboard": false
+        },
+        "sections": {
+          "main": {
+            "csv": {
+              "header": true
+            },
+            "enabledColumns": [
+              "Data",
+              "Strefa czasowa",
+              "Status",
+              "Status (1)",
+              "Kwota",
+              "Zmiana ilości złota",
+              "Saldo złota"
+            ],
+            "program": {
+              "stmts": [
+                {
+                  "type": "addAccount",
+                  "optional": true,
+                  "stmts": [
+                    {
+                      "type": "set",
+                      "prop": "account.name",
+                      "xpr": {
+                        "type": "value",
+                        "value": "Goldsaver"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "account.icon",
+                      "xpr": {
+                        "type": "value",
+                        "value": {
+                          "type": "logo",
+                          "id": "brokers/goldsaver"
+                        }
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "account.countryISO",
+                      "xpr": {
+                        "type": "value",
+                        "value": "PL"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "addTransaction",
+                  "stmts": [
+                    {
+                      "type": "comment",
+                      "md": "🌱 Some properties are optional and can be skipped or removed."
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.account",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "addedAccount"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.asset",
+                      "xpr": {
+                        "type": "value",
+                        "value": {
+                          "id": "c-XAU"
+                        }
+                      },
+                      "cast": {
+                        "asset": {
+                          "remote": {
+                            "type": "value",
+                            "value": true
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.type",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Status"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.date",
+                      "xpr": {
+                        "type": "prop",
+                        "prop": "cols.Data"
+                      }
+                    },
+                    {
+                      "type": "set",
+                      "prop": "transaction.valueCurrency",
+                      "xpr": {
+                        "type": "value",
+                        "value": {
+                          "id": "c-PLN"
+                        }
+                      }
+                    },
+                    {
+                      "type": "if",
+                      "ifs": [
+                        {
+                          "xpr": {
+                            "type": "in",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "transaction.type"
+                            },
+                            "v": {
+                              "type": "value",
+                              "value": [
+                                "OPEN",
+                                "CLOSE"
+                              ]
+                            }
+                          },
+                          "stmts": [
+                            {
+                              "type": "comment",
+                              "md": "🦉 If you're importing Buy & Sell transactions, then set quantity and price."
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.qty",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Zmiana ilości złota"
+                              },
+                              "trfms": [
+                                {
+                                  "type": "abs"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.value",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.Kwota"
+                              },
+                              "trfms": [
+                                {
+                                  "type": "abs"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "stmts": [
+                            {
+                              "type": "addRowNote",
+                              "note": {
+                                "type": "formula",
+                                "formula": "=\"🥺 Transaction type `\" + col(\"status\") + \"` is currently not handled\""
+                              },
+                              "urgency": "warn"
+                            },
+                            {
+                              "type": "return"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+}
