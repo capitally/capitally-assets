@@ -1,20 +1,20 @@
 {
   "version": 3,
   "type": "Capitally Data Export",
-  "exportedAt": "2024-11-14T19:56:10.624Z",
+  "exportedAt": "2024-12-23T08:52:51.985Z",
   "data": {
     "importPresets": {
-      "u-fNihlCxsjB5LsKQ": {
-        "id": "u-fNihlCxsjB5LsKQ",
-        "name": "Trader Go Transactions #beta",
-        "updatedAt": "2024-11-14T20:44",
-        "author": "Rafal <CEzOZ77nYhZX6L0qXPKXSs6GBho2>",
-        "info": "To import your transactions from Saxo Trader Go:\n\n1. Open the Saxo Trader app\n2. Click on the person icon in the top right corner and select **Transactions report**\n3. Select desired time period and click **Export**\n4. Make sure the **Include details** option is disabled\n5. Click on **Excel** button\n6. Download the file and open or drop that file here",
-        "sourceId": "p-broker-saxo-transactions",
-        "provider": "Saxo",
+      "u-GyZPUajLjCtKxE3": {
+        "id": "u-GyZPUajLjCtKxE3",
+        "name": "Transactions #beta",
+        "updatedAt": "2024-12-23T09:52",
+        "author": "RL <iFIjgKg2M7TIe5ygfjFzaDEAlAX2>",
+        "info": "To import your transactions from Dif Broker:\n\n1. Open the Dif webpage (new version)\n2. Open **Portfolio** → **Transactions**\n3. Select desired time period or All\n4. Click **Export Excel**\n5. Download the file and open or drop that file here",
+        "sourceId": "p-broker-dif-transactions",
+        "provider": "Dif",
         "providerIcon": {
           "type": "logo",
-          "id": "brokers/saxo"
+          "id": "brokers/dif"
         },
         "providerGroup": "Brokers",
         "parser": {
@@ -52,7 +52,7 @@
                       "prop": "account.name",
                       "xpr": {
                         "type": "value",
-                        "value": "Saxo Trader Go"
+                        "value": "Dif Broker"
                       }
                     },
                     {
@@ -62,7 +62,7 @@
                         "type": "value",
                         "value": {
                           "type": "logo",
-                          "id": "brokers/saxo"
+                          "id": "brokers/dif"
                         }
                       }
                     }

@@ -39,6 +39,10 @@
     "file": "brokers/coinbase.png",
     "name": "Coinbase"
   },
+  "brokers/dif": {
+    "file": "brokers/dif.png",
+    "name": "DIF"
+  },
   "brokers/exante": {
     "file": "brokers/exante.png",
     "name": "Exante"
