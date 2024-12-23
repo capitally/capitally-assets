@@ -1,13 +1,13 @@
 {
   "version": 3,
   "type": "Capitally Data Export",
-  "exportedAt": "2024-11-20T14:00:37.602Z",
+  "exportedAt": "2024-12-23T20:16:05.918Z",
   "data": {
     "importPresets": {
-      "u-HqMVzN1faNFnGxY": {
-        "id": "u-HqMVzN1faNFnGxY",
+      "u-Sv12stoQ1bN9Nrl": {
+        "id": "u-Sv12stoQ1bN9Nrl",
         "name": "Ledger #beta (1)",
-        "updatedAt": "2024-11-20T15:00",
+        "updatedAt": "2024-12-23T21:15",
         "author": "RL <iFIjgKg2M7TIe5ygfjFzaDEAlAX2>",
         "info": "#### To import your transactions from **Kraken**:\n\n1. Go to **[Transactions → History](https://www.kraken.com/c/transactions/history)**\n    1. Choose timeframe\n    2. Click **Export** and select **CSV**\n\n#### To import your transactions from **Kraken Pro**:\n\n1. Go to **[History → Export](https://pro.kraken.com/app/history/export)**\n    1. Set **Format** to **CSV**\n    2. Set **Export type** to **Ledger** \n    3. Enable all **Fields**\n    4. Choose timeframe\n    5. Click **Submit**\n\nOpen or drop the generated file here",
         "sourceId": "p-crypto-kraken-ledger",
@@ -136,15 +136,42 @@
                       "ifs": [
                         {
                           "xpr": {
-                            "type": "=",
-                            "xpr": {
-                              "type": "prop",
-                              "prop": "cols.type"
-                            },
-                            "v": {
-                              "type": "value",
-                              "value": "trade"
-                            }
+                            "type": "or",
+                            "xprs": [
+                              {
+                                "type": "=",
+                                "xpr": {
+                                  "type": "prop",
+                                  "prop": "cols.type"
+                                },
+                                "v": {
+                                  "type": "value",
+                                  "value": "trade"
+                                }
+                              },
+                              {
+                                "type": "=",
+                                "xpr": {
+                                  "type": "prop",
+                                  "prop": "cols.type"
+                                },
+                                "v": {
+                                  "type": "value",
+                                  "value": "spend"
+                                }
+                              },
+                              {
+                                "type": "=",
+                                "xpr": {
+                                  "type": "prop",
+                                  "prop": "cols.type"
+                                },
+                                "v": {
+                                  "type": "value",
+                                  "value": "receive"
+                                }
+                              }
+                            ]
                           },
                           "stmts": [
                             {
@@ -368,7 +395,14 @@
                                                   "xpr": {
                                                     "type": "prop",
                                                     "prop": "lookup.cols.asset"
-                                                  }
+                                                  },
+                                                  "trfms": [
+                                                    {
+                                                      "type": "replace",
+                                                      "pattern": "~.HOLD~$",
+                                                      "replace": ""
+                                                    }
+                                                  ]
                                                 }
                                               ]
                                             }
@@ -378,6 +412,353 @@
                                           "type": "ignoreRow"
                                         }
                                       ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "xpr": {
+                            "type": "=",
+                            "xpr": {
+                              "type": "prop",
+                              "prop": "cols.type"
+                            },
+                            "v": {
+                              "type": "value",
+                              "value": "transfer"
+                            }
+                          },
+                          "stmts": [
+                            {
+                              "type": "comment",
+                              "md": "## Transfers\n\nAssumed always paid out in the same token, but currently not all tokens can be used as currency, so we treat it as transfer"
+                            },
+                            {
+                              "type": "if",
+                              "ifs": [
+                                {
+                                  "xpr": {
+                                    "type": "or",
+                                    "xprs": [
+                                      {
+                                        "type": "pattern",
+                                        "xpr": {
+                                          "type": "prop",
+                                          "prop": "cols.subtype"
+                                        },
+                                        "pattern": "~spottostaking~^$"
+                                      },
+                                      {
+                                        "type": "pattern",
+                                        "xpr": {
+                                          "type": "prop",
+                                          "prop": "cols.subtype"
+                                        },
+                                        "pattern": "~stakingfromspot~^$"
+                                      }
+                                    ]
+                                  },
+                                  "stmts": [
+                                    {
+                                      "type": "comment",
+                                      "md": "Internal transfers to/from staked sub-account (the token remains in your balance)"
+                                    },
+                                    {
+                                      "type": "return"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.type",
+                              "xpr": {
+                                "type": "value",
+                                "value": "TRANSFER"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.qty",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.amount"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.asset",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.asset"
+                              },
+                              "cast": {
+                                "asset": {
+                                  "assetTypes": {
+                                    "type": "value",
+                                    "value": [
+                                      "CRYPTO"
+                                    ]
+                                  },
+                                  "remote": {
+                                    "type": "value",
+                                    "value": true
+                                  }
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "xpr": {
+                            "type": "or",
+                            "xprs": [
+                              {
+                                "type": "pattern",
+                                "xpr": {
+                                  "type": "prop",
+                                  "prop": "cols.subtype"
+                                },
+                                "pattern": "~autoallocate~^$"
+                              },
+                              {
+                                "type": "pattern",
+                                "xpr": {
+                                  "type": "prop",
+                                  "prop": "cols.subtype"
+                                },
+                                "pattern": "~allocation~^$"
+                              },
+                              {
+                                "type": "pattern",
+                                "xpr": {
+                                  "type": "prop",
+                                  "prop": "cols.subtype"
+                                },
+                                "pattern": "~migration~^$"
+                              }
+                            ]
+                          },
+                          "stmts": [
+                            {
+                              "type": "comment",
+                              "md": "Internal staking transfers"
+                            },
+                            {
+                              "type": "return"
+                            }
+                          ]
+                        },
+                        {
+                          "xpr": {
+                            "type": "or",
+                            "xprs": [
+                              {
+                                "type": "=",
+                                "xpr": {
+                                  "type": "prop",
+                                  "prop": "cols.subtype"
+                                },
+                                "v": {
+                                  "type": "value",
+                                  "value": "reward"
+                                }
+                              },
+                              {
+                                "type": "=",
+                                "xpr": {
+                                  "type": "prop",
+                                  "prop": "cols.type"
+                                },
+                                "v": {
+                                  "type": "value",
+                                  "value": "dividend"
+                                }
+                              },
+                              {
+                                "type": "=",
+                                "xpr": {
+                                  "type": "prop",
+                                  "prop": "cols.type"
+                                },
+                                "v": {
+                                  "type": "value",
+                                  "value": "staking"
+                                }
+                              },
+                              {
+                                "type": "=",
+                                "xpr": {
+                                  "type": "prop",
+                                  "prop": "cols.type"
+                                },
+                                "v": {
+                                  "type": "value",
+                                  "value": "reward"
+                                }
+                              }
+                            ]
+                          },
+                          "stmts": [
+                            {
+                              "type": "comment",
+                              "md": "## Rewards & Dividends\n\nrelates to all on-chain staking and Opt-In Rewards activities, including allocation, deallocation, rewards, and other transactions. This unified service encompasses both types of staking under a single category"
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.type",
+                              "xpr": {
+                                "type": "value",
+                                "value": "TRANSFER"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.qty",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.amount"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.qty",
+                              "op": "-=",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "transaction.fee"
+                              }
+                            },
+                            {
+                              "type": "set",
+                              "prop": "transaction.asset",
+                              "xpr": {
+                                "type": "prop",
+                                "prop": "cols.asset"
+                              },
+                              "cast": {
+                                "asset": {
+                                  "assetTypes": {
+                                    "type": "value",
+                                    "value": [
+                                      "CRYPTO"
+                                    ]
+                                  },
+                                  "remote": {
+                                    "type": "value",
+                                    "value": true
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              "type": "addRowNote",
+                              "note": {
+                                "type": "value",
+                                "value": "💰 Rewards, staking and dividends are currently tracked as Transfers. In future versions, they will be tracked as proper Dividends (or other fitting transaction type)."
+                              }
+                            },
+                            {
+                              "type": "if",
+                              "ifs": [
+                                {
+                                  "xpr": {
+                                    "type": "or",
+                                    "xprs": [
+                                      {
+                                        "type": "=",
+                                        "xpr": {
+                                          "type": "prop",
+                                          "prop": "cols.subtype"
+                                        },
+                                        "v": {
+                                          "type": "value",
+                                          "value": "reward"
+                                        }
+                                      },
+                                      {
+                                        "type": "=",
+                                        "xpr": {
+                                          "type": "prop",
+                                          "prop": "cols.type"
+                                        },
+                                        "v": {
+                                          "type": "value",
+                                          "value": "reward"
+                                        }
+                                      }
+                                    ]
+                                  },
+                                  "stmts": [
+                                    {
+                                      "type": "set",
+                                      "prop": "transaction.txn.tags",
+                                      "xpr": {
+                                        "type": "value",
+                                        "value": [
+                                          {
+                                            "id": "Kraken/income/reward"
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "xpr": {
+                                    "type": "=",
+                                    "xpr": {
+                                      "type": "prop",
+                                      "prop": "cols.type"
+                                    },
+                                    "v": {
+                                      "type": "value",
+                                      "value": "dividend"
+                                    }
+                                  },
+                                  "stmts": [
+                                    {
+                                      "type": "set",
+                                      "prop": "transaction.txn.tags",
+                                      "xpr": {
+                                        "type": "value",
+                                        "value": [
+                                          {
+                                            "id": "Kraken/income/dividend"
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "xpr": {
+                                    "type": "=",
+                                    "xpr": {
+                                      "type": "prop",
+                                      "prop": "cols.type"
+                                    },
+                                    "v": {
+                                      "type": "value",
+                                      "value": "staking"
+                                    }
+                                  },
+                                  "stmts": [
+                                    {
+                                      "type": "set",
+                                      "prop": "transaction.txn.tags",
+                                      "xpr": {
+                                        "type": "value",
+                                        "value": [
+                                          {
+                                            "id": "Kraken/income/staking"
+                                          }
+                                        ]
+                                      }
                                     }
                                   ]
                                 }
@@ -437,6 +818,13 @@
                                 "type": "prop",
                                 "prop": "cols.asset"
                               },
+                              "trfms": [
+                                {
+                                  "type": "replace",
+                                  "pattern": "~.HOLD~$",
+                                  "replace": ""
+                                }
+                              ],
                               "cast": {
                                 "asset": {
                                   "assetTypes": {
@@ -503,6 +891,21 @@
                               "type": "return"
                             }
                           ]
+                        },
+                        {
+                          "stmts": [
+                            {
+                              "type": "addRowNote",
+                              "note": {
+                                "type": "formula",
+                                "formula": "=\"🥺 Transaction `\" + col(\"type\") + \"` is currently not supported\""
+                              },
+                              "urgency": "warn"
+                            },
+                            {
+                              "type": "return"
+                            }
+                          ]
                         }
                       ]
                     }
@@ -510,6 +913,12 @@
                 }
               ]
             }
+          }
+        },
+        "options": {
+          "valueMap": {
+            "asset": {},
+            "currency": {}
           }
         }
       }
