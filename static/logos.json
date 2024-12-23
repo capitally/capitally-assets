@@ -88,6 +88,11 @@
     "name": "Ministerstwo Finansów"
   },
   "brokers/pko": { "file": "brokers/pko.png", "kw": "pko", "name": "PKO BP" },
+  "brokers/rbc": {
+    "file": "brokers/rbc.png",
+    "name": "Royal Bank of Canada",
+    "kw": "rbc"
+  },
   "brokers/revolut": {
     "file": "brokers/revolut.png",
     "name": "Revolut"
