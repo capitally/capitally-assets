@@ -1,13 +1,13 @@
 {
   "version": 3,
   "type": "Capitally Data Export",
-  "exportedAt": "2024-11-28T14:52:35.356Z",
+  "exportedAt": "2024-12-31T11:35:26.966Z",
   "data": {
     "importPresets": {
-      "u-r10ctI1TxgFTF8M": {
-        "id": "u-r10ctI1TxgFTF8M",
-        "name": "Transactions & dividends #beta",
-        "updatedAt": "2024-11-28T15:42",
+      "u-yKoJsEWKCDLsubZ": {
+        "id": "u-yKoJsEWKCDLsubZ",
+        "name": "Transactions & dividends",
+        "updatedAt": "2024-12-31T12:35",
         "author": "RL <iFIjgKg2M7TIe5ygfjFzaDEAlAX2>",
         "info": "To import your stock transactions from XTB (CFDs or shorts are not supported yet):\n\n1. Go to [xStation](https://xstation5.xtb.com/)\n2. Open **Account History/Historia** → **Cash operations/Operacje gotówkowe** \n3. Choose timeframe\n4. Click **Export/Eksportuj** → **Excel** and download it\n5. Open or drop that file here\n",
         "sourceId": "p-broker-xtb-operations",
@@ -20,7 +20,9 @@
         "parser": {
           "dateOrder": "ymd",
           "decimalSeparator": ".",
-          "formats": ["xls"],
+          "formats": [
+            "xls"
+          ],
           "allowClipboard": false
         },
         "sections": {
@@ -31,8 +33,15 @@
               "header": true,
               "sheetName": "CLOSED POSITION HISTORY"
             },
-            "replaceHeaders": [["/.+ GMT\\+.+/", ""]],
-            "enabledColumns": ["Waluta"],
+            "replaceHeaders": [
+              [
+                "/.+ GMT\\+.+/",
+                ""
+              ]
+            ],
+            "enabledColumns": [
+              "Waluta"
+            ],
             "disabledColumns": [
               "Column 1",
               "Column 2",
@@ -85,7 +94,9 @@
               "Symbol",
               "Kwota"
             ],
-            "disabledColumns": ["Column 7"],
+            "disabledColumns": [
+              "Column 7"
+            ],
             "program": {
               "stmts": [
                 {
@@ -163,7 +174,10 @@
                                 "asset": {
                                   "assetTypes": {
                                     "type": "value",
-                                    "value": ["STOCK", "ETF"]
+                                    "value": [
+                                      "STOCK",
+                                      "ETF"
+                                    ]
                                   },
                                   "remote": {
                                     "type": "value",
@@ -236,9 +250,6 @@
                                         ]
                                       },
                                       "stmts": [
-                                        {
-                                          "type": "ignoreRow"
-                                        },
                                         {
                                           "type": "if",
                                           "ifs": [
@@ -422,6 +433,29 @@
                                               ]
                                             },
                                             {
+                                              "xpr": {
+                                                "type": "=",
+                                                "xpr": {
+                                                  "type": "prop",
+                                                  "prop": "lookup.cols.Typ"
+                                                },
+                                                "v": {
+                                                  "type": "value",
+                                                  "value": "Sprzedaż akcji/ETF"
+                                                }
+                                              },
+                                              "stmts": [
+                                                {
+                                                  "type": "comment",
+                                                  "md": "Another operation on the same date&symbol - we need to stop here!"
+                                                },
+                                                {
+                                                  "type": "return",
+                                                  "levels": 1
+                                                }
+                                              ]
+                                            },
+                                            {
                                               "stmts": [
                                                 {
                                                   "type": "addRowNote",
@@ -434,6 +468,9 @@
                                               ]
                                             }
                                           ]
+                                        },
+                                        {
+                                          "type": "ignoreRow"
                                         }
                                       ]
                                     }
@@ -484,7 +521,10 @@
                                 "asset": {
                                   "assetTypes": {
                                     "type": "value",
-                                    "value": ["STOCK", "ETF"]
+                                    "value": [
+                                      "STOCK",
+                                      "ETF"
+                                    ]
                                   },
                                   "remote": {
                                     "type": "value",
@@ -557,9 +597,6 @@
                                         ]
                                       },
                                       "stmts": [
-                                        {
-                                          "type": "ignoreRow"
-                                        },
                                         {
                                           "type": "if",
                                           "ifs": [
@@ -767,6 +804,29 @@
                                               ]
                                             },
                                             {
+                                              "xpr": {
+                                                "type": "=",
+                                                "xpr": {
+                                                  "type": "prop",
+                                                  "prop": "lookup.cols.Typ"
+                                                },
+                                                "v": {
+                                                  "type": "value",
+                                                  "value": "Zakup akcji/ETF"
+                                                }
+                                              },
+                                              "stmts": [
+                                                {
+                                                  "type": "comment",
+                                                  "md": "Another operation on the same date&symbol - we need to stop here!"
+                                                },
+                                                {
+                                                  "type": "return",
+                                                  "levels": 1
+                                                }
+                                              ]
+                                            },
+                                            {
                                               "stmts": [
                                                 {
                                                   "type": "addRowNote",
@@ -779,6 +839,9 @@
                                               ]
                                             }
                                           ]
+                                        },
+                                        {
+                                          "type": "ignoreRow"
                                         }
                                       ]
                                     }
@@ -829,7 +892,10 @@
                                 "asset": {
                                   "assetTypes": {
                                     "type": "value",
-                                    "value": ["STOCK", "ETF"]
+                                    "value": [
+                                      "STOCK",
+                                      "ETF"
+                                    ]
                                   },
                                   "remote": {
                                     "type": "value",
@@ -1022,7 +1088,10 @@
                                 "asset": {
                                   "assetTypes": {
                                     "type": "value",
-                                    "value": ["STOCK", "ETF"]
+                                    "value": [
+                                      "STOCK",
+                                      "ETF"
+                                    ]
                                   },
                                   "remote": {
                                     "type": "value",
@@ -1128,7 +1197,9 @@
                                 "asset": {
                                   "assetTypes": {
                                     "type": "value",
-                                    "value": ["CASH"]
+                                    "value": [
+                                      "CASH"
+                                    ]
                                   },
                                   "remote": {
                                     "type": "value",
