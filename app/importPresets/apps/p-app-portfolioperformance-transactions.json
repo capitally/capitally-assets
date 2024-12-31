@@ -6,7 +6,7 @@
     "importPresets": {
       "u-POIiszczhNtRf11": {
         "id": "u-POIiszczhNtRf11",
-        "name": "Transactions #beta",
+        "name": "Transactions",
         "updatedAt": "2024-11-15T14:02",
         "author": "Rafal <CEzOZ77nYhZX6L0qXPKXSs6GBho2>",
         "info": "To import your transactions from Portfolio Performance:\n\n1. Select **File** → **Export** → **CSV Files** from the menu\n1. Select one account under **Securities Account Transactions** \n1. Click **Finish**\n1. Open or drop that file here",
@@ -19,9 +19,7 @@
         },
         "providerGroup": "Apps",
         "parser": {
-          "formats": [
-            "csv"
-          ],
+          "formats": ["csv"],
           "allowClipboard": false
         },
         "sections": {

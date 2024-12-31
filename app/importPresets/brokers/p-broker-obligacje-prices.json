@@ -6,7 +6,7 @@
     "importPresets": {
       "u-wXTSncAPhB7hAK2": {
         "id": "u-wXTSncAPhB7hAK2",
-        "name": "2 of 2 - Prices #beta",
+        "name": "2 of 2 - Prices",
         "updatedAt": "2024-10-20T21:12",
         "author": "Rafal <CEzOZ77nYhZX6L0qXPKXSs6GBho2>",
         "info": "☝️ This will update prices and thus value of bonds you've previously imported using **Obligacje Skarbowe: 1 of 2 - Transactions**. You'll need to run it regularly, as Capitally does not automatically update value of bonds.\n\nTo update the bond prices:\n\n1. Go to [Serwis Obligacji Skarbowych](https://www.zakup.obligacjeskarbowe.pl/login.html)\n2. Open **Rachunek Rejestrowy**\n3. Open **Stan Rachunku Rejestrowego**\n4. Click the **[↓]** button to download the XLS file\n5. Open or drop that file here\n\n> 📋 Alternatively, you can copy the *whole* table, including the headers, and paste it here.",

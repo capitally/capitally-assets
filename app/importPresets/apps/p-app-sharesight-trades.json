@@ -6,7 +6,7 @@
     "importPresets": {
       "u-Bji70iAiwQj2oAZ": {
         "id": "u-Bji70iAiwQj2oAZ",
-        "name": "Transactions #beta",
+        "name": "Transactions",
         "updatedAt": "2024-11-05T18:34",
         "author": "Rafal <CEzOZ77nYhZX6L0qXPKXSs6GBho2>",
         "info": "To import your transactions from ShareSight:\n\n1. Go to [ShareSight Portfolio](https://portfolio.sharesight.com/)\n1. Open **Reports** → **All Trades**\n1. Select timeframe\n1. Click **Download as XLSX** (green spreadsheet icon in top-right corner)\n1. Open or drop that file here",

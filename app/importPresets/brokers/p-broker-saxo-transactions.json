@@ -6,7 +6,7 @@
     "importPresets": {
       "u-fNihlCxsjB5LsKQ": {
         "id": "u-fNihlCxsjB5LsKQ",
-        "name": "Trader Go Transactions #beta",
+        "name": "Trader Go Transactions",
         "updatedAt": "2024-11-14T20:44",
         "author": "Rafal <CEzOZ77nYhZX6L0qXPKXSs6GBho2>",
         "info": "To import your transactions from Saxo Trader Go:\n\n1. Open the Saxo Trader app\n2. Click on the person icon in the top right corner and select **Transactions report**\n3. Select desired time period and click **Export**\n4. Make sure the **Include details** option is disabled\n5. Click on **Excel** button\n6. Download the file and open or drop that file here",

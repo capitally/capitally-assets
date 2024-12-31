@@ -6,7 +6,7 @@
     "importPresets": {
       "u-7lLIXCKgsoCXdqL": {
         "id": "u-7lLIXCKgsoCXdqL",
-        "name": "Transactions #beta",
+        "name": "Transactions",
         "updatedAt": "2024-12-22T17:08",
         "author": "RL <iFIjgKg2M7TIe5ygfjFzaDEAlAX2>",
         "info": "To import your stock transactions from Snowball Analytics:\n\n1. Go to [Snowball Analytics](https://snowball-analytics.com/)\n2. Open **Portfolio** → **Transactions**\n3. Open **All** tab\n4. Click **Export** → **Download File**\n5. Open or drop that file here\n\n> 🦉 You need to import each Portfolio separately. One every import open the review screen and select or create an Account that corresponds to imported portfolio.",
@@ -19,9 +19,7 @@
         },
         "providerGroup": "Apps",
         "parser": {
-          "formats": [
-            "csv"
-          ],
+          "formats": ["csv"],
           "allowClipboard": false,
           "csv": {
             "delimiter": null
@@ -324,10 +322,7 @@
                             },
                             "v": {
                               "type": "value",
-                              "value": [
-                                "OPEN",
-                                "CLOSE"
-                              ]
+                              "value": ["OPEN", "CLOSE"]
                             }
                           },
                           "stmts": [
@@ -363,11 +358,7 @@
                             },
                             "v": {
                               "type": "value",
-                              "value": [
-                                "DIVIDEND",
-                                "INTEREST",
-                                "RENT"
-                              ]
+                              "value": ["DIVIDEND", "INTEREST", "RENT"]
                             }
                           },
                           "stmts": [
@@ -398,9 +389,7 @@
                             },
                             "v": {
                               "type": "value",
-                              "value": [
-                                "OTHER"
-                              ]
+                              "value": ["OTHER"]
                             }
                           },
                           "stmts": [

@@ -6,7 +6,7 @@
     "importPresets": {
       "u-V5RgCRWIUZyfGFK": {
         "id": "u-V5RgCRWIUZyfGFK",
-        "name": "2 of 2 - Dividends #beta",
+        "name": "2 of 2 - Dividends",
         "updatedAt": "2024-11-14T20:41",
         "author": "Rafal <CEzOZ77nYhZX6L0qXPKXSs6GBho2>",
         "info": "To import transactions from PKO:\n\n1. Open [pkosupermakler.pl](https://pkosupermakler.pl)\n2. Open **Historia** → **Zestawienie operacji finansowych**\n3. Choose at least `Dywidendy i odsetki`\n4. Choose time frame\n5. Click **Eksportuj do CSV**\n6. Open or drop that file here\n",

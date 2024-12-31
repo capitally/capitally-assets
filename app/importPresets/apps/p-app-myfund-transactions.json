@@ -6,7 +6,7 @@
     "importPresets": {
       "u-Q1JOfPJB5o98FF8": {
         "id": "u-Q1JOfPJB5o98FF8",
-        "name": "Transactions #beta",
+        "name": "Transactions",
         "updatedAt": "2024-11-15T13:23",
         "author": "Rafal <CEzOZ77nYhZX6L0qXPKXSs6GBho2>",
         "info": "To import only your transactions from MyFund:\n\n1. Go to **Portfel** → **Historia operacji**\n2. Click **Eksport do xls** or **Eksport do csv**\n3. Open or drop that file here",

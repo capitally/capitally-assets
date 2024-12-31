@@ -6,7 +6,7 @@
     "importPresets": {
       "u-Sv12stoQ1bN9Nrl": {
         "id": "u-Sv12stoQ1bN9Nrl",
-        "name": "Ledger #beta (1)",
+        "name": "Ledger",
         "updatedAt": "2024-12-23T21:15",
         "author": "RL <iFIjgKg2M7TIe5ygfjFzaDEAlAX2>",
         "info": "#### To import your transactions from **Kraken**:\n\n1. Go to **[Transactions → History](https://www.kraken.com/c/transactions/history)**\n    1. Choose timeframe\n    2. Click **Export** and select **CSV**\n\n#### To import your transactions from **Kraken Pro**:\n\n1. Go to **[History → Export](https://pro.kraken.com/app/history/export)**\n    1. Set **Format** to **CSV**\n    2. Set **Export type** to **Ledger** \n    3. Enable all **Fields**\n    4. Choose timeframe\n    5. Click **Submit**\n\nOpen or drop the generated file here",
@@ -252,9 +252,7 @@
                                 "asset": {
                                   "assetTypes": {
                                     "type": "value",
-                                    "value": [
-                                      "CRYPTO"
-                                    ]
+                                    "value": ["CRYPTO"]
                                   },
                                   "remote": {
                                     "type": "value",
@@ -500,9 +498,7 @@
                                 "asset": {
                                   "assetTypes": {
                                     "type": "value",
-                                    "value": [
-                                      "CRYPTO"
-                                    ]
+                                    "value": ["CRYPTO"]
                                   },
                                   "remote": {
                                     "type": "value",
@@ -644,9 +640,7 @@
                                 "asset": {
                                   "assetTypes": {
                                     "type": "value",
-                                    "value": [
-                                      "CRYPTO"
-                                    ]
+                                    "value": ["CRYPTO"]
                                   },
                                   "remote": {
                                     "type": "value",
@@ -829,10 +823,7 @@
                                 "asset": {
                                   "assetTypes": {
                                     "type": "value",
-                                    "value": [
-                                      "CASH",
-                                      "CRYPTO"
-                                    ]
+                                    "value": ["CASH", "CRYPTO"]
                                   },
                                   "remote": {
                                     "type": "value",

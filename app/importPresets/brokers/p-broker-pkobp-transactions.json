@@ -6,7 +6,7 @@
     "importPresets": {
       "u-SxwEZt2d1qgkDMz": {
         "id": "u-SxwEZt2d1qgkDMz",
-        "name": "1 of 2 - Transactions #beta",
+        "name": "1 of 2 - Transactions",
         "updatedAt": "2024-11-04T15:44",
         "author": "Rafal <CEzOZ77nYhZX6L0qXPKXSs6GBho2>",
         "info": "To import transactions from PKO:\n\n1. Open [pkosupermakler.pl](https://pkosupermakler.pl)\n2. Open **Historia** → **Historia Transakcji**\n3. Open **Historyczne** tab\n4. Choose time frame\n5. Click **Eksportuj do CSV**\n6. Open or drop that file here",

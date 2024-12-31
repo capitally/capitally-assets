@@ -6,7 +6,7 @@
     "importPresets": {
       "u-ao3TqWmYejuk9Zj": {
         "id": "u-ao3TqWmYejuk9Zj",
-        "name": "Transactions (1)",
+        "name": "Transactions",
         "updatedAt": "2024-12-24T11:22",
         "author": "RL <iFIjgKg2M7TIe5ygfjFzaDEAlAX2>",
         "info": "To import your stock transactions from Goldsaver:\n\n1. Login to your Goldsaver account\n2. Find the **Historia transakcji** table\n3. Click the **↓** arrow in the top-right corner and then **Pobierz CSV**\n4. Open or drop that file here\n",
@@ -18,9 +18,7 @@
         },
         "providerGroup": "Brokers",
         "parser": {
-          "formats": [
-            "csv"
-          ],
+          "formats": ["csv"],
           "allowClipboard": false
         },
         "sections": {
@@ -143,10 +141,7 @@
                             },
                             "v": {
                               "type": "value",
-                              "value": [
-                                "OPEN",
-                                "CLOSE"
-                              ]
+                              "value": ["OPEN", "CLOSE"]
                             }
                           },
                           "stmts": [
@@ -167,7 +162,7 @@
                                 },
                                 {
                                   "type": "formula",
-                                  "formula": "=x / 28.349523125"
+                                  "formula": "=x / 31.1034768"
                                 }
                               ]
                             },

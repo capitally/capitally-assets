@@ -6,7 +6,7 @@
     "importPresets": {
       "u-1HmWA1QXUecT5P2": {
         "id": "u-1HmWA1QXUecT5P2",
-        "name": "Stocks #beta",
+        "name": "Stocks",
         "updatedAt": "2024-12-04T20:26",
         "author": "RL <iFIjgKg2M7TIe5ygfjFzaDEAlAX2>",
         "info": "To import your transactions from Robinhood:\n\n1. Open the **Robinhood** app\n2. Click on the Account icon in the lower right corner\n3. Open the navigation menu in the upper right and choose **Reports and statements**\n4. Click on **Reports**\n5. Click on **Generate new report** button\n6. Choose the account you need, and specify a date range, then click **Done**\n7. Robinhood will notify you when your CSV report is ready\n8. Download the file and open or drop that file here\n\n> ☝️ These statements **do not** contain crypto transactions",

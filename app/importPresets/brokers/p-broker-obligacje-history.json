@@ -6,7 +6,7 @@
     "importPresets": {
       "u-HKway76PvWgSCre": {
         "id": "u-HKway76PvWgSCre",
-        "name": "1 of 2 - Transactions #beta (1)",
+        "name": "1 of 2 - Transactions",
         "updatedAt": "2024-12-10T23:26",
         "author": "RL <iFIjgKg2M7TIe5ygfjFzaDEAlAX2>",
         "info": "To import your transactions from Obligacje Skarbowe (Polish National Bonds):\n\n1. Go to [Serwis Obligacji Skarbowych](https://www.zakup.obligacjeskarbowe.pl/login.html)\n2. Open **Rachunek Rejestrowy**\n3. Open **Historia dyspozycji na Rachunku Rejestrowym**\n4. Choose dates and click **Dalej**\n5. Click the **[↓]** button below the table to download the XLS file\n6. Open or drop that file here\n\n> ☝️ This imports only transactions. As Capitally does not automatically update Bond prices, you will need to regularly update your current bonds value with the separate import **Obligacje Skarbowe: 2 of 2 - Balances**",
@@ -19,9 +19,7 @@
         "providerGroup": "Brokers",
         "parser": {
           "dateOrder": "ymd",
-          "formats": [
-            "xls"
-          ],
+          "formats": ["xls"],
           "allowClipboard": false
         },
         "sections": {
@@ -357,9 +355,7 @@
                                 "asset": {
                                   "assetTypes": {
                                     "type": "value",
-                                    "value": [
-                                      "BOND"
-                                    ]
+                                    "value": ["BOND"]
                                   }
                                 }
                               }
@@ -498,9 +494,7 @@
                                 "asset": {
                                   "assetTypes": {
                                     "type": "value",
-                                    "value": [
-                                      "BOND"
-                                    ]
+                                    "value": ["BOND"]
                                   }
                                 }
                               }
@@ -598,9 +592,7 @@
                                 "asset": {
                                   "assetTypes": {
                                     "type": "value",
-                                    "value": [
-                                      "BOND"
-                                    ]
+                                    "value": ["BOND"]
                                   }
                                 }
                               }

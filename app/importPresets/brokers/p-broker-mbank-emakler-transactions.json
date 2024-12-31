@@ -6,7 +6,7 @@
     "importPresets": {
       "u-DqcnXdxLCXzPVyW": {
         "id": "u-DqcnXdxLCXzPVyW",
-        "name": "1 of 2 - Transactions #beta",
+        "name": "1 of 2 - Transactions",
         "updatedAt": "2024-12-03T23:25",
         "author": "RL <iFIjgKg2M7TIe5ygfjFzaDEAlAX2>",
         "info": "To import your transactions from eMakler:\n\n1. Go to [mBank](https://online.mbank.pl/)\n2. Open **Produkty** → **Inwestycje** → **Wszystkie** → **eMakler** \n3. Open **Zlecenia** \n4. Choose option **TYP OPERACJI** → **Transakcje**\n5. Choose time frame\n6. Click **Pobierz listę** → **CSV**\n7. Open or drop that file here\n\n> 🦉 To import dividends, use the other preset - **eMakler - Dividends**",

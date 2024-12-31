@@ -6,7 +6,7 @@
     "importPresets": {
       "u-ihfol0wJJZPdP79": {
         "id": "u-ihfol0wJJZPdP79",
-        "name": "Transactions #beta",
+        "name": "Transactions",
         "updatedAt": "2024-11-02T21:29",
         "author": "Rafal <CEzOZ77nYhZX6L0qXPKXSs6GBho2>",
         "info": "To import your transactions from StockMarketEye:\n\n1. Go to your portfolio\n2. Choose **Reports** → **Transactions**\n3. Select timeframe\n4. Click **More** -> **Export to CSV**\n5. Make sure that **Export columns necessary for re-import into StockMarketEye** is checked\n6. Click **Export** and save the file\n7. Open or drop that file here",

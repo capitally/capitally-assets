@@ -6,7 +6,7 @@
     "importPresets": {
       "u-Tzj6Bh5Pagck4y4": {
         "id": "u-Tzj6Bh5Pagck4y4",
-        "name": "Transactions & dividends #beta (1)",
+        "name": "Transactions & dividends",
         "updatedAt": "2024-12-01T21:47",
         "author": "RL <iFIjgKg2M7TIe5ygfjFzaDEAlAX2>",
         "info": "To import your transactions from Interactive Brokers:\n\n1. Go to [IBKR](https://www.interactivebrokers.co.uk/)\n2. Open **Performance & Reports** → **Flex Queries** → **Activity Flex Query** \n3. Create new Flex Query with a **+** sign\n4. From **Sections** choose the: \n**- Cash Transactions** (all Options apart **Summary**)\n**- Trades** (only **Execution** option)\n**- Transfers** (only **Transfer** option)\nDon't modify default Options. \nCheck the \"Select All\" checkbox to select all columns. \n5. Set Format to **CSV**\n6. Set Date Format to **yyyy-MM-dd**\n7. Set Time Format to **HH:mm:ss**\n8. Save the query\n9. Run created query with the arrow sign (**→**)\n10. Choose date period (maximum is one year, you will need an export per each year), ensure Format is **CSV** format and save the file somewhere\n11. Open or drop that file here\n\n> 🦉 If your IBKR account was recently migrated from HU to IE, first import transactions from the HU account, and then continue with the new one. You can select your account near the `Flex Queries` title.",
@@ -31,26 +31,11 @@
               "header": true
             },
             "replaceHeaders": [
-              [
-                "~Commission~^$",
-                "IBCommission"
-              ],
-              [
-                "~CommissionCurrency~^$",
-                "IBCommissionCurrency"
-              ],
-              [
-                "~Price~^$",
-                "TradePrice"
-              ],
-              [
-                "~Tax~^$",
-                "Taxes"
-              ],
-              [
-                "~Date/Time~^$",
-                "DateTime"
-              ]
+              ["~Commission~^$", "IBCommission"],
+              ["~CommissionCurrency~^$", "IBCommissionCurrency"],
+              ["~Price~^$", "TradePrice"],
+              ["~Tax~^$", "Taxes"],
+              ["~Date/Time~^$", "DateTime"]
             ],
             "enabledColumns": [
               "ClientAccountID",
@@ -391,11 +376,7 @@
                         "asset": {
                           "assetTypes": {
                             "type": "value",
-                            "value": [
-                              "STOCK",
-                              "ETF",
-                              "FUND"
-                            ]
+                            "value": ["STOCK", "ETF", "FUND"]
                           },
                           "markets": {
                             "type": "value",
@@ -661,10 +642,7 @@
                                 "asset": {
                                   "assetTypes": {
                                     "type": "value",
-                                    "value": [
-                                      "STOCK",
-                                      "ETF"
-                                    ]
+                                    "value": ["STOCK", "ETF"]
                                   },
                                   "remote": {
                                     "type": "value",
@@ -937,9 +915,7 @@
                                 "asset": {
                                   "assetTypes": {
                                     "type": "value",
-                                    "value": [
-                                      "CASH"
-                                    ]
+                                    "value": ["CASH"]
                                   },
                                   "remote": {
                                     "type": "value",
@@ -1266,10 +1242,7 @@
                                 "asset": {
                                   "assetTypes": {
                                     "type": "value",
-                                    "value": [
-                                      "STOCK",
-                                      "ETF"
-                                    ]
+                                    "value": ["STOCK", "ETF"]
                                   },
                                   "remote": {
                                     "type": "value",

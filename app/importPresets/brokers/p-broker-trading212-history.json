@@ -6,7 +6,7 @@
     "importPresets": {
       "u-pHKFFsmvPCwxn3x": {
         "id": "u-pHKFFsmvPCwxn3x",
-        "name": "History #beta",
+        "name": "History",
         "updatedAt": "2024-12-04T18:15",
         "author": "RL <iFIjgKg2M7TIe5ygfjFzaDEAlAX2>",
         "info": "To import your transactions from Trading 212:\n\n1. Open the **Trading 212** app\n2. Open the main menu and navigate to **History**\n3. Click the download icon in the top-right\n4. Select the date range and click **Export CSV**\n5. Download the file and open or drop that file here",
@@ -20,9 +20,7 @@
         "providerGroup": "Brokers",
         "parser": {
           "decimalSeparator": ".",
-          "formats": [
-            "csv"
-          ],
+          "formats": ["csv"],
           "allowClipboard": false,
           "csv": {}
         },
@@ -128,10 +126,7 @@
                         "asset": {
                           "assetTypes": {
                             "type": "value",
-                            "value": [
-                              "STOCK",
-                              "ETF"
-                            ]
+                            "value": ["STOCK", "ETF"]
                           },
                           "markets": {
                             "type": "value",
@@ -311,10 +306,7 @@
                             },
                             "v": {
                               "type": "value",
-                              "value": [
-                                "OPEN",
-                                "CLOSE"
-                              ]
+                              "value": ["OPEN", "CLOSE"]
                             }
                           },
                           "stmts": [
@@ -361,9 +353,7 @@
                             },
                             "v": {
                               "type": "value",
-                              "value": [
-                                "DIVIDEND"
-                              ]
+                              "value": ["DIVIDEND"]
                             }
                           },
                           "stmts": [
@@ -430,9 +420,7 @@
                             },
                             "v": {
                               "type": "value",
-                              "value": [
-                                "INTEREST"
-                              ]
+                              "value": ["INTEREST"]
                             }
                           },
                           "stmts": [
@@ -451,9 +439,7 @@
                                 "asset": {
                                   "assetTypes": {
                                     "type": "value",
-                                    "value": [
-                                      "CASH"
-                                    ]
+                                    "value": ["CASH"]
                                   },
                                   "remote": {
                                     "type": "value",

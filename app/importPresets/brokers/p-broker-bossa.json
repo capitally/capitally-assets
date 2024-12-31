@@ -6,7 +6,7 @@
     "importPresets": {
       "u-mprvvRNeE0vdaEZ": {
         "id": "u-mprvvRNeE0vdaEZ",
-        "name": "Transactions & dividends #beta",
+        "name": "Transactions & dividends",
         "updatedAt": "2024-12-07T16:26",
         "author": "RL <iFIjgKg2M7TIe5ygfjFzaDEAlAX2>",
         "info": "To import your transactions from Bossa:\n\n1. Go to [Bossa](https://online.bossa.pl/bossaapp/login)\n2. Open **Portfel** → **Historia finansowa** \n3. Set **Pokaż** → **Wszystkie**\n4. Choose time frame\n5. Select **Eksportuj do CSV**\n6. Click **Wykonaj** and save the file\n7. Open or drop that file here\n",

@@ -6,7 +6,7 @@
     "importPresets": {
       "u-WXYwSLZ2PDY48qo": {
         "id": "u-WXYwSLZ2PDY48qo",
-        "name": "Transactions #beta",
+        "name": "Transactions",
         "updatedAt": "2024-11-05T16:01",
         "author": "Rafal <CEzOZ77nYhZX6L0qXPKXSs6GBho2>",
         "info": "To import your transactions from Bittrex:\n\n1. Go to [Bittrex](https://bittrex.com/)\n1. Open **Orders** \n1. Click **Download History**\n1. Download history for each year you traded\n1. Open or drop those files here",
@@ -19,9 +19,7 @@
         },
         "providerGroup": "Crypto",
         "parser": {
-          "formats": [
-            "csv"
-          ],
+          "formats": ["csv"],
           "allowClipboard": false,
           "csv": {}
         },
@@ -105,9 +103,7 @@
                         "asset": {
                           "assetTypes": {
                             "type": "value",
-                            "value": [
-                              "CRYPTO"
-                            ]
+                            "value": ["CRYPTO"]
                           },
                           "remote": {
                             "type": "value",

@@ -6,7 +6,7 @@
     "importPresets": {
       "u-wDPUofpT18pHlZ2": {
         "id": "u-wDPUofpT18pHlZ2",
-        "name": "Transactions & Dividends #beta (1)",
+        "name": "Transactions & Dividends",
         "updatedAt": "2024-12-10T18:06",
         "author": "RL <iFIjgKg2M7TIe5ygfjFzaDEAlAX2>",
         "info": "To import your transactions from Exante:\n\n1. Open **Transactions**\n2. Choose date range\n3. Click **Download XLS (or CSV)**\n4. The export will be sent out to your e-mail, or you can download it from **REPORTS → Custom Reports**",
@@ -18,10 +18,7 @@
         },
         "providerGroup": "Brokers",
         "parser": {
-          "formats": [
-            "csv",
-            "xls"
-          ],
+          "formats": ["csv", "xls"],
           "allowClipboard": false,
           "codepage": "utf-16"
         },
@@ -31,42 +28,15 @@
               "header": true
             },
             "replaceHeaders": [
-              [
-                "~Identyfikator transakcji~i",
-                "Transaction ID"
-              ],
-              [
-                "~ID symbolu~^$",
-                "Symbol ID"
-              ],
-              [
-                "~Rodzaj operacji~^$",
-                "Operation type"
-              ],
-              [
-                "~Gdy~^$",
-                "When"
-              ],
-              [
-                "~Suma~^$",
-                "Sum"
-              ],
-              [
-                "~Aktywa~^$",
-                "Asset"
-              ],
-              [
-                "~Ekwiwalent EUR~",
-                "EUR equivalent"
-              ],
-              [
-                "~Komentarz~",
-                "Comment"
-              ],
-              [
-                "~Rodzic UUID~",
-                "Parent UUID"
-              ]
+              ["~Identyfikator transakcji~i", "Transaction ID"],
+              ["~ID symbolu~^$", "Symbol ID"],
+              ["~Rodzaj operacji~^$", "Operation type"],
+              ["~Gdy~^$", "When"],
+              ["~Suma~^$", "Sum"],
+              ["~Aktywa~^$", "Asset"],
+              ["~Ekwiwalent EUR~", "EUR equivalent"],
+              ["~Komentarz~", "Comment"],
+              ["~Rodzic UUID~", "Parent UUID"]
             ],
             "reverseRows": true,
             "enabledColumns": [
@@ -1049,9 +1019,7 @@
                                 "asset": {
                                   "assetTypes": {
                                     "type": "value",
-                                    "value": [
-                                      "CASH"
-                                    ]
+                                    "value": ["CASH"]
                                   },
                                   "remote": {
                                     "type": "value",
@@ -1094,9 +1062,7 @@
                                 "asset": {
                                   "assetTypes": {
                                     "type": "value",
-                                    "value": [
-                                      "CRYPTO"
-                                    ]
+                                    "value": ["CRYPTO"]
                                   },
                                   "remote": {
                                     "type": "value",

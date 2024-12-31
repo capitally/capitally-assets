@@ -6,7 +6,7 @@
     "importPresets": {
       "u-U34Ecw8Wg5IaZiD": {
         "id": "u-U34Ecw8Wg5IaZiD",
-        "name": "1 of 2 - Transactions #beta",
+        "name": "1 of 2 - Transactions",
         "updatedAt": "2024-12-05T20:12",
         "author": "RL <iFIjgKg2M7TIe5ygfjFzaDEAlAX2>",
         "info": "To import transactions from Santander:\n\n1. Open brokerage website\n2. Open **Historia** from the top-right menu\n3. Open **Historia Transakcji**\n4. Open **Historyczne** tab\n5. Choose time frame\n6. Click **Eksportuj do CSV**\n7. Open or drop that file here",
@@ -19,9 +19,7 @@
         },
         "providerGroup": "Brokers",
         "parser": {
-          "formats": [
-            "csv"
-          ],
+          "formats": ["csv"],
           "allowClipboard": false,
           "csv": {}
         },
@@ -126,10 +124,7 @@
                         "asset": {
                           "assetTypes": {
                             "type": "value",
-                            "value": [
-                              "STOCK",
-                              "ETF"
-                            ]
+                            "value": ["STOCK", "ETF"]
                           },
                           "markets": {
                             "type": "value",

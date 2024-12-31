@@ -6,7 +6,7 @@
     "importPresets": {
       "u-KYzgX9FvE0KuoI1": {
         "id": "u-KYzgX9FvE0KuoI1",
-        "name": "Statement #beta",
+        "name": "Statement",
         "updatedAt": "2024-11-04T14:46",
         "author": "Rafal <CEzOZ77nYhZX6L0qXPKXSs6GBho2>",
         "info": "To import your transactions from Revolut:\n\n1. Open the Revolut app\n1. Open **Invest** tab\n1. Click on the **More** menu with `...` and choose **Documents**\n1. Select **Brokerage Account**\n1. Select **Account statement**\n1. Choose **Excel**, select date period and click **Get statement**\n1. Download the file and open or drop that file here\n",

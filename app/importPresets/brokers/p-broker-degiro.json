@@ -6,7 +6,7 @@
     "importPresets": {
       "u-g8AdpHLyGSkyY0E": {
         "id": "u-g8AdpHLyGSkyY0E",
-        "name": "Transactions & dividends #beta (1)",
+        "name": "Transactions & dividends",
         "updatedAt": "2024-12-10T19:48",
         "author": "RL <iFIjgKg2M7TIe5ygfjFzaDEAlAX2>",
         "info": "To import your transactions from Degiro:\n\n1. Go to [Degiro](https://degiro.com/)\n2. Open **Inbox** → **Account statements** \n3. Pick a date range\n4. Click the **↓ Export** button, choose **CSV** format and save the file somewhere\n5. Open or drop that file here",
@@ -29,82 +29,25 @@
               "header": true
             },
             "replaceHeaders": [
-              [
-                "~Change~^$",
-                "Change currency"
-              ],
-              [
-                "~Column 9~^$",
-                "Change"
-              ],
-              [
-                "~Balance~^$",
-                "Balance currency"
-              ],
-              [
-                "~Column 11~^$",
-                "Balance"
-              ],
-              [
-                "~Datum~^$",
-                "Date"
-              ],
-              [
-                "~Tijd~^$",
-                "Time"
-              ],
-              [
-                "~Valutadatum~^$",
-                "Value date"
-              ],
-              [
-                "~Omschrijving~^$",
-                "Description"
-              ],
-              [
-                "~Mutatie~^$",
-                "Change currency"
-              ],
-              [
-                "~Saldo~^$",
-                "Balance currency"
-              ],
-              [
-                "~Data~^$",
-                "Date"
-              ],
-              [
-                "~Czas~^$",
-                "Time"
-              ],
-              [
-                "~Date (1)~^$",
-                "Value date"
-              ],
-              [
-                "~Produkt~^$",
-                "Product"
-              ],
-              [
-                "~Opis~^$",
-                "Description"
-              ],
-              [
-                "~Kurs~^$",
-                "FX"
-              ],
-              [
-                "~Zmiana~^$",
-                "Change currency"
-              ],
-              [
-                "~Identyfikator zlecenia~^$",
-                "Order Id"
-              ],
-              [
-                "~Order ID~^$",
-                "Order Id"
-              ]
+              ["~Change~^$", "Change currency"],
+              ["~Column 9~^$", "Change"],
+              ["~Balance~^$", "Balance currency"],
+              ["~Column 11~^$", "Balance"],
+              ["~Datum~^$", "Date"],
+              ["~Tijd~^$", "Time"],
+              ["~Valutadatum~^$", "Value date"],
+              ["~Omschrijving~^$", "Description"],
+              ["~Mutatie~^$", "Change currency"],
+              ["~Saldo~^$", "Balance currency"],
+              ["~Data~^$", "Date"],
+              ["~Czas~^$", "Time"],
+              ["~Date (1)~^$", "Value date"],
+              ["~Produkt~^$", "Product"],
+              ["~Opis~^$", "Description"],
+              ["~Kurs~^$", "FX"],
+              ["~Zmiana~^$", "Change currency"],
+              ["~Identyfikator zlecenia~^$", "Order Id"],
+              ["~Order ID~^$", "Order Id"]
             ],
             "enabledColumns": [
               "Date",
@@ -276,10 +219,7 @@
                                 "asset": {
                                   "assetTypes": {
                                     "type": "value",
-                                    "value": [
-                                      "STOCK",
-                                      "ETF"
-                                    ]
+                                    "value": ["STOCK", "ETF"]
                                   },
                                   "markets": {
                                     "type": "value",
@@ -1024,9 +964,7 @@
                                             },
                                             "v": {
                                               "type": "value",
-                                              "value": [
-                                                "CLOSE"
-                                              ]
+                                              "value": ["CLOSE"]
                                             }
                                           },
                                           "stmts": [
@@ -1145,10 +1083,7 @@
                                 "asset": {
                                   "assetTypes": {
                                     "type": "value",
-                                    "value": [
-                                      "STOCK",
-                                      "ETF"
-                                    ]
+                                    "value": ["STOCK", "ETF"]
                                   },
                                   "markets": {
                                     "type": "value",
@@ -1796,10 +1731,7 @@
                                 "asset": {
                                   "assetTypes": {
                                     "type": "value",
-                                    "value": [
-                                      "STOCK",
-                                      "ETF"
-                                    ]
+                                    "value": ["STOCK", "ETF"]
                                   },
                                   "markets": {
                                     "type": "value",
@@ -2010,9 +1942,7 @@
                                     },
                                     "v": {
                                       "type": "value",
-                                      "value": [
-                                        "OTHER"
-                                      ]
+                                      "value": ["OTHER"]
                                     }
                                   },
                                   "stmts": [
@@ -2149,9 +2079,7 @@
                                 "asset": {
                                   "assetTypes": {
                                     "type": "value",
-                                    "value": [
-                                      "CASH"
-                                    ]
+                                    "value": ["CASH"]
                                   },
                                   "remote": {
                                     "type": "value",
@@ -2266,9 +2194,7 @@
                                 "asset": {
                                   "assetTypes": {
                                     "type": "value",
-                                    "value": [
-                                      "CASH"
-                                    ]
+                                    "value": ["CASH"]
                                   },
                                   "remote": {
                                     "type": "value",

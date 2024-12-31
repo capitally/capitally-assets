@@ -6,7 +6,7 @@
     "importPresets": {
       "u-1ygyeEQa22ITXG6": {
         "id": "u-1ygyeEQa22ITXG6",
-        "name": "Transactions #beta",
+        "name": "Transactions",
         "updatedAt": "2024-11-02T23:00",
         "author": "Rafal <CEzOZ77nYhZX6L0qXPKXSs6GBho2>",
         "info": "To import your transactions from ING Direct:\n\n1. Go to ING Direct\n1. Open **Broker** → **Consultar** → **Últimos movimientos**\n 1. Select **ejecutadas** to export transactions \n1. Choose date period\n1. Download the file and open or drop it here",

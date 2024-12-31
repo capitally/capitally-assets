@@ -6,7 +6,7 @@
     "importPresets": {
       "u-4SgeUlfcnj2vo2h": {
         "id": "u-4SgeUlfcnj2vo2h",
-        "name": "Transactions & dividends #beta",
+        "name": "Transactions & dividends",
         "updatedAt": "2024-12-04T22:25",
         "author": "RL <iFIjgKg2M7TIe5ygfjFzaDEAlAX2>",
         "info": "To import your transactions from Fidelity:\n\n1. Login to your Fidelity Client Portal\n2. Choose **Account** → **Activity & Orders**\n3. Choose a time period\n4. Download transactions in CSV format with the green ↓ icon\n5. Open or drop that file here",

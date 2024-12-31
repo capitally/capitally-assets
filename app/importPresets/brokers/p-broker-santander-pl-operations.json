@@ -6,7 +6,7 @@
     "importPresets": {
       "u-5fn4gPE3TPeb53k": {
         "id": "u-5fn4gPE3TPeb53k",
-        "name": "2 of 2 - Dividends #beta (1)",
+        "name": "2 of 2 - Dividends",
         "updatedAt": "2024-12-05T20:27",
         "author": "RL <iFIjgKg2M7TIe5ygfjFzaDEAlAX2>",
         "info": "To import dividends from Santander:\n\n1. Open brokerage website\n2. Open **Historia** from the top-right menu\n3. Open **Historia operacji finansowych**\n4. Choose at least `Dywidendy i odsetki`\n5. Choose time frame\n6. Click **Eksportuj do CSV**\n7. Open or drop that file here",
@@ -147,10 +147,7 @@
                                 "asset": {
                                   "assetTypes": {
                                     "type": "value",
-                                    "value": [
-                                      "STOCK",
-                                      "ETF"
-                                    ]
+                                    "value": ["STOCK", "ETF"]
                                   },
                                   "markets": {
                                     "type": "value",

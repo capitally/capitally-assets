@@ -6,7 +6,7 @@
     "importPresets": {
       "u-tnJ4xHk7lq4aIwy": {
         "id": "u-tnJ4xHk7lq4aIwy",
-        "name": "Transactions #beta (1)",
+        "name": "Transactions",
         "updatedAt": "2024-12-04T13:19",
         "author": "RL <iFIjgKg2M7TIe5ygfjFzaDEAlAX2>",
         "info": "To import your transactions from Schwab:\n\n1. Go to [Schwab Client Portal](https://client.schwab.com/)\n2. Open **Accounts** → **Transaction History**\n3. Select account, Change date range to **All**\n4. Click **Search**\n5. Click the **↓ Export** to download the trades files\n6. Open or drop that file here",

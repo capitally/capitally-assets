@@ -6,7 +6,7 @@
     "importPresets": {
       "u-jm8Zms9OstfBY4R": {
         "id": "u-jm8Zms9OstfBY4R",
-        "name": "Transactions #beta",
+        "name": "Transactions",
         "updatedAt": "2024-11-05T11:03",
         "author": "Rafal <CEzOZ77nYhZX6L0qXPKXSs6GBho2>",
         "info": "To import your transactions from Bitstamp:\n\n1. Go to **[BitStamp](https://www.bitstamp.net/account/transactions/)** → **Dashboard** → **View transaction history**\n2. Click **Open export options**\n3. Choose timeframe\n4. Choose the **new** format if given a choice\n5. Click **Export selection** and download the file\n6. Open or drop that file here",
@@ -152,10 +152,7 @@
                                 "asset": {
                                   "assetTypes": {
                                     "type": "value",
-                                    "value": [
-                                      "CRYPTO",
-                                      "CASH"
-                                    ]
+                                    "value": ["CRYPTO", "CASH"]
                                   },
                                   "remote": {
                                     "type": "value",
@@ -267,9 +264,7 @@
                                 "asset": {
                                   "assetTypes": {
                                     "type": "value",
-                                    "value": [
-                                      "CRYPTO"
-                                    ]
+                                    "value": ["CRYPTO"]
                                   },
                                   "remote": {
                                     "type": "value",

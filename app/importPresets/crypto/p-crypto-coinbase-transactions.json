@@ -6,7 +6,7 @@
     "importPresets": {
       "u-ygVIrX5YhdAMZhE": {
         "id": "u-ygVIrX5YhdAMZhE",
-        "name": "Transactions #beta",
+        "name": "Transactions",
         "updatedAt": "2024-11-05T13:19",
         "author": "Rafal <CEzOZ77nYhZX6L0qXPKXSs6GBho2>",
         "info": "To import your transactions from Coinbase:\n\n1. Go to [Coinbase Statements](https://accounts.coinbase.com/statements) (by clicking your avatar in top-right corner)\n2. Choose All assets and a timeframe **Transactions** → **Generate custom statement** box \n3. Choose **CSV** format\n4. Click **Download**\n5. Open or drop that file here",
