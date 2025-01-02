@@ -1,15 +1,16 @@
 {
   "version": 3,
   "type": "Capitally Data Export",
-  "exportedAt": "2024-10-20T19:12:33.842Z",
+  "exportedAt": "2025-01-02T17:40:33.712Z",
   "data": {
     "importPresets": {
-      "u-wXTSncAPhB7hAK2": {
-        "id": "u-wXTSncAPhB7hAK2",
-        "name": "2 of 2 - Prices",
-        "updatedAt": "2024-10-20T21:12",
-        "author": "Rafal <CEzOZ77nYhZX6L0qXPKXSs6GBho2>",
+      "u-xFYvN1puvdssaAX": {
+        "id": "u-xFYvN1puvdssaAX",
+        "name": "2 of 2 - Prices (1)",
+        "updatedAt": "2025-01-02T18:39",
+        "author": "RL <iFIjgKg2M7TIe5ygfjFzaDEAlAX2>",
         "info": "☝️ This will update prices and thus value of bonds you've previously imported using **Obligacje Skarbowe: 1 of 2 - Transactions**. You'll need to run it regularly, as Capitally does not automatically update value of bonds.\n\nTo update the bond prices:\n\n1. Go to [Serwis Obligacji Skarbowych](https://www.zakup.obligacjeskarbowe.pl/login.html)\n2. Open **Rachunek Rejestrowy**\n3. Open **Stan Rachunku Rejestrowego**\n4. Click the **[↓]** button to download the XLS file\n5. Open or drop that file here\n\n> 📋 Alternatively, you can copy the *whole* table, including the headers, and paste it here.",
+        "sourceId": "p-broker-obligacje-prices",
         "provider": "Obligacje Skarbowe",
         "providerIcon": {
           "type": "logo",
@@ -17,7 +18,9 @@
         },
         "providerGroup": "Brokers",
         "parser": {
-          "formats": ["xls"],
+          "formats": [
+            "xls"
+          ],
           "allowClipboard": true,
           "csv": {}
         },
@@ -27,12 +30,30 @@
               "header": true
             },
             "replaceHeaders": [
-              ["~Emisja~^$", "EMISJA"],
-              ["~Liczba obligacji~^$", "DOSTĘPNA LICZBA OBLIGACJI"],
-              ["~Wartość obligacji~^$", "ZABLOKOWANA LICZBA OBLIGACJI"],
-              ["~Data Wykupu~^$", "WARTOŚĆ NOMINALNA"],
-              ["~Column 5~^$", "WARTOŚĆ AKTUALNA"],
-              ["~Column 6~^$", "DATA WYKUPU"]
+              [
+                "~Emisja~^$",
+                "EMISJA"
+              ],
+              [
+                "~Liczba obligacji~^$",
+                "DOSTĘPNA LICZBA OBLIGACJI"
+              ],
+              [
+                "~Wartość obligacji~^$",
+                "ZABLOKOWANA LICZBA OBLIGACJI"
+              ],
+              [
+                "~Data Wykupu~^$",
+                "WARTOŚĆ NOMINALNA"
+              ],
+              [
+                "~Column 5~^$",
+                "WARTOŚĆ AKTUALNA"
+              ],
+              [
+                "~Column 6~^$",
+                "DATA WYKUPU"
+              ]
             ],
             "enabledColumns": [
               "EMISJA",
@@ -58,6 +79,77 @@
                       },
                       "stmts": [
                         {
+                          "type": "var",
+                          "varId": "principal",
+                          "varType": "number",
+                          "multiple": false,
+                          "xpr": {
+                            "type": "value",
+                            "value": 0
+                          }
+                        },
+                        {
+                          "type": "var",
+                          "varId": "value",
+                          "varType": "number",
+                          "multiple": false,
+                          "xpr": {
+                            "type": "value",
+                            "value": 0
+                          }
+                        },
+                        {
+                          "type": "comment",
+                          "md": "Collect bond values from all series"
+                        },
+                        {
+                          "type": "lookupRows",
+                          "direction": "after",
+                          "stmts": [
+                            {
+                              "type": "if",
+                              "ifs": [
+                                {
+                                  "xpr": {
+                                    "type": "=",
+                                    "xpr": {
+                                      "type": "prop",
+                                      "prop": "lookup.cols.EMISJA"
+                                    },
+                                    "v": {
+                                      "type": "prop",
+                                      "prop": "cols.EMISJA"
+                                    }
+                                  },
+                                  "stmts": [
+                                    {
+                                      "type": "set",
+                                      "prop": "$principal",
+                                      "op": "+=",
+                                      "xpr": {
+                                        "type": "prop",
+                                        "prop": "lookup.cols.WARTOŚĆ NOMINALNA"
+                                      }
+                                    },
+                                    {
+                                      "type": "set",
+                                      "prop": "$value",
+                                      "op": "+=",
+                                      "xpr": {
+                                        "type": "prop",
+                                        "prop": "lookup.cols.WARTOŚĆ AKTUALNA"
+                                      }
+                                    },
+                                    {
+                                      "type": "ignoreRow"
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
                           "type": "setMarketPrice",
                           "asset": {
                             "type": "prop",
@@ -69,7 +161,7 @@
                           },
                           "price": {
                             "type": "formula",
-                            "formula": "=100 * (col(\"WARTOŚĆ AKTUALNA\") / col(\"WARTOŚĆ NOMINALNA\"))"
+                            "formula": "=100 * $value / $principal"
                           }
                         }
                       ]
